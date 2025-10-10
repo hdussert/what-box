@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: PropsWithChildren) => {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable} antialiased`}>
+      <body className={`dark font-sans ${inter.variable} antialiased`}>
         {children}
       </body>
     </html>
