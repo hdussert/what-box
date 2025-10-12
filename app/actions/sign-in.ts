@@ -28,7 +28,7 @@ export async function signIn(formData: FormData): Promise<ActionResponse> {
       return {
         success: false,
         message: 'Validation failed',
-        errors: validationResult.error.flatten().fieldErrors,
+        errors: z.flattenError(validationResult.error).fieldErrors,
       }
     }
 

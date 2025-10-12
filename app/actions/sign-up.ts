@@ -39,6 +39,7 @@ export async function signUp(formData: FormData): Promise<ActionResponse> {
     }
 
     // Check if user already exists
+    console.log(data.email)
     const existingUser = await getUserByEmail(data.email)
     if (existingUser) {
       return {
