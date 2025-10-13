@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { PropsWithChildren } from 'react'
+import { Toaster } from 'react-hot-toast'
 import './globals.css'
 
 const inter = Inter({
@@ -17,6 +18,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   return (
     <html lang="en">
       <body className={`dark font-sans ${inter.variable} antialiased`}>
+        <Toaster position="top-right" />
         {children}
       </body>
     </html>
