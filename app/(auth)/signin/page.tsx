@@ -3,8 +3,10 @@
 import { ActionResponse } from '@/app/actions/response-type'
 import { signIn } from '@/app/actions/sign-in'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import Typography from '@/components/ui/typography'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useActionState } from 'react'
@@ -47,14 +49,14 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h1 className="text-center text-3xl font-extrabold">WhatBox</h1>
-        <h2 className="mt-2 text-center text-2xl font-bold">
+        <Typography.H1 className="text-center">WhatBox</Typography.H1>
+        <Typography.H2 className="mt-2 text-center">
           Sign in to your account
-        </h2>
+        </Typography.H2>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-[#1A1A1A] py-8 px-4 shadow sm:rounded-lg sm:px-10 border">
+      <Card className="sm:mx-auto sm:w-full sm:max-w-md mt-8">
+        <CardContent>
           <form action={formAction} className="space-y-6">
             {state?.message && !state.success && (
               <FieldError>{state.message}</FieldError>
@@ -66,6 +68,7 @@ export default function SignInPage() {
                 id="email"
                 type="email"
                 name="email"
+                placeholder="m@example.com"
                 autoComplete="email"
                 required
                 disabled={isPending}
@@ -90,22 +93,18 @@ export default function SignInPage() {
                 {state?.errors?.password && state.errors.password[0]}
               </FieldError>
             </Field>
-
             <Button type="submit" className="w-full" disabled={isPending}>
               Sign in
             </Button>
           </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm">
-              Don&apos;t have an account?&nbsp;
-              <Link href="/signup" className="font-medium">
-                Sign up
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
+          <p className="mt-4 text-sm text-center">
+            Don&apos;t have an account?&nbsp;
+            <Link href="/signup" className="font-medium">
+              Sign up
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -3,8 +3,10 @@
 import { ActionResponse } from '@/app/actions/response-type'
 import { signUp } from '@/app/actions/sign-up'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import Typography from '@/components/ui/typography'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useActionState } from 'react'
@@ -46,14 +48,14 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h1 className="text-center text-3xl font-extrabold">WhatBox</h1>
-        <h2 className="mt-2 text-center text-2xl font-bold">
+        <Typography.H1 className="text-center">WhatBox</Typography.H1>
+        <Typography.H2 className="mt-2 text-center">
           Create a new account
-        </h2>
+        </Typography.H2>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-[#1A1A1A] py-8 px-4 shadow sm:rounded-lg sm:px-10 border">
+      <Card className="sm:mx-auto sm:w-full sm:max-w-md mt-8">
+        <CardContent>
           <form action={formAction} className="space-y-6">
             {state?.message && !state.success && (
               <FieldError>{state.message}</FieldError>
@@ -65,6 +67,7 @@ export default function SignUpPage() {
                 id="email"
                 name="email"
                 type="email"
+                placeholder="m@example.com"
                 autoComplete="email"
                 required
                 disabled={isPending}
@@ -107,21 +110,19 @@ export default function SignUpPage() {
               </FieldError>
             </Field>
 
-            <Button type="submit" className="w-full" disabled={isPending}>
+            <Button type="submit" className="w-full mt-2" disabled={isPending}>
               Sign up
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm">
-              Already have an account?{' '}
-              <Link href="/signin" className="font-medium">
-                Sign in
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
+          <p className="text-sm mt-4 text-center">
+            Already have an account?{' '}
+            <Link href="/signin" className="font-medium">
+              Sign in
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
     </div>
   )
 }
