@@ -1,6 +1,7 @@
 import * as jose from 'jose'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
+import 'server-only'
 
 // JWT types
 interface JWTPayload {
@@ -8,18 +9,13 @@ interface JWTPayload {
   [key: string]: string | number | boolean | null | undefined
 }
 
-// Secret key for JWT signing (in a real app, use an environment variable)
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'MISSING_JWT_SECRET_IN_ENV_VARIABLE'
 )
+const JWT_EXPIRATION = '7d' // 7 days expiration time
+const REFRESH_THRESHOLD = 24 * 60 * 60 // 24 hours refresh threshold in seconds
+const JWT_TOKEN_COOKIE_NAME = 'auth_token'
 
-// JWT expiration time
-const JWT_EXPIRATION = '7d' // 7 days
-
-// Token refresh threshold (refresh if less than this time left)
-const REFRESH_THRESHOLD = 24 * 60 * 60 // 24 hours in seconds
-
-// Generate a JWT token
 export async function generateJWT(payload: JWTPayload) {
   return await new jose.SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
@@ -28,7 +24,6 @@ export async function generateJWT(payload: JWTPayload) {
     .sign(JWT_SECRET)
 }
 
-// Verify a JWT token
 export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jose.jwtVerify(token, JWT_SECRET)
@@ -39,7 +34,6 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   }
 }
 
-// Check if token needs refresh
 export async function shouldRefreshToken(token: string): Promise<boolean> {
   try {
     const { payload } = await jose.jwtVerify(token, JWT_SECRET, {
@@ -49,25 +43,22 @@ export async function shouldRefreshToken(token: string): Promise<boolean> {
     // Get expiration time
     const exp = payload.exp as number
     const now = Math.floor(Date.now() / 1000)
+    const isTokenExpiringSoon = exp - now < REFRESH_THRESHOLD
 
-    // If token expires within the threshold, refresh it
-    return exp - now < REFRESH_THRESHOLD
+    return isTokenExpiringSoon // If token expires within the threshold, refresh it
   } catch {
     // If verification fails, token is invalid or expired
     return false
   }
 }
 
-// Create a session using JWT
 export async function createSession(userId: string) {
   try {
-    // Create JWT with user data
     const token = await generateJWT({ userId })
 
-    // Store JWT in a cookie
     const cookieStore = await cookies()
     cookieStore.set({
-      name: 'auth_token',
+      name: JWT_TOKEN_COOKIE_NAME,
       value: token,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -83,13 +74,13 @@ export async function createSession(userId: string) {
   }
 }
 
-// Get current session from JWT
 export const getSession = cache(async () => {
   try {
     const cookieStore = await cookies()
-    const token = cookieStore.get('auth_token')?.value
 
+    const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME)?.value
     if (!token) return null
+
     const payload = await verifyJWT(token)
 
     return payload ? { userId: payload.userId } : null
@@ -113,5 +104,5 @@ export const getSession = cache(async () => {
 // Delete session by clearing the JWT cookie
 export async function deleteSession() {
   const cookieStore = await cookies()
-  cookieStore.delete('auth_token')
+  cookieStore.delete(JWT_TOKEN_COOKIE_NAME)
 }
