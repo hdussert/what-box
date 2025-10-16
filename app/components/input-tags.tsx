@@ -6,9 +6,10 @@ import { useState } from 'react'
 
 type InputTagsProps = {
   name?: string
+  placeholder?: string
 }
 
-const InputTags = ({ name }: InputTagsProps) => {
+const InputTags = ({ name, placeholder }: InputTagsProps) => {
   const [tags, setTags] = useState<string[]>([])
   const [input, setInput] = useState('')
 
@@ -54,8 +55,7 @@ const InputTags = ({ name }: InputTagsProps) => {
       </div>
       <div className="flex gap-2">
         <Input
-          placeholder="Item... (optional)"
-          name="items"
+          placeholder={placeholder}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}

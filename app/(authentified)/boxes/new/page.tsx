@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
@@ -36,7 +37,7 @@ const NewBoxPage = () => {
 
       // Handle successful submission
       if (result.success) {
-        toast.success('Signed in successfully')
+        toast.success('Box created successfully')
         router.push('/dashboard')
         router.refresh()
       }
@@ -52,11 +53,14 @@ const NewBoxPage = () => {
   }, initialState)
   return (
     <div>
-      <Typography.H1>New Box</Typography.H1>
-      <Card>
-        <form action={formAction}>
+      <Typography.H1 className="mb-6">New Box</Typography.H1>
+      <form action={formAction}>
+        <Card>
           <CardContent>
             <FieldGroup>
+              {state?.message && !state.success && (
+                <FieldError>{state.message}</FieldError>
+              )}
               <Field>
                 <FieldLabel>Name</FieldLabel>
                 <Input type="text" name="name" placeholder="My Box" />
@@ -67,7 +71,7 @@ const NewBoxPage = () => {
                 <FieldDescription>
                   Describe what you put in your box, you can add more later
                 </FieldDescription>
-                <InputTags name="items" />
+                <InputTags name="items" placeholder="Item... (optional)" />
               </Field>
             </FieldGroup>
           </CardContent>
@@ -76,8 +80,8 @@ const NewBoxPage = () => {
               {isPending ? 'Creating...' : 'Create'}
             </Button>
           </CardFooter>
-        </form>
-      </Card>
+        </Card>
+      </form>
     </div>
   )
 }

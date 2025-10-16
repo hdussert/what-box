@@ -16,10 +16,9 @@ export async function newBox(formData: FormData): Promise<ActionResponse> {
   try {
     const data = {
       name: formData.get('name') as string,
-      items: formData.getAll('items').map((item) => item as string),
+      items: (formData.get('items') as string).split(','),
     }
 
-    console.log('Items:', data.items)
     const validationResult = NewBoxSchema.safeParse(data)
     if (!validationResult.success) {
       return {
