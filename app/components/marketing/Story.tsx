@@ -1,4 +1,4 @@
-const MarketingStory = () => {
+const Story = () => {
   return (
     <div className="py-24" id="features">
       <h2 className="text-3xl font-bold">No more digging around!</h2>
@@ -20,4 +20,4 @@ const MarketingStory = () => {
   )
 }
 
-export default MarketingStory
+export default Story

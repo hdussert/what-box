@@ -54,7 +54,7 @@ const IconListItem = ({
   )
 }
 
-const MarketingHowTo = () => {
+const HowTo = () => {
   return (
     <div className="flex flex-col items-center gap-4">
       <h2 className="text-3xl font-bold text-center">How does it work?</h2>
@@ -78,4 +78,4 @@ const MarketingHowTo = () => {
   )
 }
 
-export default MarketingHowTo
+export default HowTo

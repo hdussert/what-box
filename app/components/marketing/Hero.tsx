@@ -2,9 +2,9 @@ import { Button } from '@/components/ui/button'
 import { Package } from 'lucide-react'
 import Link from 'next/link'
 
-const MarketingHero = () => {
+const Hero = () => {
   return (
-    <div className="flex flex-col md:flex-row items-center gap-2 justify-center h-[60vh]">
+    <div className="flex flex-col md:flex-row items-center gap-2 justify-center h-[85vh]">
       <Package size={200} />
       <div className="text-center md:text-left">
         <h1 className="text-5xl font-bold">WhatBox</h1>
@@ -24,4 +24,4 @@ const MarketingHero = () => {
   )
 }
 
-export default MarketingHero
+export default Hero

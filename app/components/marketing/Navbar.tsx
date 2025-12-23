@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Package } from 'lucide-react'
 import Link from 'next/link'
 
-const MarketingNavbar = () => {
+const Navbar = () => {
   return (
     <nav className="w-full flex border-b-2 px-4 py-2 sticky top-0 bg-background ">
       <Link href="/" className="font-bold text-lg flex items-center gap-2">
@@ -21,4 +21,4 @@ const MarketingNavbar = () => {
   )
 }
 
-export default MarketingNavbar
+export default Navbar
