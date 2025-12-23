@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import Typography from '@/components/ui/typography'
 import { useRouter } from 'next/navigation'
 import { useActionState } from 'react'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 const initialState: ActionResponse = {
   success: false,

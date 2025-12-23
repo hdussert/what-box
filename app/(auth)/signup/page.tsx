@@ -10,7 +10,7 @@ import Typography from '@/components/ui/typography'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useActionState } from 'react'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 type SignUpState = ActionResponse & { data: SignUpData }
 
