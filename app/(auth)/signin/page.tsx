@@ -1,7 +1,7 @@
 'use client'
 
 import { ActionResponse } from '@/app/actions/response-type'
-import { signIn } from '@/app/actions/sign-in'
+import { signIn, SignInData } from '@/app/actions/sign-in'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
@@ -12,39 +12,59 @@ import { useRouter } from 'next/navigation'
 import { useActionState } from 'react'
 import toast from 'react-hot-toast'
 
-const initialState: ActionResponse = {
+type SignInState = ActionResponse & {
+  data: SignInData
+}
+const initialState: SignInState = {
   success: false,
   message: '',
   errors: undefined,
+  data: {
+    email: '',
+    password: '',
+  },
 }
 
 export default function SignInPage() {
   const router = useRouter()
 
   // Use useActionState hook for the form submission action
-  const [state, formAction, isPending] = useActionState<
-    ActionResponse,
-    FormData
-  >(async (prevState: ActionResponse, formData: FormData) => {
-    try {
-      const result = await signIn(formData)
-
-      // Handle successful submission
-      if (result.success) {
-        toast.success('Signed in successfully')
-        router.push('/dashboard')
-        router.refresh()
+  const [state, formAction, isPending] = useActionState<SignInState, FormData>(
+    async (_: SignInState, formData: FormData) => {
+      const data: SignInData = {
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
       }
 
-      return result
-    } catch (err) {
-      return {
-        success: false,
-        message: (err as Error).message || 'An error occurred',
-        errors: undefined,
+      try {
+        const result = await signIn(data)
+
+        // Handle successful submission
+        if (result.success) {
+          toast.success('Signed in successfully')
+          router.push('/dashboard')
+          router.refresh()
+        }
+
+        if (!result.success) {
+          toast.error(result.message || 'Sign in failed')
+        }
+
+        return {
+          ...result,
+          data,
+        }
+      } catch (err) {
+        return {
+          success: false,
+          message: (err as Error).message || 'An error occurred',
+          errors: undefined,
+          data,
+        }
       }
-    }
-  }, initialState)
+    },
+    initialState
+  )
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -72,6 +92,7 @@ export default function SignInPage() {
                 autoComplete="email"
                 required
                 disabled={isPending}
+                defaultValue={state.data.email}
               />
 
               <FieldError>
@@ -88,6 +109,7 @@ export default function SignInPage() {
                 autoComplete="current-password"
                 required
                 disabled={isPending}
+                defaultValue={state.data.password}
               />
               <FieldError>
                 {state?.errors?.password && state.errors.password[0]}

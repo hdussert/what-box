@@ -14,14 +14,8 @@ const SignInSchema = z.object({
 
 export type SignInData = z.infer<typeof SignInSchema>
 
-export async function signIn(formData: FormData): Promise<ActionResponse> {
+export async function signIn(data: SignInData): Promise<ActionResponse> {
   try {
-    // Extract data from form
-    const data = {
-      email: formData.get('email') as string,
-      password: formData.get('password') as string,
-    }
-
     // Validate with Zod
     const validationResult = SignInSchema.safeParse(data)
     if (!validationResult.success) {
@@ -38,9 +32,6 @@ export async function signIn(formData: FormData): Promise<ActionResponse> {
       return {
         success: false,
         message: 'Invalid email or password',
-        errors: {
-          email: ['Invalid email or password'],
-        },
       }
     }
 
@@ -50,9 +41,6 @@ export async function signIn(formData: FormData): Promise<ActionResponse> {
       return {
         success: false,
         message: 'Invalid email or password',
-        errors: {
-          password: ['Invalid email or password'],
-        },
       }
     }
 

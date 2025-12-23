@@ -19,15 +19,8 @@ const SignUpSchema = z
 
 export type SignUpData = z.infer<typeof SignUpSchema>
 
-export async function signUp(formData: FormData): Promise<ActionResponse> {
+export async function signUp(data: SignUpData): Promise<ActionResponse> {
   try {
-    // Extract data from form
-    const data = {
-      email: formData.get('email') as string,
-      password: formData.get('password') as string,
-      confirmPassword: formData.get('confirmPassword') as string,
-    }
-
     // Validate with Zod
     const validationResult = SignUpSchema.safeParse(data)
     if (!validationResult.success) {
@@ -38,8 +31,18 @@ export async function signUp(formData: FormData): Promise<ActionResponse> {
       }
     }
 
+    // Check if passwords match
+    if (data.password !== data.confirmPassword) {
+      return {
+        success: false,
+        message: "Passwords don't match",
+        errors: {
+          confirmPassword: ["Passwords don't match"],
+        },
+      }
+    }
+
     // Check if user already exists
-    console.log(data.email)
     const existingUser = await getUserByEmail(data.email)
     if (existingUser) {
       return {
