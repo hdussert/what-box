@@ -7,18 +7,14 @@ import z from 'zod'
 
 const NewBoxSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  items: z.array(z.string()).optional(),
 })
 
 export type NewBoxData = z.infer<typeof NewBoxSchema>
 
-export async function newBox(formData: FormData): Promise<ActionResponse> {
+export async function newBox(
+  data: NewBoxData
+): Promise<ActionResponse & { data?: { id: string } }> {
   try {
-    const data = {
-      name: formData.get('name') as string,
-      items: (formData.get('items') as string).split(','),
-    }
-
     const validationResult = NewBoxSchema.safeParse(data)
     if (!validationResult.success) {
       return {
@@ -29,11 +25,14 @@ export async function newBox(formData: FormData): Promise<ActionResponse> {
     }
 
     const user = await getCurrentUser()
-    await createBox(user.id, data.name, data.items)
+    const newBox = await createBox(user.id, data.name)
 
     return {
       success: true,
       message: 'Box created successfully',
+      data: {
+        id: newBox!.id,
+      },
     }
   } catch (error) {
     console.error('Error creating box:', error)
