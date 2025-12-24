@@ -9,9 +9,7 @@ interface JWTPayload {
   [key: string]: string | number | boolean | null | undefined
 }
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'MISSING_JWT_SECRET_IN_ENV_VARIABLE'
-)
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET)
 const JWT_EXPIRATION = '7d' // 7 days expiration time
 const REFRESH_THRESHOLD = 24 * 60 * 60 // 24 hours refresh threshold in seconds
 const JWT_TOKEN_COOKIE_NAME = 'auth_token'
