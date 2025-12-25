@@ -12,6 +12,9 @@ export const env = createEnv({
     // NODEMAILER
     DATABASE_URL: z.url(),
     JWT_SECRET: z.string().min(32),
+
+    // Present on Vercel deployments; absent locally
+    VERCEL: z.string().optional(),
   },
 
   /**
@@ -31,6 +34,8 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     DATABASE_URL: process.env.DATABASE_URL,
     JWT_SECRET: process.env.JWT_SECRET,
+
+    VERCEL: process.env.VERCEL,
 
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
