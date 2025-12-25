@@ -1,6 +1,8 @@
 import BoxesList from '@/components/boxes-list'
 import { Suspense } from 'react'
 
+export const dynamic = 'force-dynamic'
+
 const DashboardPage = () => {
   return (
     <div>
