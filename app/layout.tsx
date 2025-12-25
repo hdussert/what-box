@@ -18,7 +18,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   return (
     <html lang="en">
       <body className={`dark font-sans ${inter.variable} antialiased`}>
-        <Toaster position="top-center" />
+        <Toaster position="top-right" />
         {children}
       </body>
     </html>
