@@ -1,6 +1,5 @@
 import * as jose from 'jose'
 import { cookies } from 'next/headers'
-import { cache } from 'react'
 import 'server-only'
 
 // JWT types
@@ -72,32 +71,16 @@ export async function createSession(userId: string) {
   }
 }
 
-export const getSession = cache(async () => {
-  try {
-    const cookieStore = await cookies()
+export async function getSession() {
+  const cookieStore = await cookies()
 
-    const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME)?.value
-    if (!token) return null
+  const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME)?.value
+  if (!token) return null
 
-    const payload = await verifyJWT(token)
+  const payload = await verifyJWT(token)
 
-    return payload ? { userId: payload.userId } : null
-  } catch (error) {
-    // Handle the specific prerendering error
-    if (
-      error instanceof Error &&
-      error.message.includes('During prerendering, `cookies()` rejects')
-    ) {
-      console.log(
-        'Cookies not available during prerendering, returning null session'
-      )
-      return null
-    }
-
-    console.error('Error getting session:', error)
-    return null
-  }
-})
+  return payload ? { userId: payload.userId } : null
+}
 
 // Delete session by clearing the JWT cookie
 export async function deleteSession() {
