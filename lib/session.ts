@@ -26,8 +26,7 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jose.jwtVerify(token, JWT_SECRET)
     return payload as JWTPayload
-  } catch (error) {
-    console.error('JWT verification failed:', error)
+  } catch {
     return null
   }
 }
@@ -79,8 +78,12 @@ export async function getSession() {
   if (!token) return null
 
   const payload = await verifyJWT(token)
+  if (!payload) {
+    cookieStore.delete(JWT_TOKEN_COOKIE_NAME)
+    return null
+  }
 
-  return payload ? { userId: payload.userId } : null
+  return { userId: payload.userId }
 }
 
 // Delete session by clearing the JWT cookie

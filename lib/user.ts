@@ -27,43 +27,26 @@ export async function createUser(email: string, password: string) {
 
 // Get user by email
 export const getUserByEmail = cache(async (email: string) => {
-  try {
-    const user = await db.query.users.findFirst({
-      where: eq(users.email, email),
-    })
-    return user
-  } catch (error) {
-    console.error('Error getting user by email:', error)
-    return null
-  }
+  return db.query.users.findFirst({
+    where: eq(users.email, email),
+  })
 })
 
 export const getUserById = cache(async (id: string) => {
-  try {
-    const user = await db.query.users.findFirst({
-      where: eq(users.id, id),
-    })
-    return user
-  } catch (error) {
-    console.error('Error getting user by id:', error)
-    return null
-  }
+  return db.query.users.findFirst({
+    where: eq(users.id, id),
+  })
 })
 
 /**
  * Get the currently authenticated user based on the session.
  * If no user is authenticated, redirects to the sign-in page.
  */
-export const getCurrentUser = cache(async () => {
-  try {
-    const session = await getSession()
-    if (!session) redirect('/signin')
+export const getCurrentUser = async () => {
+  const session = await getSession()
+  if (!session) redirect('/signin')
 
-    const user = await getUserById(session.userId)
-    if (!user) redirect('/signin')
-    return user
-  } catch (error) {
-    console.error('Error getting current user:', error)
-    redirect('/signin')
-  }
-})
+  const user = await getUserById(session.userId)
+  if (!user) redirect('/signin')
+  return user
+}

@@ -1,32 +1,47 @@
 import { db } from '@/db'
 import { Box, boxes } from '@/db/schema'
-import { desc, eq } from 'drizzle-orm'
+import { getCurrentUser } from '@/lib/user'
+import { and, desc, eq } from 'drizzle-orm'
 import 'server-only'
 
-export async function createBox(userId: string, name: string) {
-  try {
-    const newBox = await db.insert(boxes).values({ name, userId }).returning()
+// Create a new box
+export async function createBox(userId: string, name: string): Promise<Box> {
+  const result = await db.insert(boxes).values({ name, userId }).returning()
 
-    if (newBox.length === 0) {
-      throw new Error('Failed to create box')
-    }
+  const newBox = result[0]
+  if (!newBox) throw new Error('Failed to create box')
 
-    return { id: newBox[0].id, name }
-  } catch (error) {
-    console.error('Error creating box:', error)
-    return null
-  }
+  return newBox
 }
 
-export async function getBoxes(userId: string): Promise<Array<Box>> {
-  try {
-    const userBoxes = await db.query.boxes.findMany({
-      where: eq(boxes.userId, userId),
-      orderBy: desc(boxes.createdAt),
-    })
-    return userBoxes
-  } catch (error) {
-    console.error('Error fetching boxes:', error)
-    return []
-  }
+// Fetch boxes
+export async function getBoxes(userId: string): Promise<Box[]> {
+  return db.query.boxes.findMany({
+    where: eq(boxes.userId, userId),
+    orderBy: desc(boxes.createdAt),
+  })
+}
+
+// Fetch a single box by ID
+export async function getBoxById(
+  userId: string,
+  boxId: string
+): Promise<Box | undefined> {
+  return db.query.boxes.findFirst({
+    where: and(eq(boxes.id, boxId), eq(boxes.userId, userId)), // keep single query helpers consistent
+  })
+}
+
+// User-specific box operations
+export async function createUserBox(name: string): Promise<Box> {
+  const user = await getCurrentUser()
+  return createBox(user.id, name)
+}
+export async function getUserBoxes(): Promise<Box[]> {
+  const user = await getCurrentUser()
+  return getBoxes(user.id)
+}
+export async function getUserBoxById(boxId: string): Promise<Box | undefined> {
+  const user = await getCurrentUser()
+  return getBoxById(user.id, boxId)
 }

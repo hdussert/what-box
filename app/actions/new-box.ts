@@ -1,8 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/app/actions/response-type'
-import { createBox } from '@/lib/box'
-import { getCurrentUser } from '@/lib/user'
+import { createUserBox } from '@/lib/box'
 import z from 'zod'
 
 const NewBoxSchema = z.object({
@@ -14,25 +13,21 @@ export type NewBoxData = z.infer<typeof NewBoxSchema>
 export async function newBox(
   data: NewBoxData
 ): Promise<ActionResponse & { data?: { id: string } }> {
-  try {
-    const validationResult = NewBoxSchema.safeParse(data)
-    if (!validationResult.success) {
-      return {
-        success: false,
-        message: 'Validation failed',
-        errors: z.flattenError(validationResult.error).fieldErrors,
-      }
+  const validationResult = NewBoxSchema.safeParse(data)
+  if (!validationResult.success) {
+    return {
+      success: false,
+      message: 'Validation failed',
+      errors: z.flattenError(validationResult.error).fieldErrors,
     }
+  }
 
-    const user = await getCurrentUser()
-    const newBox = await createBox(user.id, data.name)
-
+  try {
+    const newBox = await createUserBox(data.name)
     return {
       success: true,
       message: 'Box created successfully',
-      data: {
-        id: newBox!.id,
-      },
+      data: newBox,
     }
   } catch (error) {
     console.error('Error creating box:', error)
