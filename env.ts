@@ -9,9 +9,10 @@ export const env = createEnv({
   server: {
     NODE_ENV: z.enum(['development', 'test', 'production']),
 
-    // NODEMAILER
-    DATABASE_URL: z.url(),
     JWT_SECRET: z.string().min(32),
+
+    DATABASE_URL: z.url(),
+    BLOB_READ_WRITE_TOKEN: z.string(),
 
     // Present on Vercel deployments; absent locally
     VERCEL: z.string().optional(),
@@ -36,6 +37,7 @@ export const env = createEnv({
     JWT_SECRET: process.env.JWT_SECRET,
 
     VERCEL: process.env.VERCEL,
+    BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
 
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
