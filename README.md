@@ -1,5 +1,3 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
 ## Getting Started
 
 First, run the development server:
@@ -14,23 +12,43 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+I’m the GitHub Copilot Chat Assistant.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database schema & migrations (Drizzle + Postgres/Neon)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project uses **Drizzle ORM** with **Postgres (Neon)**. Schema changes are applied via **migrations**.
 
-## Learn More
+### Env notes
 
-To learn more about Next.js, take a look at the following resources:
+Pull env vars from Vercel (so `DATABASE_URL` points to the correct DB):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+vercel env pull .env.development.local --environment=development
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1) Make a schema change
 
-## Deploy on Vercel
+Edit the schema in `db/schema.ts` (tables: `users`, `boxes`, `boxes_images`, etc.).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2) Generate a migration (creates SQL files)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Generate migration files after any schema edit:
+
+```bash
+# Development
+yarn db:generate:dev
+
+```
+
+This writes migration SQL files to the configured `out` folder (e.g. `./drizzle`) and updates `drizzle/meta/_journal.json`. **Commit these migration files**.
+
+### 3) Apply migrations to the database (updates tables)
+
+Run migrations against the target environment:
+
+```bash
+# Development
+yarn db:migrate:dev
+```
+
+> If migrations aren’t being picked up, check you have `*.sql` files under `./drizzle` and that `drizzle/meta/_journal.json` contains migration entries.
