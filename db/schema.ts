@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 import { InferSelectModel, sql } from 'drizzle-orm'
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { pgTable, text } from 'drizzle-orm/pg-core'
 
 // Common column definitions
 const id = () =>
@@ -9,7 +9,7 @@ const id = () =>
     .$default(() => randomUUID())
 
 const createdAt = () =>
-  timestamp('created_at')
+  text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull()
 
@@ -39,7 +39,7 @@ export const boxes = pgTable('boxes', {
   createdAt: createdAt(),
 })
 
-export const boxesImages = pgTable('boxes_images', {
+export const images = pgTable('images', {
   id: id(),
   boxId: boxIdRef(),
   userId: userIdRef(),
@@ -48,6 +48,18 @@ export const boxesImages = pgTable('boxes_images', {
   createdAt: createdAt(),
 })
 
+export const items = pgTable('items', {
+  id: id(),
+  userId: userIdRef(),
+  boxId: boxIdRef(),
+  imageId: text('image_id').references(() => images.id, {
+    onDelete: 'set null',
+  }), // optional
+  name: text('name').notNull(),
+  createdAt: createdAt(),
+})
+
 export type User = InferSelectModel<typeof users>
 export type Box = InferSelectModel<typeof boxes>
-export type BoxImage = InferSelectModel<typeof boxesImages>
+export type Image = InferSelectModel<typeof images>
+export type Item = InferSelectModel<typeof items>
