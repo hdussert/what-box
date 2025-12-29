@@ -1,25 +1,20 @@
 'use client'
 
-import { ActionResponse } from '@/app/actions/response-type'
-import { SignInData, signIn } from '@/app/actions/sign-in'
+import { SignInState, signIn } from '@/app/actions/sign-in'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
 
-type SignInState = ActionResponse & {
-  data: SignInData
-}
 const initialState: SignInState = {
   success: false,
   message: '',
   errors: undefined,
-  data: {
+  values: {
     email: '',
-    password: '',
   },
 }
 
@@ -28,41 +23,23 @@ const SignInForm = () => {
 
   // Use useActionState hook for the form submission action
   const [state, formAction, isPending] = useActionState<SignInState, FormData>(
-    async (_: SignInState, formData: FormData) => {
-      const data: SignInData = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-      }
-
-      try {
-        const result = await signIn(data)
-
-        // Handle successful submission
-        if (result.success) {
-          toast.success('Signed in successfully')
-          router.push('/dashboard')
-          router.refresh()
-        }
-
-        if (!result.success) {
-          toast.error(result.message || 'Sign in failed')
-        }
-
-        return {
-          ...result,
-          data,
-        }
-      } catch (err) {
-        return {
-          success: false,
-          message: (err as Error).message || 'An error occurred',
-          errors: undefined,
-          data,
-        }
-      }
-    },
+    signIn,
     initialState
   )
+
+  useEffect(() => {
+    if (!state.message) return
+
+    if (state.success) {
+      toast.success(state.message)
+      router.push('/dashboard')
+      router.refresh()
+    } else {
+      toast.error(state.message)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.success, state.message])
+
   return (
     <form action={formAction} className="space-y-6">
       {state?.message && !state.success && (
@@ -79,7 +56,7 @@ const SignInForm = () => {
           autoComplete="email"
           required
           disabled={isPending}
-          defaultValue={state.data.email}
+          defaultValue={state.values.email}
         />
 
         <FieldError>{state?.errors?.email && state.errors.email[0]}</FieldError>
@@ -94,7 +71,6 @@ const SignInForm = () => {
           autoComplete="current-password"
           required
           disabled={isPending}
-          defaultValue={state.data.password}
         />
         <FieldError>
           {state?.errors?.password && state.errors.password[0]}
