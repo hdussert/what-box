@@ -8,7 +8,7 @@ import {
 } from '@/app/components/side/SideNavItem'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Boxes, LogOut, PackagePlus, Settings } from 'lucide-react'
+import { Boxes, LogOut, PackagePlus } from 'lucide-react'
 
 type SideItemList = Array<SideNavItemProps & { key: string }>
 
@@ -22,12 +22,6 @@ const Side = () => {
       name: 'New box',
       Icon: PackagePlus,
       onClick: openNewBoxModal,
-    },
-    {
-      key: 'settings',
-      name: 'Settings',
-      Icon: Settings,
-      href: '/dashboard/settings',
     },
   ]
   return (
