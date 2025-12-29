@@ -1,7 +1,6 @@
 'use client'
 
-import { newBox, NewBoxData } from '@/app/actions/new-box'
-import { ActionResponse } from '@/app/actions/response-type'
+import { newBox, NewBoxState } from '@/app/actions/new-box'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -10,21 +9,8 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
-
-type NewBoxState = ActionResponse & {
-  data: NewBoxData
-}
-
-const initialState: NewBoxState = {
-  success: false,
-  message: '',
-  errors: undefined,
-  data: {
-    name: '',
-  },
-}
 
 type NewBoxFormProps = {
   onSuccess: (boxId: string) => void
@@ -32,37 +18,33 @@ type NewBoxFormProps = {
 
 const NewBoxForm = ({ onSuccess }: NewBoxFormProps) => {
   // Use useActionState hook for the form submission action
-  const [state, formAction, isPending] = useActionState<NewBoxState, FormData>(
-    async (_: NewBoxState, formData: FormData) => {
-      const data = {
-        name: formData.get('name') as string,
-      }
-      try {
-        const result = await newBox(data)
 
-        // Handle successful submission
-        if (result.success) {
-          toast.success('Box created successfully')
-          onSuccess(result.data!.id)
-        } else {
-          toast.error(result.message)
-        }
-
-        return {
-          ...result,
-          data,
-        }
-      } catch (err) {
-        return {
-          success: false,
-          message: (err as Error).message || 'An error occurred',
-          errors: undefined,
-          data,
-        }
-      }
+  const initialState: NewBoxState = {
+    success: false,
+    message: '',
+    errors: undefined,
+    values: {
+      name: '',
     },
+  }
+
+  const [state, formAction, isPending] = useActionState<NewBoxState, FormData>(
+    newBox,
     initialState
   )
+
+  useEffect(() => {
+    if (!state.message) return
+
+    if (state.success) {
+      toast.success(state.message)
+      onSuccess(state.result!.id)
+    } else {
+      toast.error(state.message)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.success, state.message])
+
   return (
     <form action={formAction}>
       <FieldGroup>
@@ -76,7 +58,7 @@ const NewBoxForm = ({ onSuccess }: NewBoxFormProps) => {
             name="name"
             placeholder="My Box"
             disabled={isPending}
-            defaultValue={state.data.name}
+            defaultValue={state.values.name}
           />
           <FieldError>{state.errors?.name}</FieldError>
         </Field>

@@ -8,33 +8,48 @@ const NewBoxSchema = z.object({
   name: z.string().min(1, 'Name is required'),
 })
 
-export type NewBoxData = z.infer<typeof NewBoxSchema>
+type NewBoxData = z.infer<typeof NewBoxSchema>
+type NewBoxValues = Pick<NewBoxData, 'name'>
+type NewBoxResult = {
+  id: string
+}
 
+export type NewBoxState = ActionResponse & {
+  values: NewBoxValues
+  result?: NewBoxResult
+}
 export async function newBox(
-  data: NewBoxData
-): Promise<ActionResponse & { data?: { id: string } }> {
-  const validationResult = NewBoxSchema.safeParse(data)
-  if (!validationResult.success) {
-    return {
-      success: false,
-      message: 'Validation failed',
-      errors: z.flattenError(validationResult.error).fieldErrors,
-    }
+  prevState: NewBoxState,
+  formData: FormData
+): Promise<NewBoxState> {
+  const raw = {
+    name: formData.get('name') as string,
   }
 
+  const values: NewBoxValues = { name: raw.name }
   try {
+    const data = NewBoxSchema.parse(raw)
     const newBox = await createUserBox(data.name)
     return {
       success: true,
       message: 'Box created successfully',
-      data: newBox,
+      values,
+      result: { id: newBox.id },
     }
   } catch (error) {
-    console.error('Error creating box:', error)
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        message: 'Validation failed',
+        errors: z.flattenError(error).fieldErrors,
+        values,
+      }
+    }
     return {
       success: false,
-      message: 'An error occurred while creating the box',
-      error: (error as Error).message,
+      message: (error as Error).message,
+      error: 'Failed to create box',
+      values,
     }
   }
 }
