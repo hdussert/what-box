@@ -18,50 +18,37 @@ const SignUpSchema = z
   })
 
 export type SignUpData = z.infer<typeof SignUpSchema>
+export type SignupValues = Pick<SignUpData, 'email'>
+export type SignUpState = ActionResponse & {
+  values: SignupValues
+}
 
-export async function signUp(data: SignUpData): Promise<ActionResponse> {
+export async function signUp(
+  prevState: SignUpState,
+  formData: FormData
+): Promise<SignUpState> {
+  const raw = {
+    email: formData.get('email') as string,
+    password: formData.get('password') as string,
+    confirmPassword: formData.get('confirmPassword') as string,
+  }
+
+  const values: SignupValues = { email: raw.email }
+
   try {
     // Validate with Zod
-    const validationResult = SignUpSchema.safeParse(data)
-    if (!validationResult.success) {
-      return {
-        success: false,
-        message: 'Validation failed',
-        errors: z.flattenError(validationResult.error).fieldErrors,
-      }
-    }
-
-    // Check if passwords match
-    if (data.password !== data.confirmPassword) {
-      return {
-        success: false,
-        message: "Passwords don't match",
-        errors: {
-          confirmPassword: ["Passwords don't match"],
-        },
-      }
-    }
+    const data = SignUpSchema.parse(raw)
 
     // Check if user already exists
     const existingUser = await getUserByEmail(data.email)
     if (existingUser) {
-      return {
-        success: false,
-        message: 'User with this email already exists',
-        errors: {
-          email: ['User with this email already exists'],
-        },
-      }
+      throw new Error('Failed to create account')
     }
 
     // Create new user
     const user = await createUser(data.email, data.password)
     if (!user) {
-      return {
-        success: false,
-        message: 'Failed to create user',
-        error: 'Failed to create user',
-      }
+      throw new Error('Failed to create account')
     }
 
     // Create session for the newly registered user
@@ -70,13 +57,24 @@ export async function signUp(data: SignUpData): Promise<ActionResponse> {
     return {
       success: true,
       message: 'Account created successfully',
+      values,
     }
   } catch (error) {
-    console.error('Sign up error:', error)
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        message: 'Validation failed',
+        errors: z.flattenError(error).fieldErrors,
+        values,
+      }
+    }
     return {
       success: false,
-      message: 'An error occurred while creating your account',
+      message:
+        (error as Error).message ||
+        'An error occurred while creating your account',
       error: 'Failed to create account',
+      values,
     }
   }
 }
