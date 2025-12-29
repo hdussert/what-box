@@ -11,18 +11,16 @@ import 'server-only'
 export async function createUser(email: string, password: string) {
   const hashedPassword = await hashPassword(password)
 
-  try {
-    const result = await db
-      .insert(users)
-      .values({ email, password: hashedPassword })
-      .returning()
+  const [user] = await db
+    .insert(users)
+    .values({ email, password: hashedPassword })
+    .returning({
+      id: users.id,
+      email: users.email,
+    })
 
-    const user = { id: result[0].id, email: result[0].email }
-    return user
-  } catch (error) {
-    console.error('Error creating user:', error)
-    return null
-  }
+  if (!user) throw new Error('Failed to create the account')
+  return user
 }
 
 // Get user by email
