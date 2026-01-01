@@ -1,79 +1,73 @@
 'use client'
 
+import { useMachine } from '@xstate/react'
 import React, {
   ChangeEvent,
   createContext,
   RefObject,
   useContext,
-  useEffect,
   useMemo,
   useRef,
-  useState,
 } from 'react'
+import { ImageUploadActorRef } from './image-upload-machine'
+import {
+  imagesUploaderMachine,
+  type UploadItem,
+} from './images-uploader-machine'
+
+type UploadActorRef = ImageUploadActorRef
 
 type ImagesInputContextValue = {
-  inputRef: RefObject<HTMLInputElement | null>
-  images: File[]
-  previews: string[]
-  handleImagesChange: (event: ChangeEvent<HTMLInputElement>) => void
-  clearAll: () => void
-  clear: (index: number) => void
+  fileInputRef: RefObject<HTMLInputElement | null>
+  items: UploadItem[]
+  getUploadActor: (uploadId: string) => UploadActorRef
+  onFilesSelected: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 const ImagesInputContext = createContext<ImagesInputContextValue | null>(null)
 
-function useImagesInputState() {
-  const [images, setImages] = useState<File[]>([])
-  const [previews, setPreviews] = useState<string[]>([])
-  const inputRef = useRef<HTMLInputElement>(null)
+export function ImagesInputProvider({
+  children,
+  boxId,
+}: React.PropsWithChildren<{ boxId: string }>) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [state, send] = useMachine(imagesUploaderMachine, {
+    input: { boxId },
+  })
 
-  const clearAll = () => {
-    setImages([])
-    previews.forEach(URL.revokeObjectURL)
-    setPreviews([])
-  }
+  const items: UploadItem[] = useMemo(() => {
+    return state.context.items
+  }, [state.context.items])
 
-  const clear = (index: number) => {
-    setImages((imgs) => imgs.filter((_, i) => i !== index))
-    setPreviews((prev) => {
-      URL.revokeObjectURL(prev[index])
-      return prev.filter((_, i) => i !== index)
-    })
-  }
-
-  const handleImagesChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onFilesSelected = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : []
-    setImages((images) => images.concat(files))
-
-    const newPreviews = files.map((f) => URL.createObjectURL(f))
-    setPreviews((previews) => previews.concat(newPreviews))
-
-    // Reset the input value to allow re-uploading the same file if needed
-    if (inputRef.current) {
-      inputRef.current.value = ''
-    }
+    if (!files.length) return
+    send({ type: 'ADD_FILES', files })
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
-  // Sync inputRef files with images state
-  useEffect(() => {
-    if (inputRef.current) {
-      const dt = new DataTransfer()
-      images.forEach((file) => dt.items.add(file))
-      inputRef.current.files = dt.files
+  const getUploadActor = (uploadId: string) => {
+    const children = state.children as Record<
+      string,
+      UploadActorRef | undefined
+    >
+    const ref = children[uploadId]
+    if (!ref) {
+      throw new Error(`Missing upload actor for uploadId="${uploadId}"`)
     }
-  }, [images])
+    return ref
+  }
 
-  // cleanup on unmount
-  useEffect(() => clearAll, []) // clears previews if provider unmounts
-
-  return useMemo(
-    () => ({ inputRef, images, previews, handleImagesChange, clearAll, clear }),
-    [images, previews]
+  const value = useMemo(
+    () => ({
+      fileInputRef,
+      items,
+      getUploadActor,
+      onFilesSelected,
+    }),
+    [items, send]
   )
-}
 
-export function ImagesInputProvider({ children }: React.PropsWithChildren) {
-  const value = useImagesInputState()
   return (
     <ImagesInputContext.Provider value={value}>
       {children}

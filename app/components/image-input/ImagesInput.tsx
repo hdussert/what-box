@@ -1,6 +1,7 @@
 import { useImagesInput } from '@/app/components/image-input/ImagesInputProvider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { ImagePlus } from 'lucide-react'
 import { InputHTMLAttributes } from 'react'
 
 type ImagesInputProps = Omit<
@@ -9,14 +10,14 @@ type ImagesInputProps = Omit<
 >
 
 export const ImagesInput = (props: ImagesInputProps) => {
-  const { inputRef, handleImagesChange } = useImagesInput()
+  const { fileInputRef: inputRef, onFilesSelected } = useImagesInput()
 
   const openPicker = () => {
     inputRef.current?.click()
   }
 
   return (
-    <div>
+    <div className="inline-block">
       <Input
         ref={inputRef}
         {...props}
@@ -25,16 +26,18 @@ export const ImagesInput = (props: ImagesInputProps) => {
         multiple
         accept="image/jpeg,image/png,image/webp"
         onChange={(e) => {
-          handleImagesChange(e)
+          onFilesSelected(e)
           props.onChange?.(e)
         }}
       />
       <Button
+        variant="outline"
         onClick={(e) => {
           e.preventDefault()
           openPicker()
         }}
       >
+        <ImagePlus />
         Add images
       </Button>
     </div>

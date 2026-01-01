@@ -24,6 +24,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@vercel/blob": "^2.0.0",
+    "@xstate/react": "^6.0.0",
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -36,9 +37,11 @@
     "pg": "^8.16.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-qr-code": "^2.0.18",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "vaul": "^1.1.2",
+    "xstate": "^5.25.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {
