@@ -1,8 +1,9 @@
 'use server'
 
 import { ActionResponse } from '@/app/actions/response-type'
-import { createUserBox } from '@/lib/box'
-import z from 'zod'
+import { createUserBox, getUserBoxByShortId } from '@/lib/box'
+import { generateShortId } from '@/lib/id'
+import { z } from 'zod'
 
 const NewBoxSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -29,7 +30,18 @@ export async function newBox(
   const values: NewBoxValues = { name: raw.name }
   try {
     const data = NewBoxSchema.parse(raw)
-    const newBox = await createUserBox(data.name)
+
+    let shortId = ''
+    while (true) {
+      shortId = generateShortId()
+      // Check for uniqueness of shortId for this user
+      const existingBox = await getUserBoxByShortId(shortId)
+      if (!existingBox) {
+        break
+      }
+    }
+
+    const newBox = await createUserBox(data.name, shortId)
     return {
       success: true,
       message: 'Box created successfully',

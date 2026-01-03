@@ -33,6 +33,7 @@ export const users = pgTable('users', {
 
 export const boxes = pgTable('boxes', {
   id: id(),
+  shortId: text('short_id').notNull(),
   name: text('name').notNull(),
   items: text('items').array().notNull().default([]),
   userId: userIdRef(),

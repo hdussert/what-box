@@ -32,10 +32,20 @@ export async function getBoxById(
   })
 }
 
-// User-specific box operations
-export async function createUserBox(name: string): Promise<Box> {
+export async function getBoxByShortId(
+  userId: string,
+  shortId: string
+): Promise<Box | undefined> {
+  return db.query.boxes.findFirst({
+    where: and(eq(boxes.shortId, shortId), eq(boxes.userId, userId)), // keep single query helpers consistent
+  })
+}
+export async function createUserBox(
+  name: string,
+  shortId: string
+): Promise<Box> {
   const user = await getCurrentUser()
-  return createBox(user.id, name)
+  return createBox(user.id, name, shortId)
 }
 export async function getUserBoxes(): Promise<Box[]> {
   const user = await getCurrentUser()
@@ -44,4 +54,11 @@ export async function getUserBoxes(): Promise<Box[]> {
 export async function getUserBoxById(boxId: string): Promise<Box | undefined> {
   const user = await getCurrentUser()
   return getBoxById(user.id, boxId)
+}
+
+export async function getUserBoxByShortId(
+  shortId: string
+): Promise<Box | undefined> {
+  const user = await getCurrentUser()
+  return getBoxByShortId(user.id, shortId)
 }
