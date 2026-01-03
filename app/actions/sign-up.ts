@@ -47,9 +47,6 @@ export async function signUp(
 
     // Create new user
     const user = await createUser(data.email, data.password)
-    if (!user) {
-      throw new Error('Failed to create account')
-    }
 
     // Create session for the newly registered user
     await createSession(user.id)
