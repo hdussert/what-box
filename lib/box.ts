@@ -8,7 +8,16 @@ import 'server-only'
 export async function createBox(userId: string, name: string): Promise<Box> {
   const result = await db.insert(boxes).values({ name, userId }).returning()
 
-  const newBox = result[0]
+export async function createBox(
+  userId: string,
+  name: string,
+  shortId: string
+): Promise<Box> {
+  const [newBox] = await db
+    .insert(boxes)
+    .values({ name, userId, shortId })
+    .returning()
+
   if (!newBox) throw new Error('Failed to create box')
 
   return newBox
