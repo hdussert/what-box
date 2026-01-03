@@ -33,9 +33,9 @@ export const users = pgTable('users', {
 
 export const boxes = pgTable('boxes', {
   id: id(),
-  shortId: text('short_id').notNull(),
+  shortId: text('short_id'),
   name: text('name').notNull(),
-  items: text('items').array().notNull().default([]),
+  description: text('description'),
   userId: userIdRef(),
   createdAt: createdAt(),
 })
@@ -53,10 +53,10 @@ export const items = pgTable('items', {
   id: id(),
   userId: userIdRef(),
   boxId: boxIdRef(),
-  imageId: text('image_id').references(() => images.id, {
-    onDelete: 'set null',
-  }), // optional
   name: text('name').notNull(),
+  description: text('description'),
+  condition: text('condition'),
+  quantity: text('quantity').notNull(),
   createdAt: createdAt(),
 })
 
