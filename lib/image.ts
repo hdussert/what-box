@@ -1,6 +1,6 @@
 import { db } from '@/db'
 import { Image, images } from '@/db/schema'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, desc, eq, inArray } from 'drizzle-orm'
 import 'server-only'
 
 /** Create a new Image record */
@@ -40,10 +40,10 @@ export async function deleteImageRecord(
 /** Fetch images for a specific box belonging to a user */
 export async function getImages(
   userId: string,
-  boxId: string
+  boxIds: string[]
 ): Promise<Image[]> {
   return db.query.images.findMany({
-    where: and(eq(images.boxId, boxId), eq(images.userId, userId)),
+    where: and(inArray(images.boxId, boxIds), eq(images.userId, userId)),
     orderBy: desc(images.createdAt),
   })
 }

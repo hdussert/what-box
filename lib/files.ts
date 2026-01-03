@@ -10,6 +10,6 @@ export async function uploadFile(file: Blob, boxId: string) {
 }
 
 /** Delete a file from Vercel Blob Storage by its file path. */
-export async function deleteFile(pathname: string) {
+export async function deleteFiles(pathname: string | string[]) {
   return del(pathname)
 }

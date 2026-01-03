@@ -49,6 +49,26 @@ export async function getBoxByShortId(
     where: and(eq(boxes.shortId, shortId), eq(boxes.userId, userId)), // keep single query helpers consistent
   })
 }
+
+export async function deleteBoxes(
+  userId: string,
+  boxIds: string[]
+): Promise<void> {
+  const result = await db
+    .delete(boxes)
+    .where(
+      and(
+        inArray(boxes.id, boxIds),
+        eq(boxes.userId, userId) // ensure the box belongs to the current user
+      )
+    )
+    .returning({ id: boxes.id })
+
+  if (result.length === 0) {
+    throw new Error('No valid boxes to delete')
+  }
+}
+
 export async function createUserBox(
   name: string,
   shortId: string
