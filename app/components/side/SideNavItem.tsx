@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { SidebarMenuButton } from '@/components/ui/sidebar'
 import Link from 'next/link'
 import { ComponentType } from 'react'
 
@@ -18,21 +18,25 @@ export type SideNavItemProps = SideNavLinkProps | SideButtonProps
 
 const SideNavLink = ({ name, Icon, href }: SideNavLinkProps) => {
   return (
-    <Button className="justify-start w-full" asChild variant="ghost">
+    <SidebarMenuButton asChild tooltip={name} className="whitespace-nowrap">
       <Link href={href}>
         <Icon />
         {name}
       </Link>
-    </Button>
+    </SidebarMenuButton>
   )
 }
 
 const SideButton = ({ name, Icon, onClick }: SideButtonProps) => {
   return (
-    <Button onClick={onClick} className="justify-start w-full" variant="ghost">
+    <SidebarMenuButton
+      className="hover:cursor-pointer whitespace-nowrap"
+      onClick={onClick}
+      tooltip={name}
+    >
       <Icon />
       {name}
-    </Button>
+    </SidebarMenuButton>
   )
 }
 

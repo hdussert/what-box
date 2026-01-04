@@ -7,7 +7,14 @@ import {
   SideNavItemProps,
 } from '@/app/components/side/SideNavItem'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarRail,
+} from '@/components/ui/sidebar'
 import { Boxes, LogOut, PackagePlus } from 'lucide-react'
 
 type SideItemList = Array<SideNavItemProps & { key: string }>
@@ -25,23 +32,28 @@ const Side = () => {
     },
   ]
   return (
-    <div className="bg-sidebar border-sidebar-border h-full flex flex-col gap-2 max-w-64 border-r pt-12 px-4 ">
-      <div>
-        {items.map((item) => (
-          <SideNavItem {...item} key={item.key} />
-        ))}
-      </div>
-
-      <Separator />
-      <Button
-        onClick={() => signOut()}
-        className="justify-start"
-        variant="ghost"
-      >
-        <LogOut />
-        Sign out
-      </Button>
-    </div>
+    <Sidebar collapsible="icon">
+      <SidebarContent>
+        <SidebarMenu>
+          {items.map((item) => (
+            <SidebarMenuItem key={item.key}>
+              <SideNavItem {...item} key={item.key} />
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
+      <SidebarFooter>
+        <Button
+          onClick={() => signOut()}
+          className="justify-start"
+          variant="ghost"
+        >
+          <LogOut />
+          Sign out
+        </Button>
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
   )
 }
 
