@@ -1,15 +1,19 @@
 import { NewBoxModalProvider } from '@/app/components/providers/NewBoxModalProvider'
 import Side from '@/app/components/side/Side'
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { PropsWithChildren } from 'react'
 
 const DashboardLayout = ({ children }: PropsWithChildren) => {
   return (
-    <NewBoxModalProvider>
-      <div className="flex h-screen">
+    <SidebarProvider>
+      <NewBoxModalProvider>
         <Side />
-        <div className="p-8 w-full">{children}</div>
-      </div>
-    </NewBoxModalProvider>
+        <main className="px-6 py-2 w-full">
+          <SidebarTrigger />
+          {children}
+        </main>
+      </NewBoxModalProvider>
+    </SidebarProvider>
   )
 }
 
