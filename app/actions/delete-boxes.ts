@@ -1,3 +1,5 @@
+'use server'
+
 import { deleteBoxes } from '@/lib/box'
 import { deleteFiles } from '@/lib/files'
 import { getImages } from '@/lib/image'

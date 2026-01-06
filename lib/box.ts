@@ -1,12 +1,51 @@
 import { db } from '@/db'
 import { Box, boxes } from '@/db/schema'
 import { getCurrentUser } from '@/lib/user'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq, ilike, inArray, sql } from 'drizzle-orm'
 import 'server-only'
 
-// Create a new box
-export async function createBox(userId: string, name: string): Promise<Box> {
-  const result = await db.insert(boxes).values({ name, userId }).returning()
+export type BoxesSort =
+  | 'createdAt_desc'
+  | 'createdAt_asc'
+  | 'name_asc'
+  | 'name_desc'
+
+export type BoxesQuery = {
+  search?: string
+  sort?: BoxesSort
+  page?: number
+  pageSize?: number
+}
+
+export type Paginated<T> = {
+  items: T[]
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
+
+// ===== Utility Functions =====
+
+function toOrderBy(sort: BoxesSort | undefined) {
+  switch (sort) {
+    case 'createdAt_asc':
+      return asc(boxes.createdAt)
+    case 'name_asc':
+      return asc(boxes.name)
+    case 'name_desc':
+      return desc(boxes.name)
+    case 'createdAt_desc':
+    default:
+      return desc(boxes.createdAt)
+  }
+}
+
+function clampInt(value: unknown, fallback: number, min: number, max: number) {
+  const n = typeof value === 'number' ? value : Number(value)
+  if (!Number.isFinite(n)) return fallback
+  return Math.min(max, Math.max(min, Math.trunc(n)))
+}
 
 export async function createBox(
   userId: string,
@@ -90,4 +129,40 @@ export async function getUserBoxByShortId(
 ): Promise<Box | undefined> {
   const user = await getCurrentUser()
   return getBoxByShortId(user.id, shortId)
+}
+export async function getUserBoxesPaginated(
+  query: BoxesQuery = {}
+): Promise<Paginated<Box>> {
+  const user = await getCurrentUser()
+
+  const search = query.search?.trim()
+  const pageSize = clampInt(query.pageSize ?? 20, 20, 5, 100)
+  const page = clampInt(query.page ?? 1, 1, 1, 1_000_000)
+
+  const filters = [
+    eq(boxes.userId, user.id),
+    search ? ilike(boxes.name, `%${search}%`) : undefined,
+    // Add more filters here in the future
+  ].filter(Boolean)
+
+  const whereClause = and(...filters)
+
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(boxes)
+    .where(whereClause)
+
+  const total = Number(count) || 0
+  const totalPages = Math.max(1, Math.ceil(total / pageSize))
+  const safePage = Math.min(page, totalPages)
+  const offset = (safePage - 1) * pageSize
+
+  const items = await db.query.boxes.findMany({
+    where: whereClause,
+    orderBy: toOrderBy(query.sort),
+    limit: pageSize,
+    offset,
+  })
+
+  return { items, total, page: safePage, pageSize, totalPages }
 }
