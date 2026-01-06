@@ -4,6 +4,7 @@ import { newBox, NewBoxState } from '@/app/actions/new-box'
 import { Button } from '@/components/ui/button'
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -46,24 +47,27 @@ const NewBoxForm = ({ onSuccess }: NewBoxFormProps) => {
   }, [state.success, state.message])
 
   return (
-    <form action={formAction}>
+    <form action={formAction} className="flex flex-col">
       <FieldGroup>
         {state?.message && !state.success && (
           <FieldError>{state.message}</FieldError>
         )}
         <Field>
           <FieldLabel>Name</FieldLabel>
+          <FieldDescription>
+            Use a descriptive name to identify this box.
+          </FieldDescription>
           <Input
             type="text"
             name="name"
-            placeholder="My Box"
+            placeholder="Bedroom, Kitchen..."
             disabled={isPending}
             defaultValue={state.values.name}
           />
           <FieldError>{state.errors?.name}</FieldError>
         </Field>
       </FieldGroup>
-      <Button type="submit" className="mt-6" disabled={isPending}>
+      <Button type="submit" className="mt-6 self-end" disabled={isPending}>
         {isPending ? 'Creating...' : 'Create'}
       </Button>
     </form>
