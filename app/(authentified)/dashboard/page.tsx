@@ -1,17 +1,24 @@
-import BoxesList from '@/components/boxes-list'
+import BoxesTable from '@/app/components/box/BoxesTable'
+import { SortOptions } from '@/app/components/box/BoxesTableToolbar'
+import Typography from '@/components/ui/typography'
 import { Suspense } from 'react'
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic' // ← Force Next.js à re-render à chaque requête
 
-const DashboardPage = () => {
+type DashboardPageProps = {
+  searchParams?: Promise<{ search?: string; sort?: SortOptions; page?: string }>
+}
+
+export default async function DashboardPage({
+  searchParams,
+}: DashboardPageProps) {
+  const _searchParams = await searchParams
   return (
     <div>
-      <div>My boxes</div>
+      <Typography.H1 className="mb-6">My Boxes</Typography.H1>
       <Suspense fallback={<div>Loading...</div>}>
-        <BoxesList />
+        <BoxesTable searchParams={_searchParams} />
       </Suspense>
     </div>
   )
 }
-
-export default DashboardPage
