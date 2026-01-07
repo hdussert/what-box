@@ -79,7 +79,7 @@ export async function getSession() {
 
   const payload = await verifyJWT(token)
   if (!payload) {
-    cookieStore.delete(JWT_TOKEN_COOKIE_NAME)
+    // cookieStore.delete(JWT_TOKEN_COOKIE_NAME)
     return null
   }
 
