@@ -1,6 +1,8 @@
 'use client'
 
 import { deleteBoxesAndAssociatedDatas } from '@/app/actions/delete-boxes'
+import BoxTableHeaderCell from '@/app/components/box/table/BoxTableHeaderCell'
+import { useBoxTableContext } from '@/app/components/box/table/BoxTableProvider'
 // import { deleteBoxes } from '@/app/actions/box-actions'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -20,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Box } from '@/db/schema'
 import {
   ColumnDef,
   RowSelectionState,
@@ -32,19 +35,13 @@ import Link from 'next/link'
 import { useMemo, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
-export type BoxesDataTableRow = {
-  id: string
-  shortId: string | null
-  name: string
-}
+export type BoxesDataTableRow = Pick<
+  Box,
+  'id' | 'shortId' | 'name' | 'createdAt'
+>
 
-type Props = {
-  data: BoxesDataTableRow[]
-  page: number
-  totalPages: number
-}
-
-export default function BoxesDataTable({ data }: Props) {
+export default function BoxTableData() {
+  const { boxes } = useBoxTableContext()
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -77,16 +74,16 @@ export default function BoxesDataTable({ data }: Props) {
         size: 32,
       },
       {
-        accessorKey: 'id',
-        header: 'Id',
-
+        accessorKey: 'shortId',
+        header: () => <BoxTableHeaderCell field="shortId" label="ID" />,
         cell: ({ row }) => (
           <Link href={`/boxes/${row.original.id}`}>{row.original.shortId}</Link>
         ),
       },
       {
         accessorKey: 'name',
-        header: 'Name',
+        header: () => <BoxTableHeaderCell field="name" label="Name" />,
+
         cell: ({ row }) => (
           <Link href={`/boxes/${row.original.id}`}>{row.original.name}</Link>
         ),
@@ -95,12 +92,17 @@ export default function BoxesDataTable({ data }: Props) {
   }, [])
 
   const table = useReactTable({
-    data,
+    data: boxes,
     columns,
     state: { rowSelection },
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     enableRowSelection: true,
+
+    // Note: Pagination, filtering, sorting are handled server-side with URL params
+    manualPagination: true,
+    manualFiltering: true,
+    manualSorting: true,
   })
 
   const selectedIds = table.getSelectedRowModel().rows.map((r) => r.original.id)

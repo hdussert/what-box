@@ -3,7 +3,7 @@ import { Box, boxes } from '@/db/schema'
 import { getCurrentUser } from '@/lib/user'
 import { and, desc, eq, ilike, sql } from 'drizzle-orm'
 import 'server-only'
-import { BoxesQuery, Paginated } from './types'
+import { BoxesPaginated, BoxesQuery } from './types'
 import { clampInt, toOrderBy } from './utils'
 
 // Single box queries
@@ -52,7 +52,7 @@ export async function getUserBoxes(): Promise<Box[]> {
 
 export async function getUserBoxesPaginated(
   query: BoxesQuery = {}
-): Promise<Paginated<Box>> {
+): Promise<BoxesPaginated> {
   const user = await getCurrentUser()
 
   const search = query.search?.trim()

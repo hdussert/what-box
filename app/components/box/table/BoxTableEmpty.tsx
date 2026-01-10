@@ -4,7 +4,7 @@ import { useNewBoxModal } from '@/app/components/providers/NewBoxModalProvider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
-const BoxesTableEmpty = () => {
+const BoxTableEmpty = () => {
   const { openModal: openNewBoxModal } = useNewBoxModal()
 
   return (
@@ -19,4 +19,4 @@ const BoxesTableEmpty = () => {
   )
 }
 
-export default BoxesTableEmpty
+export default BoxTableEmpty

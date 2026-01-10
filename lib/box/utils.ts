@@ -1,19 +1,35 @@
-import { boxes } from '@/db/schema'
+import {
+  BOXES_SORTABLE_COLUMNS,
+  DEFAULT_BOXES_SORT_OPTION,
+} from '@/lib/box/const'
 import { asc, desc } from 'drizzle-orm'
-import { BoxesSort } from './types'
+import { BoxesSortDirection, BoxesSortField, BoxesSortOptions } from './types'
 
-export function toOrderBy(sort: BoxesSort | undefined) {
-  switch (sort) {
-    case 'createdAt_asc':
-      return asc(boxes.createdAt)
-    case 'name_asc':
-      return asc(boxes.name)
-    case 'name_desc':
-      return desc(boxes.name)
-    case 'createdAt_desc':
-    default:
-      return desc(boxes.createdAt)
+export function buildSortOption(
+  field: BoxesSortField,
+  direction: BoxesSortDirection
+): BoxesSortOptions {
+  return `${field}_${direction}`
+}
+
+export function parseSort(sort: BoxesSortOptions | undefined) {
+  const [field, direction] = sort
+    ? sort.split('_')
+    : DEFAULT_BOXES_SORT_OPTION.split('_')
+  return {
+    field,
+    direction,
   }
+}
+
+export function toOrderBy(sort: BoxesSortOptions | undefined) {
+  const { field, direction } = parseSort(sort)
+  const sortFunc = direction === 'asc' ? asc : desc
+
+  const boxField = field as BoxesSortField
+  const boxColumn = BOXES_SORTABLE_COLUMNS[boxField]
+
+  return sortFunc(boxColumn)
 }
 
 export function clampInt(
