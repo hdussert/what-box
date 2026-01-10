@@ -2,8 +2,8 @@
 
 import { useImagesInput } from '@/app/components/image-input/ImagesInputProvider'
 import type { UploadItem } from '@/app/components/image-input/images-uploader-machine'
-import { Skeleton } from '@/components/ui/skeleton'
 import { useSelector } from '@xstate/react'
+import { LoaderCircle } from 'lucide-react'
 import Image from 'next/image'
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error'
@@ -25,43 +25,26 @@ const ImagePreview = ({ item, index }: { item: UploadItem; index: number }) => {
   const error = useSelector(ref, (s) => s.context.error)
   const pct = Math.max(0, Math.min(100, Math.round(progress)))
 
-  const abortUpload = () => {
-    ref.send({ type: 'ABORT' })
-  }
-
   return (
-    <Skeleton>
-      <div className="relative h-24 w-24 mt-2 shrink-0">
-        <Image
-          src={item.previewUrl}
-          width={96}
-          height={96}
-          alt={`Preview ${index + 1}`}
-          className="border rounded-md h-full w-full object-cover"
-        />
+    <div className="relative h-32 w-32">
+      <Image
+        src={item.previewUrl}
+        width={128}
+        height={128}
+        alt={`Preview ${index + 1}`}
+        className="border rounded-md h-full w-full object-cover"
+      />
 
-        {/* Status + progress overlay */}
-        <div className="absolute inset-0  rounded bg-black/60 px-1 py-0.5 text-[11px] text-white">
-          <div className="flex items-center justify-between gap-2">
-            <span>{statusLabel[status]}</span>
-            <span>{pct}%</span>
-          </div>
-
-          <div className="mt-0.5 h-1 w-full rounded bg-white/30">
-            <div
-              className="h-1 rounded bg-primary"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-
-          {status === 'error' && error ? (
-            <div className="mt-1 line-clamp-2 text-[10px] text-white/90">
-              {error}
-            </div>
-          ) : null}
+      {/* Status + progress overlay */}
+      <div className="absolute inset-0 rounded bg-black/60 overflow-hidden">
+        <div className="flex items-center justify-center gap-1 size-full uppercase font-bold">
+          <LoaderCircle className="absolute stroke-1 size-32 animate-spin" />
+          <span>{pct}%</span>
         </div>
+
+        {status === 'error' && error ? <div>{error}</div> : null}
       </div>
-    </Skeleton>
+    </div>
   )
 }
 

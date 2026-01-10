@@ -17,7 +17,7 @@ export const ImagesInput = (props: ImagesInputProps) => {
   }
 
   return (
-    <div className="inline-block">
+    <div className="inline-block relative">
       <Input
         ref={inputRef}
         {...props}
@@ -32,6 +32,7 @@ export const ImagesInput = (props: ImagesInputProps) => {
       />
       <Button
         variant="outline"
+        size="sm"
         onClick={(e) => {
           e.preventDefault()
           openPicker()
