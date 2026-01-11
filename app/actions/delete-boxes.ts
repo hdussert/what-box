@@ -4,6 +4,7 @@ import { deleteBoxes } from '@/lib/box'
 import { deleteFiles } from '@/lib/files'
 import { getImages } from '@/lib/image'
 import { getCurrentUser } from '@/lib/user'
+import { revalidatePath } from 'next/cache'
 
 export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
   if (boxIds.length === 0) {
@@ -26,6 +27,7 @@ export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
 
     // Delete box records from the database
     await deleteBoxes(user.id, boxIds)
+    revalidatePath('/dashboard')
 
     return {
       success: true,
