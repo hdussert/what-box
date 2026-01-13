@@ -15,6 +15,7 @@ export type SingleContext = {
   boxId: string
   file: File
   previewUrl: string
+  blobUrl?: string
   progress: number
   status: UploadStatus
   error?: string
@@ -75,7 +76,12 @@ export const imageUploadMachine = createMachine(
         invoke: {
           src: 'doUpload',
           input: ({ context, self }) => ({ context, self }),
-          onDone: { target: 'success' },
+          onDone: {
+            target: 'success',
+            actions: assign({
+              blobUrl: ({ event }) => event.output.url,
+            }),
+          },
           onError: {
             target: 'error',
             actions: assign({
@@ -99,6 +105,7 @@ export const imageUploadMachine = createMachine(
           sendParent(({ context }) => ({
             type: 'COMPLETED',
             uploadId: context.id,
+            boxUrl: context.blobUrl,
           })),
         ],
         type: 'final',
@@ -124,14 +131,14 @@ export const imageUploadMachine = createMachine(
           const { context, self } = input
           const { boxId, id, file } = context
           const filePath = `${boxId}/${id}-${file.name}`
-          await upload(filePath, context.file, {
+          const blob = await upload(filePath, context.file, {
             access: 'public',
             handleUploadUrl: `/api/boxes/${context.boxId}/images/upload`,
             onUploadProgress: (p) => {
               self.send({ type: 'PROGRESS', progress: clampPct(p.percentage) })
             },
           })
-          return true
+          return { url: blob.url }
         }
       ),
     },

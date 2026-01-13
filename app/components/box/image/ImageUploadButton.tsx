@@ -1,32 +1,32 @@
-import { useImagesInput } from '@/app/components/image-input/ImagesInputProvider'
+import { useImageUpload } from '@/app/components/box/image/ImageUploadProvider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ImagePlus } from 'lucide-react'
 import { InputHTMLAttributes } from 'react'
 
-type ImagesInputProps = Omit<
+type ImageUploadButtonProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'ref'
 >
 
-export const ImagesInput = (props: ImagesInputProps) => {
-  const { fileInputRef: inputRef, onFilesSelected } = useImagesInput()
+export const ImageUploadButton = (props: ImageUploadButtonProps) => {
+  const { fileInputRef, handleFilesSelected } = useImageUpload()
 
-  const openPicker = () => {
-    inputRef.current?.click()
+  const openFilePicker = () => {
+    fileInputRef.current?.click()
   }
 
   return (
     <div className="inline-block relative">
       <Input
-        ref={inputRef}
+        ref={fileInputRef}
         {...props}
-        className="sr-only" // Hidden visuallly
+        className="sr-only"
         type="file"
         multiple
         accept="image/jpeg,image/png,image/webp"
         onChange={(e) => {
-          onFilesSelected(e)
+          handleFilesSelected(e)
           props.onChange?.(e)
         }}
       />
@@ -35,7 +35,7 @@ export const ImagesInput = (props: ImagesInputProps) => {
         size="sm"
         onClick={(e) => {
           e.preventDefault()
-          openPicker()
+          openFilePicker()
         }}
       >
         <ImagePlus />

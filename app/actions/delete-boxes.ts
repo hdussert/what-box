@@ -2,7 +2,7 @@
 
 import { deleteBoxes } from '@/lib/box'
 import { deleteFiles } from '@/lib/files'
-import { getImages } from '@/lib/image'
+import { getBoxImages } from '@/lib/image'
 import { getCurrentUser } from '@/lib/user'
 import { revalidatePath } from 'next/cache'
 
@@ -18,7 +18,7 @@ export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
     const user = await getCurrentUser()
 
     // Delete blobs associated with the boxes
-    const images = await getImages(user.id, boxIds)
+    const images = await getBoxImages(user.id, boxIds)
     const imagesPathnames = images.map((image) => image.pathname)
     await deleteFiles(imagesPathnames).catch((error) => {
       console.log('Failed to delete some image files :', error)

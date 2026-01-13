@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { getBoxById } from '@/lib/box'
 import { createImageRecord } from '@/lib/image'
 import { getCurrentUser } from '@/lib/user'
@@ -29,7 +30,10 @@ export async function POST(
 
         // Generate a unique pathname for the upload
         const id = crypto.randomUUID()
-        const origin = new URL(req.url).origin
+        const origin =
+          env.NODE_ENV === 'development'
+            ? 'https://c3800a9271a2.ngrok-free.app' // TODO: Use env or ngrok idk
+            : new URL(req.url).origin
 
         // Organized into a per-user/per-box folder structure
         const safePathname = `users/${user.id}/boxes/${box.id}/${id}`
@@ -41,9 +45,8 @@ export async function POST(
             boxId: box.id,
           }),
           pathname: safePathname,
-
           maximumSizeInBytes: 10 * 1024 * 1024, // 10 MB
-          callbackUrl: `https://b3cf7f80dffb.ngrok-free.app/api/boxes/${boxId}/images/upload`,
+          callbackUrl: `${origin}/api/boxes/${boxId}/images/upload`,
         }
       },
       onUploadCompleted: async ({ blob, tokenPayload }) => {

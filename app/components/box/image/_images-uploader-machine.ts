@@ -1,7 +1,7 @@
 import {
   ImageUploadActorRef,
   imageUploadMachine,
-} from '@/app/components/image-input/image-upload-machine'
+} from '@/app/components/box/image/_image-upload-machine'
 import { createMachine, enqueueActions, spawnChild } from 'xstate'
 
 export type UploadItem = {
@@ -17,7 +17,7 @@ type Ctx = {
 
 type AddFilesEvent = { type: 'ADD_FILES'; files: File[] }
 type PumpEvent = { type: 'PUMP' }
-type CompletedEvent = { type: 'COMPLETED'; uploadId: string }
+type CompletedEvent = { type: 'COMPLETED'; uploadId: string; boxUrl: string }
 type AbortedEvent = { type: 'ABORTED'; uploadId: string }
 
 type Event = AddFilesEvent | PumpEvent | CompletedEvent | AbortedEvent
@@ -53,7 +53,7 @@ export const imagesUploaderMachine = createMachine(
       ready: {
         on: {
           ADD_FILES: { actions: 'spawnFiles' },
-          COMPLETED: { actions: ['startMoreIfPossible', 'removeItem'] },
+          COMPLETED: { actions: ['startMoreIfPossible'] },
           ABORTED: { actions: ['startMoreIfPossible', 'removeItem'] },
           PUMP: { actions: 'startMoreIfPossible' },
         },

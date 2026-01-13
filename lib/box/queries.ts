@@ -1,5 +1,6 @@
 import { db } from '@/db'
 import { Box, boxes } from '@/db/schema'
+import { getBoxImages } from '@/lib/image'
 import { getCurrentUser } from '@/lib/user'
 import { and, desc, eq, ilike, sql } from 'drizzle-orm'
 import 'server-only'
@@ -95,8 +96,7 @@ export async function getUserBoxWithImages(boxId: string) {
     return { box: undefined, images: [] }
   }
 
-  const { getImages } = await import('@/lib/image')
-  const images = await getImages(user.id, [boxId])
+  const images = await getBoxImages(user.id, [boxId])
 
   return { box, images }
 }

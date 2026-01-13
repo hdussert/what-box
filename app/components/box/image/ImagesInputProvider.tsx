@@ -9,11 +9,11 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
-import { ImageUploadActorRef } from './image-upload-machine'
+import { ImageUploadActorRef } from './_image-upload-machine'
 import {
   imagesUploaderMachine,
   type UploadItem,
-} from './images-uploader-machine'
+} from './_images-uploader-machine'
 
 type UploadActorRef = ImageUploadActorRef
 
@@ -26,10 +26,10 @@ type ImagesInputContextValue = {
 
 const ImagesInputContext = createContext<ImagesInputContextValue | null>(null)
 
-export function ImagesInputProvider({
+const ImagesInputProvider = ({
   children,
   boxId,
-}: React.PropsWithChildren<{ boxId: string }>) {
+}: React.PropsWithChildren<{ boxId: string }>) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [state, send] = useMachine(imagesUploaderMachine, {
     input: { boxId },
@@ -75,9 +75,11 @@ export function ImagesInputProvider({
   )
 }
 
-export function useImagesInput() {
+export function useImagesInputContext() {
   const ctx = useContext(ImagesInputContext)
   if (!ctx)
     throw new Error('useImagesInput must be used within ImagesInputProvider')
   return ctx
 }
+
+export default ImagesInputProvider

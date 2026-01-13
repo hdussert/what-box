@@ -1,5 +1,6 @@
 import { db } from '@/db'
 import { Image, images } from '@/db/schema'
+import { getCurrentUser } from '@/lib/user'
 import { and, desc, eq, inArray } from 'drizzle-orm'
 import 'server-only'
 
@@ -38,7 +39,7 @@ export async function deleteImageRecord(
 }
 
 /** Fetch images for a specific box belonging to a user */
-export async function getImages(
+export async function getBoxImages(
   userId: string,
   boxIds: string[]
 ): Promise<Image[]> {
@@ -46,4 +47,14 @@ export async function getImages(
     where: and(inArray(images.boxId, boxIds), eq(images.userId, userId)),
     orderBy: desc(images.createdAt),
   })
+}
+
+/** Fetch images for a specific box belonging to the current user */
+export async function getUserBoxImages(
+  boxId: string
+): Promise<{ images: Image[] }> {
+  // Lazy load to avoid circular dependencies
+  const user = await getCurrentUser()
+  const images = await getBoxImages(user.id, [boxId])
+  return { images }
 }
