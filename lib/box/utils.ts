@@ -2,7 +2,7 @@ import {
   BOXES_SORTABLE_COLUMNS,
   DEFAULT_BOXES_SORT_OPTION,
 } from '@/lib/box/const'
-import { asc, desc } from 'drizzle-orm'
+import { asc, desc, sql } from 'drizzle-orm'
 import { BoxesSortDirection, BoxesSortField, BoxesSortOptions } from './types'
 
 export function buildSortOption(
@@ -29,7 +29,7 @@ export function toOrderBy(sort: BoxesSortOptions | undefined) {
   const boxField = field as BoxesSortField
   const boxColumn = BOXES_SORTABLE_COLUMNS[boxField]
 
-  return sortFunc(boxColumn)
+  return sortFunc(sql`lower(${boxColumn})`)
 }
 
 export function clampInt(
