@@ -1,3 +1,4 @@
+import DeleteImageButton from '@/app/components/box/image/DeleteImageButton'
 import ImageThumbnail from '@/app/components/box/image/ImageThumbnail'
 import { useImageUpload } from '@/app/components/box/image/ImageUploadProvider'
 import UploadingImageThumbnail from '@/app/components/box/image/UploadingImageThumbnail'
@@ -5,14 +6,15 @@ import UploadingImageThumbnail from '@/app/components/box/image/UploadingImageTh
 type ImageCarouselProps = {
   images: {
     url: string
+    id: string
   }[]
 }
 
 const ImageGallery = ({ images }: ImageCarouselProps) => {
   const { uploadItems } = useImageUpload()
-
   return (
-    <div className="relative flex flex-row flex-wrap justify-center gap-4 bg-red-400">
+    <div className="flex flex-wrap gap-4 mx-auto">
+      {/* TODO: SSE so I can use the images records  and delete them instead of the blobs */}
       {uploadItems
         .map((item, index) => (
           <UploadingImageThumbnail
@@ -23,7 +25,8 @@ const ImageGallery = ({ images }: ImageCarouselProps) => {
         ))
         .reverse()}
       {images.map((image, index) => (
-        <div key={index}>
+        <div key={index} className="relative group">
+          <DeleteImageButton imageId={image.id} />
           <ImageThumbnail src={image.url} alt={`Box image ${index + 1}`} />
         </div>
       ))}

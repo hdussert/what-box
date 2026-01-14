@@ -1,3 +1,5 @@
+'use server'
+
 import { ActionResponse } from '@/app/actions/response-type'
 import { deleteFiles } from '@/lib/files'
 import { deleteImagesRecord, getImagesByIds } from '@/lib/image'

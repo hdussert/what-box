@@ -37,7 +37,7 @@ const UploadingImageThumbnail = ({
       {uploadStatus === 'success' ? null : (
         <div className="absolute inset-0 rounded bg-black/60 overflow-hidden">
           <div className="flex items-center justify-center gap-1 size-full uppercase font-bold">
-            <LoaderCircle className="absolute stroke-1 size-32 animate-spin" />
+            <LoaderCircle className="absolute stroke-[0.5] size-32 animate-spin" />
             <span>{progressPercent}%</span>
           </div>
 
