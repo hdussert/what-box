@@ -26,16 +26,26 @@ export async function createImageRecord(
 }
 
 /** Delete an Image record by its ID */
-export async function deleteImageRecord(
+export async function deleteImagesRecord(
   userId: string,
-  imageId: string
+  imageIds: string[]
 ): Promise<void> {
   await db.delete(images).where(
     and(
-      eq(images.id, imageId),
+      inArray(images.id, imageIds),
       eq(images.userId, userId) // ensure the image belongs to the current user
     )
   )
+}
+
+/** Fetch images by their IDs for a specific user */
+export async function getImagesByIds(
+  userId: string,
+  imageIds: string[]
+): Promise<Image[]> {
+  return db.query.images.findMany({
+    where: and(inArray(images.id, imageIds), eq(images.userId, userId)),
+  })
 }
 
 /** Fetch images for a specific box belonging to a user */
