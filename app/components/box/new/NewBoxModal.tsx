@@ -1,11 +1,10 @@
 'use client'
 
-import NewBoxForm from '@/app/components/box/NewBoxForm'
-import { useNewBoxModal } from '@/app/components/providers/NewBoxModalProvider'
+import NewBoxForm from '@/app/components/box/new/NewBoxForm'
+import { useNewBoxModal } from '@/app/components/box/new/NewBoxModalProvider'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -26,9 +25,6 @@ const NewBoxModal = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New box</DialogTitle>
-          <DialogDescription>
-            Create a new box to start organizing your items.
-          </DialogDescription>
         </DialogHeader>
         <NewBoxForm
           onSuccess={(boxId) => {

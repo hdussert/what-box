@@ -1,6 +1,10 @@
-import { NewBoxModalProvider } from '@/app/components/providers/NewBoxModalProvider'
+import { NewBoxModalProvider } from '@/app/components/box/new/NewBoxModalProvider'
 import Side from '@/app/components/side/Side'
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar'
 import { PropsWithChildren } from 'react'
 
 const DashboardLayout = ({ children }: PropsWithChildren) => {
@@ -8,10 +12,14 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
     <SidebarProvider>
       <NewBoxModalProvider>
         <Side />
-        <main className="px-6 py-2 w-full">
-          <SidebarTrigger />
-          {children}
-        </main>
+        <SidebarInset>
+          <header className="flex h-14 shrink-0 items-center gap-2 border-b px-6">
+            <SidebarTrigger />
+          </header>
+          <main className="flex flex-1 flex-col gap-4 p-6 overflow-auto">
+            {children}
+          </main>
+        </SidebarInset>
       </NewBoxModalProvider>
     </SidebarProvider>
   )

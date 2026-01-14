@@ -1,6 +1,6 @@
 'use client'
 
-import { useNewBoxModal } from '@/app/components/providers/NewBoxModalProvider'
+import { useNewBoxModal } from '@/app/components/box/new/NewBoxModalProvider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 

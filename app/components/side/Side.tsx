@@ -1,7 +1,7 @@
 'use client'
 
 import { signOut } from '@/app/actions/sign-out'
-import { useNewBoxModal } from '@/app/components/providers/NewBoxModalProvider'
+import { useNewBoxModal } from '@/app/components/box/new/NewBoxModalProvider'
 import {
   SideNavItem,
   SideNavItemProps,

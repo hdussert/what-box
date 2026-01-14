@@ -1,6 +1,6 @@
 'use client'
 
-import NewBoxModal from '@/app/components/modals/NewBoxModal'
+import NewBoxModal from '@/app/components/box/new/NewBoxModal'
 import {
   createContext,
   PropsWithChildren,

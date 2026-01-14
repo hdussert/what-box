@@ -1,3 +1,5 @@
+'use client'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -34,9 +36,9 @@ const InputTags = ({ name, placeholder }: InputTagsProps) => {
   }
 
   return (
-    <>
-      <input type="hidden" name={name} value={tags} />
+    <div className="flex flex-col gap-2">
       <div>
+        <input type="hidden" name={name} value={tags} />
         {tags.map((tag, index) => (
           <Badge key={index} variant="outline" className="mr-2">
             {tag}
@@ -61,6 +63,7 @@ const InputTags = ({ name, placeholder }: InputTagsProps) => {
           onKeyDown={handleKeyDown}
         />
         <Button
+          variant="outline"
           onClick={(e) => {
             e.preventDefault()
             addTag()
@@ -69,7 +72,7 @@ const InputTags = ({ name, placeholder }: InputTagsProps) => {
           Add
         </Button>
       </div>
-    </>
+    </div>
   )
 }
 
