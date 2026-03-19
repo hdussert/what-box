@@ -9,12 +9,10 @@ type ImageGalleryProps = {
 
 const ImageGallery = ({ images }: ImageGalleryProps) => {
   return (
-    <div className="flex flex-wrap gap-3 mx-auto">
-      <div className="flex w-full overflow-hidden">
-        <UploadingImages />
-      </div>
+    <div className="mx-auto grid grid-cols-4 w-full">
+      <UploadingImages />
       {images.map((image, index) => (
-        <div key={index} className="relative group">
+        <div key={image.id} className="relative group aspect-square">
           <DeleteImageButton pathname={image.pathname} />
           <ImageThumbnail src={image.url} alt={`Box image ${image.id}`} />
         </div>

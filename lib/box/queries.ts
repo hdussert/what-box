@@ -1,6 +1,5 @@
 import { db } from '@/db'
 import { Box, boxes } from '@/db/schema'
-import { getBoxImages } from '@/lib/image'
 import { getCurrentUser } from '@/lib/user'
 import { and, desc, eq, ilike, sql } from 'drizzle-orm'
 import 'server-only'
@@ -85,18 +84,4 @@ export async function getUserBoxesPaginated(
   })
 
   return { items, total, page: safePage, pageSize, totalPages }
-}
-
-// Combined queries (box + related data)
-export async function getUserBoxWithImages(boxId: string) {
-  const user = await getCurrentUser()
-  const box = await getBoxById(user.id, boxId)
-
-  if (!box) {
-    return { box: undefined, images: [] }
-  }
-
-  const images = await getBoxImages(user.id, [boxId])
-
-  return { box, images }
 }

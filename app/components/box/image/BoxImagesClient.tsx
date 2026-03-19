@@ -18,7 +18,7 @@ const BoxImagesClient = ({ boxId, images }: BoxImagesClientProps) => {
       <Card>
         <CardHeader>
           <div className="flex flex-row items-center justify-between">
-            <Typography.H2>Photos</Typography.H2>
+            <Typography.H2>Images</Typography.H2>
             <UploadImageInput multiple />
           </div>
         </CardHeader>

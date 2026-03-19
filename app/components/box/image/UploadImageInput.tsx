@@ -51,7 +51,7 @@ export const UploadImageInput = (props: UploadImageInputProps) => {
         }}
       >
         <ImagePlus />
-        Add images
+        Upload
       </Button>
     </div>
   )
