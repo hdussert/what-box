@@ -48,6 +48,16 @@ export async function getImagesByIds(
   })
 }
 
+/** Fetch images by their pathnames for a specific user */
+export async function getImagesByPathnames(
+  userId: string,
+  pathnames: string[]
+): Promise<Image[]> {
+  return db.query.images.findMany({
+    where: and(inArray(images.pathname, pathnames), eq(images.userId, userId)),
+  })
+}
+
 /** Fetch images for a specific box belonging to a user */
 export async function getBoxImages(
   userId: string,

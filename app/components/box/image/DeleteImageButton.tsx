@@ -8,21 +8,25 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { Trash } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 type DeleteImageButtonProps = {
-  imageId: string
+  pathname: string
 }
 
-const DeleteImageButton = ({ imageId }: DeleteImageButtonProps) => {
+// TODO: Handle multiple image selection & deletion
+const DeleteImageButton = ({ pathname }: DeleteImageButtonProps) => {
   const [isDeleting, setIsDeleting] = useState(false)
+  const router = useRouter()
 
   const handleDelete = async () => {
     setIsDeleting(true)
-    const response = await deleteImages([imageId])
+    const response = await deleteImages([pathname])
     if (response.success) {
       toast.success('Image deleted successfully')
+      router.refresh()
     } else {
       toast.error(response.message || 'Failed to delete image')
     }

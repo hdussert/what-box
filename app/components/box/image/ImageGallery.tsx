@@ -1,33 +1,22 @@
 import DeleteImageButton from '@/app/components/box/image/DeleteImageButton'
 import ImageThumbnail from '@/app/components/box/image/ImageThumbnail'
-import { useImageUpload } from '@/app/components/box/image/ImageUploadProvider'
-import UploadingImageThumbnail from '@/app/components/box/image/UploadingImageThumbnail'
+import UploadingImages from '@/app/components/box/image/UploadingImages'
+import { Image } from '@/db/schema'
 
-type ImageCarouselProps = {
-  images: {
-    url: string
-    id: string
-  }[]
+type ImageGalleryProps = {
+  images: Image[]
 }
 
-const ImageGallery = ({ images }: ImageCarouselProps) => {
-  const { uploadItems } = useImageUpload()
+const ImageGallery = ({ images }: ImageGalleryProps) => {
   return (
-    <div className="flex flex-wrap gap-4 mx-auto">
-      {/* TODO: SSE so I can use the images records  and delete them instead of the blobs */}
-      {uploadItems
-        .map((item, index) => (
-          <UploadingImageThumbnail
-            key={index}
-            uploadItem={item}
-            index={index}
-          />
-        ))
-        .reverse()}
+    <div className="flex flex-wrap gap-3 mx-auto">
+      <div className="flex w-full overflow-hidden">
+        <UploadingImages />
+      </div>
       {images.map((image, index) => (
         <div key={index} className="relative group">
-          <DeleteImageButton imageId={image.id} />
-          <ImageThumbnail src={image.url} alt={`Box image ${index + 1}`} />
+          <DeleteImageButton pathname={image.pathname} />
+          <ImageThumbnail src={image.url} alt={`Box image ${image.id}`} />
         </div>
       ))}
     </div>

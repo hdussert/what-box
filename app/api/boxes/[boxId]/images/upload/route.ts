@@ -32,12 +32,12 @@ export async function POST(
         const id = crypto.randomUUID()
         const origin =
           env.NODE_ENV === 'development'
-            ? 'https://c3800a9271a2.ngrok-free.app' // TODO: Use env or ngrok idk
+            ? 'https://c3800a9271a2.ngrok-free.app' // TODO: use a dynamic solution for local development instead of hardcoding the ngrok URL
             : new URL(req.url).origin
 
         // Organized into a per-user/per-box folder structure
-        const safePathname = `users/${user.id}/boxes/${box.id}/${id}`
-        console.log(safePathname)
+        const safePathname = `users/${user.id}/boxes/${box.id}/${id}` // TODO: extract this logic into a shared helper
+
         return {
           allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp'], // TODO: remove magic strings
           tokenPayload: JSON.stringify({

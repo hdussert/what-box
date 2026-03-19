@@ -1,49 +1,31 @@
-import { UploadStatus } from '@/app/components/box/image/_image-upload-machine'
-import { UploadItem } from '@/app/components/box/image/_images-uploader-machine'
 import ImageThumbnail from '@/app/components/box/image/ImageThumbnail'
-import { useImageUpload } from '@/app/components/box/image/ImageUploadProvider'
-import { useSelector } from '@xstate/react'
+import useImageUpload from '@/app/components/box/image/machines/useImageUpload'
 import { LoaderCircle } from 'lucide-react'
 
 type UploadingImageThumbnailProps = {
-  uploadItem: UploadItem
-  index: number
+  uploadId: string
 }
 
 const UploadingImageThumbnail = ({
-  uploadItem,
-  index,
+  uploadId,
 }: UploadingImageThumbnailProps) => {
-  const { getUploadActorById } = useImageUpload()
-  const uploadActor = getUploadActorById(uploadItem.id)
-
-  const uploadStatus = useSelector(
-    uploadActor,
-    (s) => s.context.status as UploadStatus
-  )
-  const uploadProgress = useSelector(
-    uploadActor,
-    (s) => s.context.progress ?? 0
-  )
-  const uploadError = useSelector(uploadActor, (s) => s.context.error)
-  const progressPercent = Math.max(0, Math.min(100, Math.round(uploadProgress)))
+  const { isSuccess, isError, error, progress, previewUrl, file } =
+    useImageUpload(uploadId)
 
   return (
     <ImageThumbnail
-      src={uploadItem.previewUrl}
-      alt={`Preview ${index + 1}`}
+      src={previewUrl}
+      alt={`Preview ${file.name}`}
       className="relative"
     >
-      {uploadStatus === 'success' ? null : (
+      {isSuccess ? null : (
         <div className="absolute inset-0 rounded bg-black/60 overflow-hidden">
           <div className="flex items-center justify-center gap-1 size-full uppercase font-bold">
             <LoaderCircle className="absolute stroke-[0.5] size-32 animate-spin" />
-            <span>{progressPercent}%</span>
+            <span>{progress}%</span>
           </div>
 
-          {uploadStatus === 'error' && uploadError ? (
-            <div>{uploadError}</div>
-          ) : null}
+          {isError && error ? <div>{error}</div> : null}
         </div>
       )}
     </ImageThumbnail>
