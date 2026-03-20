@@ -1,39 +1,24 @@
-import BoxTableClient from '@/app/components/box/table/BoxTableClient'
-import { DEFAULT_BOXES_SORT_OPTION, SORT_OPTIONS } from '@/lib/box/const'
-import { getUserBoxesPaginated } from '@/lib/box/queries'
-import { z } from 'zod'
+'use client'
 
-type BoxTableProps = {
-  searchParams?: {
-    search?: string
-    sort?: string
-    page?: string
-  }
-}
+import BoxTableData from '@/app/components/box/table/BoxTableData'
+import BoxTableEmpty from '@/app/components/box/table/BoxTableEmpty'
+import BoxTablePagination from '@/app/components/box/table/BoxTablePagination'
+import { BoxTableContextProvider } from '@/app/components/box/table/BoxTableProvider'
+import BoxTableToolbar from '@/app/components/box/table/BoxTableToolbar'
+import { BoxesPaginated } from '@/lib/box/types'
 
-const searchParamsSchema = z.object({
-  search: z.string().trim().optional(),
-  sort: z.enum(SORT_OPTIONS).optional(),
-  page: z.coerce.number().min(1).optional(),
-})
+type BoxTableProps = BoxesPaginated
 
-const BoxTable = async ({ searchParams }: BoxTableProps) => {
-  // Validate and parse search parameters
-  const validated = searchParamsSchema.safeParse(searchParams)
-  const {
-    search = '',
-    sort = DEFAULT_BOXES_SORT_OPTION,
-    page = 1,
-  } = validated.data || {}
+const BoxTable = (props: BoxTableProps) => {
+  const isEmpty = props.items.length === 0
 
-  const result = await getUserBoxesPaginated({
-    search,
-    sort,
-    page,
-    pageSize: 20,
-  })
-
-  return <BoxTableClient {...result} />
+  return (
+    <BoxTableContextProvider {...props}>
+      <BoxTableToolbar />
+      {isEmpty ? <BoxTableEmpty /> : <BoxTableData />}
+      <BoxTablePagination />
+    </BoxTableContextProvider>
+  )
 }
 
 export default BoxTable

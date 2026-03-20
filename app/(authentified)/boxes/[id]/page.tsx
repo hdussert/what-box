@@ -1,9 +1,6 @@
-import BoxImages from '@/app/components/box/image/BoxImages'
-import { Separator } from '@/components/ui/separator'
 import Typography from '@/components/ui/typography'
 import { Box } from '@/db/schema'
 import { getUserBoxById } from '@/lib/box'
-import { Suspense } from 'react'
 
 type BoxPageProps = {
   params: Promise<{ id: string }>
@@ -32,17 +29,10 @@ const BoxPage = async ({ params }: BoxPageProps) => {
   const { id } = await params
 
   const box = await getUserBoxById(id)
-  if (!box) {
-    return <div>Box not found :(</div>
-  }
 
   return (
     <div className="flex flex-col gap-4">
-      <Header box={box} />
-      <Separator />
-      <Suspense fallback={<div>Loading images...</div>}>
-        <BoxImages boxId={box.id} />
-      </Suspense>
+      <Header box={box!} />
     </div>
   )
 }
