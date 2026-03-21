@@ -5,18 +5,22 @@ import { Button } from '@/components/ui/button'
 import { BoxesSortField } from '@/lib/box/types'
 import { parseSort } from '@/lib/box/utils'
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
-import { useBoxTableContext } from './BoxTableProvider'
+import { useBoxTableContext } from '../BoxTableProvider'
 
-type BoxTableHeaderCellProps = {
+type BoxTableColumnsHeaderProps = {
   field: BoxesSortField
   label: string
 }
 
-const BoxTableHeaderCell = ({ field, label }: BoxTableHeaderCellProps) => {
+const BoxTableColumnsHeader = ({
+  field,
+  label,
+}: BoxTableColumnsHeaderProps) => {
   const { sort, toggleSort } = useBoxTableContext()
-
   const { field: currentField, direction } = parseSort(sort)
+
   const isActive = currentField === field
+  const isAsc = direction === 'asc'
 
   return (
     <Button
@@ -27,7 +31,7 @@ const BoxTableHeaderCell = ({ field, label }: BoxTableHeaderCellProps) => {
     >
       {label}
       {isActive ? (
-        direction === 'asc' ? (
+        isAsc ? (
           <ArrowUp className="ml-2 h-4 w-4" />
         ) : (
           <ArrowDown className="ml-2 h-4 w-4" />
@@ -39,4 +43,4 @@ const BoxTableHeaderCell = ({ field, label }: BoxTableHeaderCellProps) => {
   )
 }
 
-export default BoxTableHeaderCell
+export default BoxTableColumnsHeader

@@ -12,22 +12,21 @@ import { buildSortOption, parseSort } from '@/lib/box/utils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+const DEBOUNCE_MS = 300
+
 export type BoxTableContextValue = {
   boxes: Box[]
+  total: number
 
-  // Row selection
   selectedIds: string[]
   setSelectedIds: (ids: string[]) => void
 
-  // Search
   search: string
   onSearchChange: (newSearch: string) => void
 
-  // Sorting
   sort: BoxesSortOptions
   toggleSort: (sortField: BoxesSortField) => void
 
-  // Pagination
   page: number
   totalPages: number
   goToFirstPage: () => void
@@ -35,12 +34,9 @@ export type BoxTableContextValue = {
   goToPreviousPage: () => void
   goToLastPage: () => void
 
-  // Actions
-  deleteSelectedBoxes?: () => void
-  printSelectedBoxesLabel?: () => void
+  clearSelection: () => void
+  clearingSelection: boolean // Hacky flag to trigger clearing BoxTable's rows selection
 }
-
-const DEBOUNCE_MS = 300
 
 export const useBoxTable = (props: BoxesPaginated): BoxTableContextValue => {
   const router = useRouter()
@@ -48,12 +44,14 @@ export const useBoxTable = (props: BoxesPaginated): BoxTableContextValue => {
   const searchParams = useSearchParams()
 
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [clearingSelection, setClearingSelection] = useState(false)
+
   const [search, setSearch] = useState<string>(searchParams.get('search') || '')
   const [sort, setSort] = useState<BoxesSortOptions>(
     (searchParams.get('sort') as BoxesSortOptions) || DEFAULT_BOXES_SORT_OPTION
   )
   const [page, setPage] = useState<number>(props.page)
-  const { items: boxes, totalPages } = props
+  const { items: boxes, totalPages, total } = props
 
   // Search handler
   const onSearchChange = (newSearch: string) => {
@@ -104,10 +102,13 @@ export const useBoxTable = (props: BoxesPaginated): BoxTableContextValue => {
     return () => clearTimeout(timeoutId)
   }, [search, sort, page])
 
+  const clearSelection = () => setClearingSelection((prev) => !prev)
+
   return {
     boxes,
     page,
     totalPages,
+    total,
     search,
     selectedIds,
     sort,
@@ -120,5 +121,8 @@ export const useBoxTable = (props: BoxesPaginated): BoxTableContextValue => {
     goToNextPage,
     goToPreviousPage,
     goToLastPage,
+
+    clearSelection,
+    clearingSelection,
   }
 }

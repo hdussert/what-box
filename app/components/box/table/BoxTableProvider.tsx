@@ -1,3 +1,5 @@
+'use client'
+
 import {
   BoxTableContextValue,
   useBoxTable,
@@ -10,6 +12,7 @@ const BoxTableContext = createContext<BoxTableContextValue | null>(null)
 type BoxTableProviderProps = BoxesPaginated & {
   children: React.ReactNode
 }
+
 export const BoxTableContextProvider = ({
   children,
   ...props

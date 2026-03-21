@@ -1,9 +1,9 @@
 'use client'
 
 import { Input } from '@/components/ui/input'
-import { useBoxTableContext } from './BoxTableProvider'
+import { useBoxTableContext } from '../BoxTableProvider'
 
-const BoxTableToolbarSearch = () => {
+const BoxTableSearchInput = () => {
   const { search, onSearchChange } = useBoxTableContext()
 
   return (
@@ -16,4 +16,4 @@ const BoxTableToolbarSearch = () => {
   )
 }
 
-export default BoxTableToolbarSearch
+export default BoxTableSearchInput
