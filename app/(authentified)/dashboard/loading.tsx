@@ -6,29 +6,28 @@ export default function Loading() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex gap-6">
-          <Skeleton className="h-8 w-4/5" />
-          <div className="flex gap-2">
+        <div className="flex justify-between">
+          <Skeleton className="h-8 w-96" />
+          <div className="flex gap-1">
             <Skeleton className="h-8 w-8" />
             <Skeleton className="h-8 w-8" />
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex w-full max-w-sm flex-col gap-2">
-          {Array.from({ length: 9 }).map((_, index) => (
-            <div className="flex gap-6 items-center" key={index}>
-              <Skeleton className="h-4 w-4 rounded" />
-              <Skeleton className="h-6 flex-1" />
-              <Skeleton className="h-6 flex-1" />
+        <div className="flex w-full flex-col gap-px pl-2 pt-2">
+          {Array.from({ length: 7 }).map((_, index) => (
+            <div className="flex gap-2 items-center" key={index}>
+              <Skeleton className="size-4.5 rounded" />
+              <Skeleton className="h-9 flex-1" />
             </div>
           ))}
         </div>
       </CardContent>
       <CardFooter>
         <div className="flex justify-between w-full items-center">
-          <Skeleton className="h-6 w-1/4" />
-          <div className="flex gap-2 w-1/2">
+          <Skeleton className="h-6 w-16" />
+          <div className="flex gap-2 w-60">
             <Skeleton className="h-8 w-1/4" />
             <Skeleton className="h-8 w-1/4" />
             <Skeleton className="h-8 w-1/4" />
@@ -36,7 +35,6 @@ export default function Loading() {
           </div>
         </div>
       </CardFooter>
-      <Skeleton />
     </Card>
   )
 }

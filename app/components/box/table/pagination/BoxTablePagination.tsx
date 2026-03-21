@@ -14,12 +14,12 @@ export const BoxTablePagination = () => {
   } = useBoxTableContext()
 
   const buttonProps = {
-    variant: 'outline' as const,
+    variant: 'ghost' as const,
     size: 'sm' as const,
   }
 
   return (
-    <div className="mt-4 flex items-center justify-between gap-2">
+    <div className="w-full flex items-center justify-between">
       <div className="text-sm text-muted-foreground">
         Page {page} / {totalPages}
       </div>
