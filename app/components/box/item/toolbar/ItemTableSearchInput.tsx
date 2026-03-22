@@ -1,18 +1,27 @@
 'use client'
 
-import { Input } from '@/components/ui/input'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group'
+import { Search } from 'lucide-react'
 import { useItemTableContext } from '../ItemTableProvider'
 
 const ItemTableSearchInput = () => {
   const { search, onSearchChange } = useItemTableContext()
 
   return (
-    <Input
-      value={search}
-      placeholder="Search items..."
-      onChange={(e) => onSearchChange(e.target.value)}
-      className="flex-1 sm:max-w-sm"
-    />
+    <InputGroup>
+      <InputGroupInput
+        value={search}
+        placeholder="Search an item..."
+        onChange={(e) => onSearchChange(e.target.value)}
+      />
+      <InputGroupAddon>
+        <Search />
+      </InputGroupAddon>
+    </InputGroup>
   )
 }
 
