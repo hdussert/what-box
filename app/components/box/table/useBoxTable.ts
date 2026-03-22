@@ -33,6 +33,7 @@ export type BoxTableContextValue = {
   goToNextPage: () => void
   goToPreviousPage: () => void
   goToLastPage: () => void
+  goToPage: (page: number) => void
 
   clearSelection: () => void
   clearingSelection: boolean // Hacky flag to trigger clearing BoxTable's rows selection
@@ -80,6 +81,7 @@ export const useBoxTable = (props: BoxesPaginated): BoxTableContextValue => {
   const goToNextPage = () => setPage((prev) => prev + 1)
   const goToPreviousPage = () => setPage((prev) => Math.max(prev - 1, 1))
   const goToLastPage = () => setPage(totalPages)
+  const goToPage = (page: number) => setPage(page)
 
   // Search param updater
   useEffect(() => {
@@ -121,6 +123,7 @@ export const useBoxTable = (props: BoxesPaginated): BoxTableContextValue => {
     goToNextPage,
     goToPreviousPage,
     goToLastPage,
+    goToPage,
 
     clearSelection,
     clearingSelection,

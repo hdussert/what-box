@@ -34,6 +34,7 @@ export type ItemTableContextValue = {
   goToNextPage: () => void
   goToPreviousPage: () => void
   goToLastPage: () => void
+  gotToPage: (page: number) => void
 
   clearSelection: () => void
   clearingSelection: boolean
@@ -79,6 +80,7 @@ export const useItemTable = (
   const goToNextPage = () => setPage((prev) => prev + 1)
   const goToPreviousPage = () => setPage((prev) => Math.max(prev - 1, 1))
   const goToLastPage = () => setPage(totalPages)
+  const gotToPage = (page: number) => setPage(page)
 
   const clearSelection = () => setClearingSelection((prev) => !prev)
 
@@ -123,6 +125,7 @@ export const useItemTable = (
     goToNextPage,
     goToPreviousPage,
     goToLastPage,
+    gotToPage,
 
     clearSelection,
     clearingSelection,
