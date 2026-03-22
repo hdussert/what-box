@@ -1,3 +1,4 @@
+import { Separator } from '@/components/ui/separator'
 import { getUserBoxById } from '@/lib/box'
 import { notFound } from 'next/navigation'
 import { ReactNode } from 'react'
@@ -25,8 +26,13 @@ export default async function Layout({
   return (
     <>
       {children}
-      {items}
-      {images}
+      <Separator className="mt-2" />
+      <div className="xl:flex-row flex flex-col gap-4">
+        <div className="xl:w-2/3">{items}</div>
+        <Separator className="xl:hidden" />
+        <Separator orientation="vertical" className="xl:block hidden" />
+        <div className="xl:w-1/3">{images}</div>
+      </div>
     </>
   )
 }

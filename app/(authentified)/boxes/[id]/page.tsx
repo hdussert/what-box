@@ -27,7 +27,6 @@ const Header = ({ box }: HeaderProps) => {
 
 const BoxPage = async ({ params }: BoxPageProps) => {
   const { id } = await params
-
   const box = await getUserBoxById(id)
 
   return (
