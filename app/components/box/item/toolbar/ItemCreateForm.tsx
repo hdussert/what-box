@@ -68,7 +68,7 @@ const ItemCreateForm = () => {
             onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
             onKeyDown={handleKeyDown}
             disabled={isPending}
-            className="flex-1"
+            className="flex-2"
           />
           <Input
             placeholder="Quantity *"
@@ -78,7 +78,7 @@ const ItemCreateForm = () => {
             }
             onKeyDown={handleKeyDown}
             disabled={isPending}
-            className="w-full sm:w-32"
+            className="flex-1"
           />
           <Input
             placeholder="Condition"
@@ -88,7 +88,7 @@ const ItemCreateForm = () => {
             }
             onKeyDown={handleKeyDown}
             disabled={isPending}
-            className="w-full sm:w-40"
+            className="flex-1"
           />
           <Input
             placeholder="Description"
@@ -98,7 +98,7 @@ const ItemCreateForm = () => {
             }
             onKeyDown={handleKeyDown}
             disabled={isPending}
-            className="flex-1"
+            className="flex-2"
           />
           <Button
             onClick={handleCreateItem}

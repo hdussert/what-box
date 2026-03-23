@@ -15,8 +15,8 @@ type HeaderProps = {
 const Header = ({ box }: HeaderProps) => {
   return (
     <div className="flex flex-col gap-2">
-      <Typography.P className="uppercase tracking-widest">
-        Box {box.shortId ?? box.id.slice(0, 6)}
+      <Typography.P className="uppercase font-bold text-muted-foreground text-sm font-jb">
+        Box {box.shortId}
       </Typography.P>
       <Typography.H2 className="uppercase">{box.name}</Typography.H2>
     </div>

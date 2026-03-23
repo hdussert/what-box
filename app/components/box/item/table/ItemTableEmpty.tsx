@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
 const ItemTableEmpty = () => {
   return (
-    <Card className="text-center">
+    <Card className="text-center shadow-none">
       <CardHeader>No items found.</CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">

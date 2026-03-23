@@ -56,7 +56,9 @@ export function ItemTableColumns() {
       },
       {
         accessorKey: 'description',
-        header: 'Description',
+        header: () => (
+          <ItemTableColumnsHeader field="description" label="Description" />
+        ),
         cell: ({ row }) => row.original.description || '—',
       },
     ],

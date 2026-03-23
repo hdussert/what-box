@@ -32,22 +32,30 @@ export function BoxTableColumns() {
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label="Select row"
+            onClick={(e) => e.stopPropagation()}
           />
         ),
         enableSorting: false,
         enableHiding: false,
-        size: 32,
       },
       {
         accessorKey: 'shortId',
         header: () => <BoxTableColumnsHeader field="shortId" label="ID" />,
         cell: ({ row }) => (
-          <Link href={`/boxes/${row.original.id}`}>{row.original.shortId}</Link>
+          <div className="font-jb text-sm uppercase">
+            {row.getValue('shortId')}
+          </div>
         ),
       },
       {
         accessorKey: 'name',
         header: () => <BoxTableColumnsHeader field="name" label="Name" />,
+        cell: ({ row, cell }) => {
+          return (
+            <div className="uppercase font-bold">{row.getValue('name')}</div>
+          )
+        },
+      },
         cell: ({ row }) => (
           <Link href={`/boxes/${row.original.id}`}>{row.original.name}</Link>
         ),

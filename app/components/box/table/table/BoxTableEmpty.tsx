@@ -8,7 +8,7 @@ const BoxTableEmpty = () => {
   const { openModal: openNewBoxModal } = useNewBoxModal()
 
   return (
-    <Card className="text-center">
+    <Card className="text-center shadow-none">
       <CardHeader>No boxes found.</CardHeader>
       <CardContent>
         <Button className="mx-auto" onClick={openNewBoxModal}>

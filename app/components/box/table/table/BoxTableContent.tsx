@@ -8,14 +8,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Table as ReactTable, flexRender } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
 
 type BoxTableContentProps = {
   table: ReactTable<BoxesDataTableRow>
 }
 
 export function BoxTableContent({ table }: BoxTableContentProps) {
+  const router = useRouter()
+
   return (
-    <div className="rounded-md border">
+    <div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((hg) => (
@@ -35,29 +38,20 @@ export function BoxTableContent({ table }: BoxTableContentProps) {
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() ? 'selected' : undefined}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={table.getAllColumns().length}
-                className="h-24 text-center"
-              >
-                No results.
-              </TableCell>
+          {table.getRowModel().rows.map((row) => (
+            <TableRow
+              key={row.id}
+              data-state={row.getIsSelected() ? 'selected' : undefined}
+              className="cursor-pointer"
+              onClick={() => router.push(`/boxes/${row.original.id}`)} // Navigate to box details on row click
+            >
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
             </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
     </div>

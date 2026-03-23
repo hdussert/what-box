@@ -15,7 +15,7 @@ type ItemTableContentProps = {
 
 export function ItemTableContent({ table }: ItemTableContentProps) {
   return (
-    <div className="rounded-md border">
+    <div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((hg) => (

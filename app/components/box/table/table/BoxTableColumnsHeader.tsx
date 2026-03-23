@@ -26,18 +26,18 @@ const BoxTableColumnsHeader = ({
     <Button
       variant="ghost"
       size="sm"
+      className="text-muted-foreground uppercase font-bold tracking-widest text-xs -ml-3"
       onClick={() => toggleSort(field)}
-      className="-ml-3 h-8"
     >
       {label}
       {isActive ? (
         isAsc ? (
-          <ArrowUp className="ml-2 h-4 w-4" />
+          <ArrowUp />
         ) : (
-          <ArrowDown className="ml-2 h-4 w-4" />
+          <ArrowDown />
         )
       ) : (
-        <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
+        <ArrowUpDown className="opacity-50" />
       )}
     </Button>
   )
