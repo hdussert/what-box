@@ -59,3 +59,28 @@ export async function getUserBoxItems(
   const user = await getCurrentUser()
   return getBoxItems(user.id, boxId, query)
 }
+
+export async function getUserBoxesIdsContainingItem(itemName: string) {
+  const user = await getCurrentUser()
+  return getBoxesIdsContainingItem(user.id, itemName)
+}
+
+export async function getBoxesIdsContainingItem(
+  userId: string,
+  itemName: string
+) {
+  const search = itemName.trim()
+
+  if (!search) {
+    return []
+  }
+
+  const itemsList = await db
+    .select({ boxId: items.boxId })
+    .from(items)
+    .where(and(eq(items.userId, userId), ilike(items.name, `%${search}%`)))
+    .groupBy(items.boxId)
+
+  const boxesIds = itemsList.map((i) => i.boxId)
+  return boxesIds
+}

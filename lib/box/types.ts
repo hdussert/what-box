@@ -1,4 +1,4 @@
-import { Box } from '@/db/schema'
+import { Box, Item } from '@/db/schema'
 import { BOXES_SORT_DIRECTIONS, BOXES_SORTABLE_COLUMNS } from '@/lib/box/const'
 
 // --- Generate types from constants for sorting options ---
@@ -22,4 +22,5 @@ export type Paginated<T> = {
   totalPages: number
 }
 
-export type BoxesPaginated = Paginated<Box>
+export type BoxWithItems = Box & { items: Item[] }
+export type BoxesPaginated = Paginated<BoxWithItems>

@@ -1,7 +1,8 @@
 import { db } from '@/db'
 import { Box, boxes } from '@/db/schema'
+import { getBoxesIdsContainingItem } from '@/lib/item'
 import { getCurrentUser } from '@/lib/user'
-import { and, desc, eq, ilike, sql } from 'drizzle-orm'
+import { and, desc, eq, ilike, inArray, or, sql } from 'drizzle-orm'
 import 'server-only'
 import { BoxesPaginated, BoxesQuery } from './types'
 import { clampInt, toOrderBy } from './utils'
@@ -59,9 +60,16 @@ export async function getUserBoxesPaginated(
   const pageSize = clampInt(query.pageSize ?? 20, 20, 5, 100)
   const page = clampInt(query.page ?? 1, 1, 1, 1_000_000)
 
+  const boxesIdsContainingItem = search
+    ? await getBoxesIdsContainingItem(user.id, search)
+    : []
+
   const filters = [
     eq(boxes.userId, user.id),
-    search ? ilike(boxes.name, `%${search}%`) : undefined,
+    or(
+      search ? ilike(boxes.name, `%${search}%`) : undefined, // Search in box name
+      search ? inArray(boxes.id, boxesIdsContainingItem) : undefined // Search in items names (via box IDs)
+    ),
   ].filter(Boolean)
 
   const whereClause = and(...filters)
@@ -76,12 +84,15 @@ export async function getUserBoxesPaginated(
   const safePage = Math.min(page, totalPages)
   const offset = (safePage - 1) * pageSize
 
-  const items = await db.query.boxes.findMany({
+  const boxesResult = await db.query.boxes.findMany({
     where: whereClause,
     orderBy: toOrderBy(query.sort),
     limit: pageSize,
     offset,
+    with: {
+      items: true,
+    },
   })
 
-  return { items, total, page: safePage, pageSize, totalPages }
+  return { items: boxesResult, total, page: safePage, pageSize, totalPages }
 }

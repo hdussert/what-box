@@ -1,12 +1,12 @@
 'use client'
 
-import { Box } from '@/db/schema'
 import { DEFAULT_BOXES_SORT_OPTION } from '@/lib/box/const'
 import {
   BoxesPaginated,
   BoxesSortDirection,
   BoxesSortField,
   BoxesSortOptions,
+  BoxWithItems,
 } from '@/lib/box/types'
 import { buildSortOption, parseSort } from '@/lib/box/utils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react'
 const DEBOUNCE_MS = 300
 
 export type BoxTableContextValue = {
-  boxes: Box[]
+  boxes: BoxWithItems[]
   total: number
 
   selectedIds: string[]

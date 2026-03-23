@@ -8,6 +8,7 @@ export const ITEMS_SORTABLE_COLUMNS = {
   name: items.name,
   quantity: items.quantity,
   condition: items.condition,
+  description: items.description,
 } as const
 
 export const ITEMS_SORT_OPTIONS = Object.keys(ITEMS_SORTABLE_COLUMNS).flatMap(

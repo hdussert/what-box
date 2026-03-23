@@ -1,13 +1,13 @@
 import BoxTableColumnsHeader from '@/app/components/box/table/table/BoxTableColumnsHeader'
+import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Box } from '@/db/schema'
+import { BoxesPaginated } from '@/lib/box'
 import { ColumnDef } from '@tanstack/react-table'
-import Link from 'next/link'
 import { useMemo } from 'react'
 
 export type BoxesDataTableRow = Pick<
-  Box,
-  'id' | 'shortId' | 'name' | 'createdAt'
+  BoxesPaginated['items'][number],
+  'id' | 'shortId' | 'name' | 'items'
 >
 
 export function BoxTableColumns() {
@@ -56,8 +56,19 @@ export function BoxTableColumns() {
           )
         },
       },
+      {
+        accessorKey: 'items',
+        header: () => (
+          <div className="text-muted-foreground uppercase font-bold tracking-widest text-xs">
+            Items
+          </div>
+        ),
         cell: ({ row }) => (
-          <Link href={`/boxes/${row.original.id}`}>{row.original.name}</Link>
+          <div className="flex flex-wrap gap-1">
+            {row.original.items.map((item) => (
+              <Badge key={item.id}>{item.name}</Badge>
+            ))}
+          </div>
         ),
       },
     ],

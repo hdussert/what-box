@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import { InferSelectModel, sql } from 'drizzle-orm'
+import { InferSelectModel, relations, sql } from 'drizzle-orm'
 import { pgTable, text } from 'drizzle-orm/pg-core'
 
 // Common column definitions
@@ -59,6 +59,21 @@ export const items = pgTable('items', {
   quantity: text('quantity').notNull(),
   createdAt: createdAt(),
 })
+
+// Relations definitions for easier querying with Drizzle.
+// This is not defining foreign keys (that's done in the table definitions above),
+// but rather telling Drizzle how the tables are related so it can generate the correct JOINs when you query with relations.
+export const boxesRelations = relations(boxes, ({ many }) => ({
+  items: many(items),
+  images: many(images),
+}))
+
+export const itemsRelations = relations(items, ({ one }) => ({
+  box: one(boxes, {
+    fields: [items.boxId],
+    references: [boxes.id],
+  }),
+}))
 
 export type User = InferSelectModel<typeof users>
 export type Box = InferSelectModel<typeof boxes>
