@@ -6,8 +6,8 @@ import {
   isStartable,
   isUploading,
 } from '@/app/components/box/image/machines/utils'
+import { v4 as generateUUID } from 'uuid'
 import { createMachine, enqueueActions, spawnChild, stopChild } from 'xstate'
-
 export type FilesUploadChildren = Record<string, FileUploadActorRef | undefined>
 
 const MAX_CONCURRENT_UPLOADS = 2
@@ -60,7 +60,7 @@ export const filesUploaderMachine = createMachine(
 
         event.files.forEach((file) => {
           // Generate a unique ID for this upload item and create a preview URL for the file
-          const uploadId = crypto.randomUUID()
+          const uploadId = generateUUID()
 
           // TODO: if isImage(file) { ... }
           enqueue(

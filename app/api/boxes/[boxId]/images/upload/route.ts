@@ -4,8 +4,8 @@ import { createImageRecord } from '@/lib/image'
 import { getCurrentUser } from '@/lib/user'
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 import { NextResponse } from 'next/server'
+import { v4 as generateUUID } from 'uuid'
 import { z } from 'zod'
-
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ boxId: string }> }
@@ -29,7 +29,7 @@ export async function POST(
         }
 
         // Generate a unique pathname for the upload
-        const id = crypto.randomUUID()
+        const id = generateUUID
         const origin =
           env.NODE_ENV === 'development'
             ? 'https://c3800a9271a2.ngrok-free.app' // TODO: use a dynamic solution for local development instead of hardcoding the ngrok URL
