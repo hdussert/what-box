@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Plus } from 'lucide-react'
-import { useState, useTransition } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
 type NewItemRow = {
@@ -27,6 +27,15 @@ const ItemCreateForm = () => {
   const { boxId } = useItemTableContext()
   const [newItem, setNewItem] = useState<NewItemRow>(EMPTY_ROW)
   const [isPending, startTransition] = useTransition()
+  const nameInputRef = useRef<HTMLInputElement>(null)
+  const [shouldFocus, setShouldFocus] = useState(false)
+
+  useEffect(() => {
+    if (!isPending && shouldFocus) {
+      nameInputRef.current?.focus()
+      setShouldFocus(false)
+    }
+  }, [isPending, shouldFocus])
 
   const handleCreateItem = () => {
     if (!newItem.name.trim() || !newItem.quantity.trim()) {
@@ -46,6 +55,7 @@ const ItemCreateForm = () => {
       if (result.success) {
         toast.success('Item created')
         setNewItem(EMPTY_ROW)
+        setShouldFocus(true)
       } else {
         toast.error(result.error || 'Failed to create item')
       }
@@ -63,6 +73,7 @@ const ItemCreateForm = () => {
       <CardContent>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <Input
+            ref={nameInputRef}
             placeholder="Item name *"
             value={newItem.name}
             onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
