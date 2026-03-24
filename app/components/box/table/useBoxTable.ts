@@ -35,6 +35,7 @@ export type BoxTableContextValue = {
   goToLastPage: () => void
   goToPage: (page: number) => void
 
+  getSelectedBoxes: () => BoxWithItems[]
   clearSelection: () => void
   clearingSelection: boolean // Hacky flag to trigger clearing BoxTable's rows selection
 }
@@ -104,6 +105,8 @@ export const useBoxTable = (props: BoxesPaginated): BoxTableContextValue => {
     return () => clearTimeout(timeoutId)
   }, [search, sort, page])
 
+  const getSelectedBoxes = () =>
+    boxes.filter((box) => selectedIds.includes(box.id))
   const clearSelection = () => setClearingSelection((prev) => !prev)
 
   return {
@@ -125,6 +128,7 @@ export const useBoxTable = (props: BoxesPaginated): BoxTableContextValue => {
     goToLastPage,
     goToPage,
 
+    getSelectedBoxes,
     clearSelection,
     clearingSelection,
   }
