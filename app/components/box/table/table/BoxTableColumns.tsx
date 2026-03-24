@@ -64,10 +64,15 @@ export function BoxTableColumns() {
           </div>
         ),
         cell: ({ row }) => (
-          <div className="flex flex-wrap gap-1">
-            {row.original.items.map((item) => (
-              <Badge key={item.id}>{item.name}</Badge>
+          <div className="flex gap-1">
+            {row.original.items.slice(0, 6).map((item) => (
+              <Badge variant="outline" key={item.id}>
+                {item.name}
+              </Badge>
             ))}
+            {row.original.items.length > 6 && (
+              <Badge variant="outline">+{row.original.items.length - 6}</Badge>
+            )}
           </div>
         ),
       },
