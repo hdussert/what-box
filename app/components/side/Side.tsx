@@ -6,12 +6,12 @@ import {
   SideNavItem,
   SideNavItemProps,
 } from '@/app/components/side/SideNavItem'
-import { Button } from '@/components/ui/button'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarMenu,
+  SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar'
@@ -43,14 +43,14 @@ const Side = () => {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <Button
+        <SidebarMenuButton
+          className="hover:cursor-pointer whitespace-nowrap"
           onClick={() => signOut()}
-          className="justify-start"
-          variant="ghost"
+          tooltip={'Sign out'}
         >
           <LogOut />
           Sign out
-        </Button>
+        </SidebarMenuButton>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
