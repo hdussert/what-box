@@ -63,6 +63,7 @@ export async function getUserBoxesPaginated(
   const boxesIdsContainingItem = search
     ? await getBoxesIdsContainingItem(user.id, search)
     : []
+  const isItemsMatchingSearch = search && boxesIdsContainingItem.length > 0
 
   const filters = [
     eq(boxes.userId, user.id),
@@ -90,7 +91,16 @@ export async function getUserBoxesPaginated(
     limit: pageSize,
     offset,
     with: {
-      items: true,
+      items: isItemsMatchingSearch
+        ? {
+            orderBy: (items, { sql }) => [
+              sql`CASE WHEN ${ilike(
+                items.name,
+                `%${search}%`
+              )} THEN 0 ELSE 1 END`, // Prioritize items matching the search
+            ],
+          }
+        : true,
     },
   })
 
