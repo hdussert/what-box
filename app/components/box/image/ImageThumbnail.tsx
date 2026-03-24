@@ -14,7 +14,7 @@ const ImageThumbnail = ({
   return (
     <div
       className={cn(
-        'w-full h-full border-[0.5] border-accent overflow-hidden',
+        'w-full h-full overflow-hidden rounded-lg shadow-sm',
         className
       )}
     >

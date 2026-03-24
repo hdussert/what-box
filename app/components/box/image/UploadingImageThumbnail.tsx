@@ -37,7 +37,7 @@ const UploadingImageThumbnail = ({
   if (!previewUrl) return null
 
   return (
-    <Skeleton>
+    <Skeleton className="aspect-square w-full rounded-lg">
       <ImageThumbnail
         src={previewUrl}
         alt={`Preview ${file.name}`}
