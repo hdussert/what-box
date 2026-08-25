@@ -23,6 +23,25 @@ export async function createUser(email: string, password: string) {
   return user
 }
 
+// Update user password
+export async function updateUserPassword(userId: string, password: string) {
+  const hashedPassword = await hashPassword(password)
+  const date = new Date()
+
+  console.table({ pwd: hashedPassword, date: date, uid: userId })
+  const [user] = await db
+    .update(users)
+    .set({ password: hashedPassword, tokenInvalidBefore: date })
+    .where(eq(users.id, userId))
+    .returning({
+      id: users.id,
+      email: users.email,
+    })
+
+  if (!user) throw new Error("Couldn't change the user password")
+  return user
+}
+
 // Get user by email
 export const getUserByEmail = cache(async (email: string) => {
   return db.query.users.findFirst({
