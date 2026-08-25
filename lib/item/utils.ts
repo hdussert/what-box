@@ -7,7 +7,7 @@ import { ItemsSortDirection, ItemsSortField, ItemsSortOptions } from './types'
 
 export function buildSortOption(
   field: ItemsSortField,
-  direction: ItemsSortDirection
+  direction: ItemsSortDirection,
 ): ItemsSortOptions {
   return `${field}_${direction}`
 }
@@ -28,6 +28,10 @@ export function toOrderBy(sort: ItemsSortOptions | undefined) {
 
   const itemField = field as ItemsSortField
   const itemColumn = ITEMS_SORTABLE_COLUMNS[itemField]
+
+  if (itemField === 'createdAt') {
+    return sortFunc(itemColumn)
+  }
 
   return sortFunc(sql`lower(${itemColumn})`)
 }

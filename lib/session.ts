@@ -49,7 +49,7 @@ export async function verifyAccessToken(token: string) {
 
   const tokenIssuedAt = payload.iat as number // seconds
   const tokenInvalidBefore = Math.floor(
-    new Date(user.tokenInvalidBefore).getTime() / 1000,
+    user.tokenInvalidBefore.getTime() / 1000,
   )
 
   if (tokenIssuedAt < tokenInvalidBefore) {

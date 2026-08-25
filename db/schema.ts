@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
-import { InferSelectModel, relations, sql } from 'drizzle-orm'
-import { integer, pgTable, text } from 'drizzle-orm/pg-core'
+import { InferSelectModel, relations } from 'drizzle-orm'
+import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 // Common column definitions
 const id = () =>
@@ -8,10 +8,7 @@ const id = () =>
     .primaryKey()
     .$default(() => randomUUID())
 
-const createdAt = () =>
-  integer('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull()
+const createdAt = () => timestamp('created_at').notNull().defaultNow()
 
 const userIdRef = () =>
   text('user_id')
@@ -28,9 +25,7 @@ export const users = pgTable('users', {
   id: id(),
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
-  tokenInvalidBefore: integer('token_invalid_before')
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  tokenInvalidBefore: timestamp('token_invalid_before').notNull().defaultNow(),
   createdAt: createdAt(),
 })
 

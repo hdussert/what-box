@@ -7,7 +7,7 @@ import { BoxesSortDirection, BoxesSortField, BoxesSortOptions } from './types'
 
 export function buildSortOption(
   field: BoxesSortField,
-  direction: BoxesSortDirection
+  direction: BoxesSortDirection,
 ): BoxesSortOptions {
   return `${field}_${direction}`
 }
@@ -29,6 +29,10 @@ export function toOrderBy(sort: BoxesSortOptions | undefined) {
   const boxField = field as BoxesSortField
   const boxColumn = BOXES_SORTABLE_COLUMNS[boxField]
 
+  if (boxField === 'createdAt') {
+    return sortFunc(boxColumn)
+  }
+
   return sortFunc(sql`lower(${boxColumn})`)
 }
 
@@ -36,7 +40,7 @@ export function clampInt(
   value: unknown,
   fallback: number,
   min: number,
-  max: number
+  max: number,
 ) {
   const n = typeof value === 'number' ? value : Number(value)
   if (!Number.isFinite(n)) return fallback
