@@ -1,4 +1,5 @@
 import { env } from '@/env'
+import { getUserById } from '@/lib/user'
 import * as jose from 'jose'
 import { cookies } from 'next/headers'
 import 'server-only'
@@ -6,7 +7,7 @@ import 'server-only'
 // JWT types
 interface JWTPayload {
   userId: string
-  [key: string]: string | number | boolean | null | undefined
+  [key: string]: string | number | boolean | null | undefined // This is ugly af
 }
 
 const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET)
@@ -29,6 +30,33 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   } catch {
     return null
   }
+}
+
+export async function verifyAccessToken(token: string) {
+  const payload = await verifyJWT(token)
+  if (!payload)
+    return {
+      valid: false,
+      error: 'Invalid token structure',
+    }
+
+  const user = await getUserById(payload.userId) // payload.sub is usually the user ID
+  if (!user)
+    return {
+      valid: false,
+      error: 'User not found',
+    }
+
+  const tokenIssuedAt = payload.iat as number // seconds
+  const tokenInvalidBefore = Math.floor(
+    new Date(user.tokenInvalidBefore).getTime() / 1000,
+  )
+
+  if (tokenIssuedAt < tokenInvalidBefore) {
+    return { valid: false, error: 'Token has been revoked by a security event' }
+  }
+
+  return { valid: true, user }
 }
 
 export async function shouldRefreshToken(token: string): Promise<boolean> {
@@ -73,17 +101,14 @@ export async function createSession(userId: string) {
 
 export async function getSession() {
   const cookieStore = await cookies()
-
   const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME)?.value
   if (!token) return null
 
-  const payload = await verifyJWT(token)
-  if (!payload) {
-    // cookieStore.delete(JWT_TOKEN_COOKIE_NAME)
-    return null
-  }
+  // TODO: Check errors, display toasts (like "Session expired")
+  const { valid, user } = await verifyAccessToken(token)
+  if (!valid || !user) return null
 
-  return { userId: payload.userId }
+  return user
 }
 
 // Delete session by clearing the JWT cookie

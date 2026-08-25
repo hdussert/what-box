@@ -41,10 +41,8 @@ export const getUserById = cache(async (id: string) => {
  * If no user is authenticated, redirects to the sign-in page.
  */
 export const getCurrentUser = async () => {
-  const session = await getSession()
-  if (!session) redirect('/signin')
-
-  const user = await getUserById(session.userId)
+  const user = await getSession()
   if (!user) redirect('/signin')
+
   return user
 }

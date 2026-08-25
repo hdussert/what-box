@@ -9,7 +9,7 @@ const id = () =>
     .$default(() => randomUUID())
 
 const createdAt = () =>
-  text('created_at')
+  integer('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull()
 
@@ -28,6 +28,9 @@ export const users = pgTable('users', {
   id: id(),
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
+  tokenInvalidBefore: integer('token_invalid_before')
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
   createdAt: createdAt(),
 })
 
