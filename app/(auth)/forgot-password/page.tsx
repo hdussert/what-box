@@ -1,28 +1,24 @@
-import SignInForm from '@/app/components/auth/SignInForm'
+import ForgotPasswordForm from '@/app/components/auth/ForgotPasswordForm'
 import { Card, CardContent } from '@/components/ui/card'
 import Typography from '@/components/ui/typography'
 import Link from 'next/link'
 
-export default function SignInPage() {
+export default function ForgotPasswordPage() {
   return (
     <>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Typography.H1 className="mt-2 text-center">Sign in</Typography.H1>
+        <Typography.H1 className="mt-2 text-center">
+          Forgot password
+        </Typography.H1>
       </div>
 
       <Card className="sm:mx-auto sm:w-full sm:max-w-md mt-8">
         <CardContent>
-          <SignInForm />
+          <ForgotPasswordForm />
           <p className="mt-4 text-sm text-center">
-            Don&apos;t have an account?&nbsp;
+            I remembered my password,&nbsp;
             <Link href="/signup" className="font-medium">
-              Sign up
-            </Link>
-          </p>
-          <p className="text-sm mt-4 text-center">
-            Forgot password?&nbsp;
-            <Link href="/forgot-password" className="font-medium">
-              Click here
+              go back
             </Link>
           </p>
         </CardContent>
