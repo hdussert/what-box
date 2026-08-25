@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 import { InferSelectModel, relations, sql } from 'drizzle-orm'
-import { pgTable, text } from 'drizzle-orm/pg-core'
+import { integer, pgTable, text } from 'drizzle-orm/pg-core'
 
 // Common column definitions
 const id = () =>
@@ -55,8 +55,7 @@ export const items = pgTable('items', {
   boxId: boxIdRef(),
   name: text('name').notNull(),
   description: text('description'),
-  condition: text('condition'),
-  quantity: text('quantity').notNull(),
+  quantity: integer('quantity').notNull(),
   createdAt: createdAt(),
 })
 

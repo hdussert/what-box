@@ -26,6 +26,5 @@ export type ItemCreate = {
   boxId: string
   name: string
   description?: string
-  condition?: string
-  quantity: string
+  quantity: number
 }

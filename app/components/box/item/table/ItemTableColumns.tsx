@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 
 export type ItemsDataTableRow = Pick<
   Item,
-  'id' | 'name' | 'quantity' | 'condition' | 'description'
+  'id' | 'name' | 'quantity' | 'description'
 >
 
 export function ItemTableColumns() {
@@ -47,13 +47,7 @@ export function ItemTableColumns() {
           <ItemTableColumnsHeader field="quantity" label="Quantity" />
         ),
       },
-      {
-        accessorKey: 'condition',
-        header: () => (
-          <ItemTableColumnsHeader field="condition" label="Condition" />
-        ),
-        cell: ({ row }) => row.original.condition || '—',
-      },
+
       {
         accessorKey: 'description',
         header: () => (

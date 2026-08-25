@@ -12,14 +12,12 @@ import { toast } from 'sonner'
 type NewItemRow = {
   name: string
   quantity: string
-  condition: string
   description: string
 }
 
 const EMPTY_ROW: NewItemRow = {
   name: '',
   quantity: '',
-  condition: '',
   description: '',
 }
 
@@ -38,7 +36,10 @@ const ItemCreateForm = () => {
   }, [isPending, shouldFocus])
 
   const handleCreateItem = () => {
-    if (!newItem.name.trim() || !newItem.quantity.trim()) {
+    const quantity = parseInt(newItem.quantity)
+    const name = newItem.name.trim()
+
+    if (!name || !quantity || quantity <= 0) {
       toast.error('Name and quantity are required')
       return
     }
@@ -46,9 +47,8 @@ const ItemCreateForm = () => {
     startTransition(async () => {
       const result = await createItemAction({
         boxId,
-        name: newItem.name.trim(),
-        quantity: newItem.quantity.trim(),
-        condition: newItem.condition.trim() || undefined,
+        name: name,
+        quantity: quantity,
         description: newItem.description.trim() || undefined,
       })
 
@@ -69,8 +69,8 @@ const ItemCreateForm = () => {
   }
 
   return (
-    <Card>
-      <CardContent>
+    <Card className="py-2">
+      <CardContent className="px-2">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <Input
             ref={nameInputRef}
@@ -91,16 +91,7 @@ const ItemCreateForm = () => {
             disabled={isPending}
             className="flex-1"
           />
-          <Input
-            placeholder="Condition"
-            value={newItem.condition}
-            onChange={(e) =>
-              setNewItem({ ...newItem, condition: e.target.value })
-            }
-            onKeyDown={handleKeyDown}
-            disabled={isPending}
-            className="flex-1"
-          />
+
           <Input
             placeholder="Description"
             value={newItem.description}

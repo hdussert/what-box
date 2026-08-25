@@ -7,7 +7,6 @@ export const ITEMS_SORTABLE_COLUMNS = {
   createdAt: items.createdAt,
   name: items.name,
   quantity: items.quantity,
-  condition: items.condition,
   description: items.description,
 } as const
 
