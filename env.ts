@@ -14,6 +14,7 @@ export const env = createEnv({
     DATABASE_URL: z.url(),
     BLOB_READ_WRITE_TOKEN: z.string(),
 
+    RESEND_API_KEY: z.string(),
     // Present on Vercel deployments; absent locally
     VERCEL: z.string().optional(),
   },
@@ -39,6 +40,7 @@ export const env = createEnv({
     VERCEL: process.env.VERCEL,
     BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
 
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
