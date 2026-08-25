@@ -13,7 +13,7 @@ const BoxTablePrintButton = () => {
   return (
     <>
       <Button
-        size="sm"
+        size="icon"
         variant="outline"
         disabled={selectedIds.length === 0}
         onClick={print}

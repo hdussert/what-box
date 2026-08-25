@@ -8,7 +8,7 @@ import { v4 as generateUUID } from 'uuid'
 import { z } from 'zod'
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ boxId: string }> }
+  { params }: { params: Promise<{ boxId: string }> },
 ) {
   console.log('[upload route] POST', req.url) // <- add
 
@@ -32,7 +32,7 @@ export async function POST(
         const id = generateUUID
         const origin =
           env.NODE_ENV === 'development'
-            ? 'https://c3800a9271a2.ngrok-free.app' // TODO: use a dynamic solution for local development instead of hardcoding the ngrok URL
+            ? 'https://7d76-2a01-e0a-11b3-c530-2966-b2b3-37c9-5231.ngrok-free.app' // TODO: use a dynamic solution for local development instead of hardcoding the ngrok URL
             : new URL(req.url).origin
 
         // Organized into a per-user/per-box folder structure
@@ -69,7 +69,7 @@ export async function POST(
           message: 'Validation failed',
           errors: z.flattenError(error).fieldErrors,
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -79,7 +79,7 @@ export async function POST(
         message: (error as Error).message ?? 'Upload token error',
         error: 'Upload token error',
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

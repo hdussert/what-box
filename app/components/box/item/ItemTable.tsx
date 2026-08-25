@@ -11,7 +11,8 @@ import ItemTableEmpty from '@/app/components/box/item/table/ItemTableEmpty'
 import ItemCreateForm from '@/app/components/box/item/toolbar/ItemCreateForm'
 
 import ItemTableToolbar from '@/app/components/box/item/toolbar/ItemTableToolbar'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { useIsMobile } from '@/hooks/use-mobile'
 import { ItemsPaginated } from '@/lib/item/types'
 import {
   getCoreRowModel,
@@ -28,6 +29,7 @@ const ItemTableInner = () => {
   const { setSelectedIds, clearingSelection, items, total } =
     useItemTableContext()
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const isMobile = useIsMobile()
 
   const columns = ItemTableColumns()
 
@@ -60,12 +62,10 @@ const ItemTableInner = () => {
 
   return (
     <div className="space-y-2">
-      <ItemCreateForm />
-      <Card>
-        <CardHeader>
+      {isMobile ? <ItemCreateForm /> : <ItemCreateForm />}
+      <Card className="py-2">
+        <CardContent className="px-2">
           <ItemTableToolbar />
-        </CardHeader>
-        <CardContent>
           {isEmpty ? <ItemTableEmpty /> : <ItemTableContent table={table} />}
         </CardContent>
         <CardFooter>

@@ -13,8 +13,8 @@ const BoxTableDeleteButton = () => {
   return (
     <>
       <Button
-        size="sm"
-        variant="outlineDestructive"
+        size="icon"
+        variant="outline"
         disabled={selectedIds.length === 0}
         onClick={() => setShowDeleteDialog(true)}
       >

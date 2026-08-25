@@ -5,12 +5,9 @@ import Link from 'next/link'
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Typography.H1 className="text-center">WhatBox</Typography.H1>
-        <Typography.H2 className="mt-2 text-center">
-          Sign in to your account
-        </Typography.H2>
+        <Typography.H1 className="mt-2 text-center">Sign in</Typography.H1>
       </div>
 
       <Card className="sm:mx-auto sm:w-full sm:max-w-md mt-8">
@@ -24,6 +21,6 @@ export default function SignInPage() {
           </p>
         </CardContent>
       </Card>
-    </div>
+    </>
   )
 }

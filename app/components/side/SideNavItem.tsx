@@ -1,4 +1,4 @@
-import { SidebarMenuButton } from '@/components/ui/sidebar'
+import { SidebarMenuButton, useSidebar } from '@/components/ui/sidebar'
 import Link from 'next/link'
 import { ComponentType } from 'react'
 
@@ -6,19 +6,25 @@ type SideNavLinkProps = {
   name: string
   Icon: ComponentType
   href: string
+  onClick?: () => void
 }
 
 type SideButtonProps = {
   name: string
   Icon: ComponentType
-  onClick: () => void
+  onClick?: () => void
 }
 
 export type SideNavItemProps = SideNavLinkProps | SideButtonProps
 
-const SideNavLink = ({ name, Icon, href }: SideNavLinkProps) => {
+const SideNavLink = ({ name, Icon, href, onClick }: SideNavLinkProps) => {
   return (
-    <SidebarMenuButton asChild tooltip={name} className="whitespace-nowrap">
+    <SidebarMenuButton
+      asChild
+      tooltip={name}
+      className="whitespace-nowrap"
+      onClick={onClick}
+    >
       <Link href={href}>
         <Icon />
         {name}
@@ -41,9 +47,14 @@ const SideButton = ({ name, Icon, onClick }: SideButtonProps) => {
 }
 
 export const SideNavItem = (props: SideNavLinkProps | SideButtonProps) => {
+  const { toggleSidebar, isMobile } = useSidebar()
+  const handleClick = () => {
+    props.onClick?.()
+    if (isMobile) toggleSidebar()
+  }
   if ('href' in props) {
-    return <SideNavLink {...props} />
+    return <SideNavLink {...props} onClick={handleClick} />
   } else {
-    return <SideButton {...props} />
+    return <SideButton {...props} onClick={handleClick} />
   }
 }

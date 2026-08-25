@@ -21,7 +21,7 @@ export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
     const images = await getBoxImages(user.id, boxIds)
     const imagesPathnames = images.map((image) => image.pathname)
     await deleteFiles(imagesPathnames).catch((error) => {
-      console.log('Failed to delete some image files :', error)
+      console.error('Failed to delete some image files :', error)
       // Continue even if the blob deletion fails (shouldn't stop the user)
     })
 

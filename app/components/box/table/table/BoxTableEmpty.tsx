@@ -1,21 +1,17 @@
 'use client'
 
-import { useNewBoxModal } from '@/app/components/box/new/NewBoxModalProvider'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import NewBoxButton from '@/app/components/box/new/NewBoxButton'
+import Typography from '@/components/ui/typography'
 
 const BoxTableEmpty = () => {
-  const { openModal: openNewBoxModal } = useNewBoxModal()
-
   return (
-    <Card className="text-center shadow-none">
-      <CardHeader>No boxes found.</CardHeader>
-      <CardContent>
-        <Button className="mx-auto" onClick={openNewBoxModal}>
-          Create a Box
-        </Button>
-      </CardContent>
-    </Card>
+    <div className="text-center pt-12 pb-6 text-muted-foreground">
+      <Typography.H3 className="mb-2">No boxes found.</Typography.H3>
+      <Typography.P className="text-sm mb-4">
+        Create your first box and start organizing your items
+      </Typography.P>
+      <NewBoxButton />
+    </div>
   )
 }
 

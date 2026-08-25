@@ -26,7 +26,7 @@ export default async function Layout({
   return (
     <>
       {children}
-      <Separator className="mt-2" />
+      <Separator />
       <div className="xl:flex-row flex flex-col gap-4">
         <div className="xl:w-2/3">{items}</div>
         <Separator className="xl:hidden" />

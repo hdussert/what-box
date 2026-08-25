@@ -9,7 +9,8 @@ import { BoxTableColumns } from '@/app/components/box/table/table/BoxTableColumn
 import { BoxTableContent } from '@/app/components/box/table/table/BoxTableContent'
 import BoxTableEmpty from '@/app/components/box/table/table/BoxTableEmpty'
 import BoxTableToolbar from '@/app/components/box/table/toolbar/BoxTableToolbar'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import { BoxesPaginated } from '@/lib/box/types'
 import {
   getCoreRowModel,
@@ -59,14 +60,13 @@ const BoxTableInner = () => {
 
   return (
     <div>
-      <Card>
-        <CardHeader>
+      <Card className="py-2 gap-2">
+        <CardContent className="px-2">
           <BoxTableToolbar />
-        </CardHeader>
-        <CardContent>
+          <Separator className="mt-2" />
           {isEmpty ? <BoxTableEmpty /> : <BoxTableContent table={table} />}
         </CardContent>
-        <CardFooter>
+        <CardFooter className="px-4">
           <BoxTablePagination />
         </CardFooter>
       </Card>

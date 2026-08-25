@@ -1,17 +1,15 @@
 'use client'
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import Typography from '@/components/ui/typography'
 
 const ItemTableEmpty = () => {
   return (
-    <Card className="text-center shadow-none">
-      <CardHeader>No items found.</CardHeader>
-      <CardContent>
-        <p className="text-sm text-muted-foreground">
-          Start adding items to this box.
-        </p>
-      </CardContent>
-    </Card>
+    <div className="text-center text-muted-foreground pt-12 pb-6">
+      <Typography.H3 className="mb-2">No items found.</Typography.H3>
+      <Typography.P className="text-sm">
+        Start adding items to this box.
+      </Typography.P>
+    </div>
   )
 }
 
