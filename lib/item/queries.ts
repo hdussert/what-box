@@ -1,24 +1,24 @@
 import { db } from '@/db'
 import { Item, items } from '@/db/schema'
+import { toOrderBy } from '@/lib/item'
 import { getCurrentUser } from '@/lib/user'
 import { and, eq, ilike, sql } from 'drizzle-orm'
 import 'server-only'
 import { ItemsPaginated, ItemsQuery } from './types'
-import { toOrderBy } from './utils'
 
 export async function getItemById(
   userId: string,
-  itemId: string
+  itemId: string,
 ): Promise<Item | undefined> {
   return db.query.items.findFirst({
-    where: and(eq(items.id, itemId), eq(items.userId, userId)),
+    where: { id: itemId, userId },
   })
 }
 
 export async function getBoxItems(
   userId: string,
   boxId: string,
-  query: ItemsQuery = {}
+  query: ItemsQuery = {},
 ): Promise<ItemsPaginated> {
   const search = query.search?.trim()
   const pageSize = query.pageSize ?? 100
@@ -43,8 +43,14 @@ export async function getBoxItems(
   const offset = (safePage - 1) * pageSize
 
   const itemsList = await db.query.items.findMany({
-    where: whereClause,
-    orderBy: toOrderBy(query.sort),
+    where: {
+      userId,
+      boxId,
+      name: {
+        ilike: `%${search}%`,
+      },
+    },
+    orderBy: (table, { desc, asc }) => toOrderBy(query.sort, table, desc, asc),
     limit: pageSize,
     offset,
   })
@@ -54,7 +60,7 @@ export async function getBoxItems(
 
 export async function getUserBoxItems(
   boxId: string,
-  query: ItemsQuery = {}
+  query: ItemsQuery = {},
 ): Promise<ItemsPaginated> {
   const user = await getCurrentUser()
   return getBoxItems(user.id, boxId, query)
@@ -67,7 +73,7 @@ export async function getUserBoxesIdsContainingItem(itemName: string) {
 
 export async function getBoxesIdsContainingItem(
   userId: string,
-  itemName: string
+  itemName: string,
 ) {
   const search = itemName.trim()
 

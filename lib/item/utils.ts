@@ -1,8 +1,6 @@
-import {
-  DEFAULT_ITEMS_SORT_OPTION,
-  ITEMS_SORTABLE_COLUMNS,
-} from '@/lib/item/const'
-import { asc, desc, sql } from 'drizzle-orm'
+import { items } from '@/db/schema'
+import { DEFAULT_ITEMS_SORT_OPTION } from '@/lib/item/const'
+import { AnyColumn, SQL, sql, SQLWrapper } from 'drizzle-orm'
 import { ItemsSortDirection, ItemsSortField, ItemsSortOptions } from './types'
 
 export function buildSortOption(
@@ -22,12 +20,17 @@ export function parseSort(sort: ItemsSortOptions | undefined) {
   }
 }
 
-export function toOrderBy(sort: ItemsSortOptions | undefined) {
+export function toOrderBy(
+  sort: ItemsSortOptions | undefined,
+  itemsTable: typeof items,
+  asc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
+  desc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
+) {
   const { field, direction } = parseSort(sort)
   const sortFunc = direction === 'asc' ? asc : desc
 
   const itemField = field as ItemsSortField
-  const itemColumn = ITEMS_SORTABLE_COLUMNS[itemField]
+  const itemColumn = itemsTable[itemField]
 
   if (itemField === 'createdAt') {
     return sortFunc(itemColumn)

@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
-import { InferSelectModel, relations } from 'drizzle-orm'
-import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { InferSelectModel } from 'drizzle-orm'
+import { integer, snakeCase, text, timestamp } from 'drizzle-orm/pg-core'
 
 // Common column definitions
 const id = () =>
@@ -21,7 +21,7 @@ const boxIdRef = () =>
     .notNull()
 
 // Tables definitions
-export const users = pgTable('users', {
+export const users = snakeCase.table('users', {
   id: id(),
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
@@ -29,7 +29,7 @@ export const users = pgTable('users', {
   createdAt: createdAt(),
 })
 
-export const boxes = pgTable('boxes', {
+export const boxes = snakeCase.table('boxes', {
   id: id(),
   shortId: text('short_id'),
   name: text('name').notNull(),
@@ -38,7 +38,7 @@ export const boxes = pgTable('boxes', {
   createdAt: createdAt(),
 })
 
-export const images = pgTable('images', {
+export const images = snakeCase.table('images', {
   id: id(),
   boxId: boxIdRef(),
   userId: userIdRef(),
@@ -47,7 +47,7 @@ export const images = pgTable('images', {
   createdAt: createdAt(),
 })
 
-export const items = pgTable('items', {
+export const items = snakeCase.table('items', {
   id: id(),
   userId: userIdRef(),
   boxId: boxIdRef(),
@@ -56,21 +56,6 @@ export const items = pgTable('items', {
   quantity: integer('quantity').notNull(),
   createdAt: createdAt(),
 })
-
-// Relations definitions for easier querying with Drizzle.
-// This is not defining foreign keys (that's done in the table definitions above),
-// but rather telling Drizzle how the tables are related so it can generate the correct JOINs when you query with relations.
-export const boxesRelations = relations(boxes, ({ many }) => ({
-  items: many(items),
-  images: many(images),
-}))
-
-export const itemsRelations = relations(items, ({ one }) => ({
-  box: one(boxes, {
-    fields: [items.boxId],
-    references: [boxes.id],
-  }),
-}))
 
 export type User = InferSelectModel<typeof users>
 export type Box = InferSelectModel<typeof boxes>

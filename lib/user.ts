@@ -45,13 +45,13 @@ export async function updateUserPassword(userId: string, password: string) {
 // Get user by email
 export const getUserByEmail = cache(async (email: string) => {
   return db.query.users.findFirst({
-    where: eq(users.email, email),
+    where: { email },
   })
 })
 
 export const getUserById = cache(async (id: string) => {
   return db.query.users.findFirst({
-    where: eq(users.id, id),
+    where: { id },
   })
 })
 

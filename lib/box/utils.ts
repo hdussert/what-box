@@ -1,8 +1,6 @@
-import {
-  BOXES_SORTABLE_COLUMNS,
-  DEFAULT_BOXES_SORT_OPTION,
-} from '@/lib/box/const'
-import { asc, desc, sql } from 'drizzle-orm'
+import { boxes } from '@/db/schema'
+import { DEFAULT_BOXES_SORT_OPTION } from '@/lib/box/const'
+import { AnyColumn, SQL, sql, SQLWrapper } from 'drizzle-orm'
 import { BoxesSortDirection, BoxesSortField, BoxesSortOptions } from './types'
 
 export function buildSortOption(
@@ -22,12 +20,17 @@ export function parseSort(sort: BoxesSortOptions | undefined) {
   }
 }
 
-export function toOrderBy(sort: BoxesSortOptions | undefined) {
+export function toOrderBy(
+  sort: BoxesSortOptions | undefined,
+  boxesTable: typeof boxes,
+  asc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
+  desc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
+) {
   const { field, direction } = parseSort(sort)
   const sortFunc = direction === 'asc' ? asc : desc
 
   const boxField = field as BoxesSortField
-  const boxColumn = BOXES_SORTABLE_COLUMNS[boxField]
+  const boxColumn = boxesTable[boxField]
 
   if (boxField === 'createdAt') {
     return sortFunc(boxColumn)
