@@ -47,7 +47,7 @@ const ItemTableInner = () => {
 
   const computedSelectedIds = useMemo(
     () => table.getSelectedRowModel().rows.map((r) => r.original.id),
-    [table.getSelectedRowModel().rows]
+    [table.getSelectedRowModel().rows],
   )
 
   useEffect(() => {

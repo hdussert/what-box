@@ -28,8 +28,6 @@ type UploadFileInput = {
 }
 const uploadFile = fromPromise<PutBlobResult, UploadFileInput>(
   async ({ input }) => {
-    // Test error handling
-
     const { context, self } = input
     const { boxId, id, file } = context
     const filePath = `${boxId}/${id}-${file.name}`
@@ -41,7 +39,7 @@ const uploadFile = fromPromise<PutBlobResult, UploadFileInput>(
       },
     })
     return blob
-  }
+  },
 )
 
 type FileUploadMachine = typeof fileUploadMachine

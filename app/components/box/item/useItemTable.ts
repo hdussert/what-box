@@ -41,7 +41,7 @@ export type ItemTableContextValue = {
 }
 
 export const useItemTable = (
-  props: ItemsPaginated & { boxId: string }
+  props: ItemsPaginated & { boxId: string },
 ): ItemTableContextValue => {
   const router = useRouter()
   const pathname = usePathname()
@@ -51,7 +51,7 @@ export const useItemTable = (
   const [clearingSelection, setClearingSelection] = useState(false)
   const [search, setSearch] = useState<string>(searchParams.get('search') || '')
   const [sort, setSort] = useState<ItemsSortOptions>(
-    (searchParams.get('sort') as ItemsSortOptions) || DEFAULT_ITEMS_SORT_OPTION
+    (searchParams.get('sort') as ItemsSortOptions) || DEFAULT_ITEMS_SORT_OPTION,
   )
   const [page, setPage] = useState<number>(props.page)
 
@@ -105,7 +105,7 @@ export const useItemTable = (
     }, DEBOUNCE_MS)
 
     return () => clearTimeout(timeoutId)
-  }, [search, sort, page, pathname, router, searchParams])
+  }, [search, sort, page])
 
   return {
     items,
