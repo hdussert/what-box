@@ -32,9 +32,9 @@ export function toOrderBy(
   const itemField = field as ItemsSortField
   const itemColumn = itemsTable[itemField]
 
-  if (itemField === 'createdAt') {
-    return sortFunc(itemColumn)
+  if (typeof itemColumn === 'string') {
+    return sortFunc(sql`lower(${itemColumn})`)
   }
 
-  return sortFunc(sql`lower(${itemColumn})`)
+  return sortFunc(itemColumn)
 }

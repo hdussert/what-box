@@ -32,11 +32,11 @@ export function toOrderBy(
   const boxField = field as BoxesSortField
   const boxColumn = boxesTable[boxField]
 
-  if (boxField === 'createdAt') {
-    return sortFunc(boxColumn)
+  if (typeof boxColumn === 'string') {
+    return sortFunc(sql`lower(${boxColumn})`)
   }
 
-  return sortFunc(sql`lower(${boxColumn})`)
+  return sortFunc(boxColumn)
 }
 
 export function clampInt(
