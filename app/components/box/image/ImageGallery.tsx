@@ -23,7 +23,7 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
   }
 
   return (
-    <div className="mx-auto grid grid-cols-4 w-full gap-6 ">
+    <div className="mx-auto grid grid-cols-3 md:grid-cols-4 w-full gap-2 ">
       <UploadingImages />
       {images.map((image, index) => (
         <div key={image.id} className="relative group aspect-square">

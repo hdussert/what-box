@@ -19,8 +19,8 @@ const BoxImages = ({ boxId, images }: BoxImagesProps) => {
         <Typography.H2>Images</Typography.H2>
         <UploadImageInput multiple />
       </div>
-      <Card>
-        <CardContent className="flex items-center">
+      <Card className="py-2">
+        <CardContent className="px-2 flex items-center">
           <ImageGallery images={images} />
         </CardContent>
       </Card>

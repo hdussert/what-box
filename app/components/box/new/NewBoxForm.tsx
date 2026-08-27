@@ -4,7 +4,6 @@ import { newBox, NewBoxState } from '@/app/actions/new-box'
 import { Button } from '@/components/ui/button'
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -31,7 +30,7 @@ const NewBoxForm = ({ onSuccess }: NewBoxFormProps) => {
 
   const [state, formAction, isPending] = useActionState<NewBoxState, FormData>(
     newBox,
-    initialState
+    initialState,
   )
 
   useEffect(() => {
@@ -54,9 +53,6 @@ const NewBoxForm = ({ onSuccess }: NewBoxFormProps) => {
         )}
         <Field>
           <FieldLabel>Name</FieldLabel>
-          <FieldDescription>
-            Use a descriptive name to identify this box.
-          </FieldDescription>
           <Input
             type="text"
             name="name"

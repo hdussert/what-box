@@ -5,6 +5,7 @@ import { useNewBoxModal } from '@/app/components/box/new/NewBoxModalProvider'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -25,6 +26,9 @@ const NewBoxModal = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New box</DialogTitle>
+          <DialogDescription>
+            Create a new box and start taking inventory
+          </DialogDescription>
         </DialogHeader>
         <NewBoxForm
           onSuccess={(boxId) => {

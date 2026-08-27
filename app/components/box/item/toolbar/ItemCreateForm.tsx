@@ -71,7 +71,7 @@ const ItemCreateForm = () => {
   return (
     <Card className="py-2">
       <CardContent className="px-2">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Input
             ref={nameInputRef}
             placeholder="Item name *"
@@ -90,6 +90,7 @@ const ItemCreateForm = () => {
             onKeyDown={handleKeyDown}
             disabled={isPending}
             className="flex-1"
+            type="number"
           />
 
           <Input

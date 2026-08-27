@@ -5,7 +5,7 @@ import ItemTableSearchInput from '@/app/components/box/item/toolbar/ItemTableSea
 
 const ItemTableToolbar = () => {
   return (
-    <div className="space-y-4">
+    <div className="mb-2">
       <div className="flex gap-3 flex-row sm:items-center sm:justify-between">
         <ItemTableSearchInput />
         <ItemTableDeleteButton />
