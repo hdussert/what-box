@@ -17,6 +17,9 @@ export const env = createEnv({
     RESEND_API_KEY: z.string(),
     // Present on Vercel deployments; absent locally
     VERCEL: z.string().optional(),
+
+    LOCAL_PUBLIC_URL:
+      process.env.NODE_ENV === 'development' ? z.url() : z.url().optional(),
   },
 
   /**
@@ -41,8 +44,11 @@ export const env = createEnv({
     BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
 
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+
+    LOCAL_PUBLIC_URL: process.env.LOCAL_PUBLIC_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
+
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
    * useful for Docker builds.

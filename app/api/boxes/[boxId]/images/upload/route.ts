@@ -32,7 +32,7 @@ export async function POST(
         const id = generateUUID
         const origin =
           env.NODE_ENV === 'development'
-            ? 'https://7d76-2a01-e0a-11b3-c530-2966-b2b3-37c9-5231.ngrok-free.app' // TODO: use a dynamic solution for local development instead of hardcoding the ngrok URL
+            ? env.LOCAL_PUBLIC_URL
             : new URL(req.url).origin
 
         // Organized into a per-user/per-box folder structure
