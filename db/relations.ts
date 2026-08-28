@@ -1,25 +1,14 @@
-import { boxes, images, items, users } from '@/db/schema'
+import { boxes, boxImages, itemImages, items, users } from '@/db/schema'
 import { defineRelations } from 'drizzle-orm'
 
 export const relations = defineRelations(
-  { users, boxes, images, items },
+  { users, boxes, boxImages, itemImages, items },
   (r) => ({
-    images: {
-      box: r.one.boxes({
-        from: r.images.boxId,
-        to: r.boxes.id,
-        optional: false,
-      }),
-    },
-    items: {
-      box: r.one.boxes({
-        from: r.items.boxId,
-        to: r.boxes.id,
-        optional: false,
-      }),
+    users: {
+      boxes: r.many.boxes(),
     },
     boxes: {
-      images: r.many.images(),
+      images: r.many.boxImages(),
       items: r.many.items(),
       owner: r.one.users({
         from: r.boxes.userId,
@@ -27,8 +16,27 @@ export const relations = defineRelations(
         optional: false,
       }),
     },
-    users: {
-      boxes: r.many.boxes(),
+    boxImages: {
+      box: r.one.boxes({
+        from: r.boxImages.boxId,
+        to: r.boxes.id,
+        optional: false,
+      }),
+    },
+    items: {
+      images: r.many.itemImages(),
+      box: r.one.boxes({
+        from: r.items.boxId,
+        to: r.boxes.id,
+        optional: false,
+      }),
+    },
+    itemImages: {
+      item: r.one.items({
+        from: r.itemImages.itemId,
+        to: r.items.id,
+        optional: false,
+      }),
     },
   }),
 )
