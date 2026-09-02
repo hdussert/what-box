@@ -17,19 +17,4 @@ if (!process.env.RESEND_API_KEY) {
   )
 }
 
-/**
- * Singleton Resend client instance
- *
- * Usage:
- * ```ts
- * import { resend } from '@/lib/resend';
- *
- * const { data, error } = await resend.emails.send({
- *   from: 'delivered@resend.dev',
- *   to: 'delivered@resend.dev',
- *   subject: 'Hello',
- *   html: '<p>Hello World</p>'
- * });
- * ```
- */
 export const resend = new Resend(process.env.RESEND_API_KEY)
