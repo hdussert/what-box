@@ -9,14 +9,16 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
 
 type NewBoxFormProps = {
   onSuccess: (boxId: string) => void
+  className?: string
 }
 
-const NewBoxForm = ({ onSuccess }: NewBoxFormProps) => {
+const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
   // Use useActionState hook for the form submission action
 
   const initialState: NewBoxState = {
@@ -46,13 +48,13 @@ const NewBoxForm = ({ onSuccess }: NewBoxFormProps) => {
   }, [state.success, state.message])
 
   return (
-    <form action={formAction} className="flex flex-col">
+    <form action={formAction} className={cn('flex flex-col', className)}>
       <FieldGroup>
         {state?.message && !state.success && (
           <FieldError>{state.message}</FieldError>
         )}
         <Field>
-          <FieldLabel>Name</FieldLabel>
+          <FieldLabel>Name*</FieldLabel>
           <Input
             type="text"
             name="name"
@@ -63,7 +65,11 @@ const NewBoxForm = ({ onSuccess }: NewBoxFormProps) => {
           <FieldError>{state.errors?.name}</FieldError>
         </Field>
       </FieldGroup>
-      <Button type="submit" className="mt-6 self-end" disabled={isPending}>
+      <Button
+        type="submit"
+        className="mt-6 w-full md:self-end md:w-fit"
+        disabled={isPending}
+      >
         {isPending ? 'Creating...' : 'Create'}
       </Button>
     </form>

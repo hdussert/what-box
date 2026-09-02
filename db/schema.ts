@@ -53,7 +53,6 @@ export const boxes = snakeCase.table('boxes', {
 
   shortId: text(),
   name: text().notNull(),
-  description: text(),
   labelPrinted: boolean().default(false),
 })
 

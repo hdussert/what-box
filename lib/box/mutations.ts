@@ -8,24 +8,16 @@ import 'server-only'
 export async function createBox(
   userId: string,
   name: string,
-  shortId: string
+  shortId: string,
 ): Promise<Box> {
   const [newBox] = await db
     .insert(boxes)
-    .values({ name, userId, shortId })
+    .values({ userId, name, shortId })
     .returning()
 
   if (!newBox) throw new Error('Failed to create box')
 
   return newBox
-}
-
-export async function createUserBox(
-  name: string,
-  shortId: string
-): Promise<Box> {
-  const user = await getCurrentUser()
-  return createBox(user.id, name, shortId)
 }
 
 // TODO : Update
@@ -56,7 +48,7 @@ export async function createUserBox(
 // Delete
 export async function deleteBoxes(
   userId: string,
-  boxIds: string[]
+  boxIds: string[],
 ): Promise<number> {
   const result = await db
     .delete(boxes)
