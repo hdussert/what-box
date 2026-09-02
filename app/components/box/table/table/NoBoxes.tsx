@@ -3,7 +3,7 @@
 import NewBoxButton from '@/app/components/box/new/NewBoxButton'
 import Typography from '@/components/ui/typography'
 
-const BoxTableEmpty = () => {
+const NoBoxes = () => {
   return (
     <div className="text-center pt-12 pb-6 text-muted-foreground">
       <Typography.H3 className="mb-2">No boxes found.</Typography.H3>
@@ -15,4 +15,4 @@ const BoxTableEmpty = () => {
   )
 }
 
-export default BoxTableEmpty
+export default NoBoxes

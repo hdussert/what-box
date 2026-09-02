@@ -1,5 +1,5 @@
 import { deleteBoxesAndAssociatedDatas } from '@/app/actions/delete-boxes'
-import { useBoxTableContext } from '@/app/components/box/table/BoxTableProvider'
+import { useBoxesContext } from '@/app/components/box/table/BoxesContext'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -12,16 +12,16 @@ import {
 import { useTransition } from 'react'
 import { toast } from 'sonner'
 
-type DeleteBoxesDialogProps = {
+type BoxesDeleteDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function DeleteBoxesDialog({
+export function BoxesDeleteDialog({
   open,
   onOpenChange,
-}: DeleteBoxesDialogProps) {
-  const { selectedIds, clearSelection } = useBoxTableContext()
+}: BoxesDeleteDialogProps) {
+  const { selectedIds, clearSelection } = useBoxesContext()
   const [isPending, startTransition] = useTransition()
 
   const handleDelete = () => {
