@@ -10,7 +10,7 @@ const inter = Inter({
 })
 
 const jetBrainsMono = JetBrains_Mono({
-  variable: '--font-jetbrains-mono',
+  variable: '--font-mono',
   subsets: ['latin'],
   weight: ['400', '500', '700'],
 })
