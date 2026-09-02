@@ -1,26 +1,23 @@
 'use client'
 
-import { DeleteBoxesDialog } from '@/app/components/box/table/dialog/DeleteBoxesDialog'
+import { BoxesDeleteDialog } from '@/app/components/box/table/dialog/BoxesDeleteDialog'
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { useBoxTableContext } from '../BoxTableProvider'
 
-const BoxTableDeleteButton = () => {
-  const { selectedIds } = useBoxTableContext()
+const BoxesDeleteButton = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   return (
     <>
       <Button
         size="icon"
-        variant="outline"
-        disabled={selectedIds.length === 0}
+        variant="ghost"
         onClick={() => setShowDeleteDialog(true)}
       >
         <Trash2 />
       </Button>
-      <DeleteBoxesDialog
+      <BoxesDeleteDialog
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
       />
@@ -28,4 +25,4 @@ const BoxTableDeleteButton = () => {
   )
 }
 
-export default BoxTableDeleteButton
+export default BoxesDeleteButton
