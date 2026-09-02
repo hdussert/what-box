@@ -1,16 +1,16 @@
 import { boxes } from '@/db/schema'
 import { DEFAULT_BOXES_SORT_OPTION } from '@/lib/box/const'
 import { AnyColumn, SQL, sql, SQLWrapper } from 'drizzle-orm'
-import { BoxesSortDirection, BoxesSortField, BoxesSortOptions } from './types'
+import { BoxesSortDirection, BoxesSortField, BoxesSortValues } from './types'
 
 export function buildSortOption(
   field: BoxesSortField,
   direction: BoxesSortDirection,
-): BoxesSortOptions {
+): BoxesSortValues {
   return `${field}_${direction}`
 }
 
-export function parseSort(sort: BoxesSortOptions | undefined) {
+export function parseSort(sort: BoxesSortValues | undefined) {
   const [field, direction] = sort
     ? sort.split('_')
     : DEFAULT_BOXES_SORT_OPTION.split('_')
@@ -21,7 +21,7 @@ export function parseSort(sort: BoxesSortOptions | undefined) {
 }
 
 export function toOrderBy(
-  sort: BoxesSortOptions | undefined,
+  sort: BoxesSortValues | undefined,
   boxesTable: typeof boxes,
   asc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
   desc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
@@ -32,7 +32,7 @@ export function toOrderBy(
   const boxField = field as BoxesSortField
   const boxColumn = boxesTable[boxField]
 
-  if (typeof boxColumn === 'string') {
+  if (boxColumn.dataType === 'string') {
     return sortFunc(sql`lower(${boxColumn})`)
   }
 

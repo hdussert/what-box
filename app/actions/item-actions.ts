@@ -1,12 +1,12 @@
 'use server'
 
-import { createUserItem, deleteUserItems } from '@/lib/item/mutations'
+import { createItem, deleteItems } from '@/lib/item/mutations'
 import { ItemCreate } from '@/lib/item/types'
 import { revalidatePath } from 'next/cache'
 
 export async function createItemAction(data: ItemCreate) {
   try {
-    const item = await createUserItem(data)
+    const item = await createItem(data)
     revalidatePath(`/boxes/${data.boxId}`)
     return { success: true, item }
   } catch (error) {
@@ -17,7 +17,7 @@ export async function createItemAction(data: ItemCreate) {
 
 export async function deleteItemsAction(boxId: string, itemIds: string[]) {
   try {
-    const deleted = await deleteUserItems(itemIds)
+    const deleted = await deleteItems(itemIds)
     revalidatePath(`/boxes/${boxId}`)
     return { success: true, deleted }
   } catch (error) {

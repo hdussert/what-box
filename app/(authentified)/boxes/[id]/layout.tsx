@@ -1,5 +1,5 @@
 import { Separator } from '@/components/ui/separator'
-import { getUserBoxById } from '@/lib/box'
+import { getBoxById } from '@/lib/box'
 import { notFound } from 'next/navigation'
 import { ReactNode } from 'react'
 
@@ -17,7 +17,7 @@ export default async function Layout({
   params,
 }: LayoutProps) {
   const { id } = await params
-  const box = await getUserBoxById(id)
+  const box = await getBoxById(id)
 
   if (!box) {
     notFound()

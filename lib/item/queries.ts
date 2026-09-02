@@ -6,26 +6,22 @@ import { and, eq, ilike, sql } from 'drizzle-orm'
 import 'server-only'
 import { ItemsPaginated, ItemsQuery } from './types'
 
-export async function getItemById(
-  userId: string,
-  itemId: string,
-): Promise<Item | undefined> {
+export async function getItemById(itemId: string): Promise<Item | undefined> {
+  const user = await getCurrentUser()
   return db.query.items.findFirst({
-    where: { id: itemId, userId },
+    where: { id: itemId, userId: user.id },
   })
 }
 
-export async function getBoxItems(
-  userId: string,
+export async function getItems(
   boxId: string,
   query: ItemsQuery = {},
 ): Promise<ItemsPaginated> {
-  const search = query.search?.trim()
-  const pageSize = query.pageSize ?? 100
-  const page = query.page ?? 1
+  const user = await getCurrentUser()
 
+  const search = query.search?.trim()
   const filters = [
-    eq(items.userId, userId),
+    eq(items.userId, user.id),
     eq(items.boxId, boxId),
     search ? ilike(items.name, `%${search}%`) : undefined,
   ].filter(Boolean)
@@ -38,43 +34,25 @@ export async function getBoxItems(
     .where(whereClause)
 
   const total = Number(count) || 0
-  const totalPages = Math.max(1, Math.ceil(total / pageSize))
-  const safePage = Math.min(page, totalPages)
-  const offset = (safePage - 1) * pageSize
 
   const itemsList = await db.query.items.findMany({
     where: {
-      userId,
+      userId: user.id,
       boxId,
       name: {
         ilike: `%${search}%`,
       },
     },
     orderBy: (table, { desc, asc }) => toOrderBy(query.sort, table, desc, asc),
-    limit: pageSize,
-    offset,
+    limit: 20,
+    offset: 0,
   })
 
-  return { items: itemsList, total, page: safePage, pageSize, totalPages }
+  return { items: itemsList, total }
 }
 
-export async function getUserBoxItems(
-  boxId: string,
-  query: ItemsQuery = {},
-): Promise<ItemsPaginated> {
+export async function getBoxesIdsContainingItem(itemName: string) {
   const user = await getCurrentUser()
-  return getBoxItems(user.id, boxId, query)
-}
-
-export async function getUserBoxesIdsContainingItem(itemName: string) {
-  const user = await getCurrentUser()
-  return getBoxesIdsContainingItem(user.id, itemName)
-}
-
-export async function getBoxesIdsContainingItem(
-  userId: string,
-  itemName: string,
-) {
   const search = itemName.trim()
 
   if (!search) {
@@ -84,7 +62,7 @@ export async function getBoxesIdsContainingItem(
   const itemsList = await db
     .select({ boxId: items.boxId })
     .from(items)
-    .where(and(eq(items.userId, userId), ilike(items.name, `%${search}%`)))
+    .where(and(eq(items.userId, user.id), ilike(items.name, `%${search}%`)))
     .groupBy(items.boxId)
 
   const boxesIds = itemsList.map((i) => i.boxId)
