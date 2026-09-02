@@ -39,7 +39,7 @@ export async function newBox(
     let shortId = generateShortId()
     while (true) {
       // Check for uniqueness of shortId for this user
-      const isShortIdAvailable = !(await getBoxByShortId(userId, shortId))
+      const isShortIdAvailable = !(await getBoxByShortId(shortId))
       if (isShortIdAvailable) break
 
       shortId = generateShortId()

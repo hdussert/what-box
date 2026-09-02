@@ -22,8 +22,7 @@ export async function POST(
       request: req,
       onBeforeGenerateToken: async () => {
         const user = await getCurrentUser()
-
-        const box = await getBoxById(user.id, boxId)
+        const box = await getBoxById(boxId)
         if (!box) {
           throw new Error('Box not found')
         }
@@ -55,8 +54,8 @@ export async function POST(
           pathname: blob.pathname,
         })
 
-        const { userId, boxId } = JSON.parse(tokenPayload!)
-        await createImageRecord(userId, boxId, blob.url, blob.pathname)
+        const { boxId } = JSON.parse(tokenPayload!)
+        await createImageRecord(boxId, blob.url, blob.pathname)
       },
     })
 

@@ -2,8 +2,7 @@
 
 import { deleteBoxes } from '@/lib/box'
 import { deleteFiles } from '@/lib/files'
-import { getBoxImages } from '@/lib/image'
-import { getCurrentUser } from '@/lib/user'
+import { getBoxesImages } from '@/lib/image'
 import { revalidatePath } from 'next/cache'
 
 export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
@@ -15,10 +14,8 @@ export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
   }
 
   try {
-    const user = await getCurrentUser()
-
     // Delete blobs associated with the boxes
-    const images = await getBoxImages(user.id, boxIds)
+    const images = await getBoxesImages(boxIds)
     const imagesPathnames = images.map((image) => image.pathname)
     await deleteFiles(imagesPathnames).catch((error) => {
       console.error('Failed to delete some image files :', error)
@@ -26,7 +23,7 @@ export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
     })
 
     // Delete box records from the database
-    await deleteBoxes(user.id, boxIds)
+    await deleteBoxes(boxIds)
     revalidatePath('/dashboard')
 
     return {
