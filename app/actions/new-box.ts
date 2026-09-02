@@ -1,8 +1,9 @@
 'use server'
 
 import { ActionResponse } from '@/app/actions/response-type'
-import { createUserBox, getUserBoxByShortId } from '@/lib/box'
+import { createBox, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
+import { getCurrentUser } from '@/lib/user'
 import { z } from 'zod'
 
 const NewBoxSchema = z.object({
@@ -10,7 +11,8 @@ const NewBoxSchema = z.object({
 })
 
 type NewBoxData = z.infer<typeof NewBoxSchema>
-type NewBoxValues = Pick<NewBoxData, 'name'>
+type NewBoxValues = NewBoxData
+
 type NewBoxResult = {
   id: string
 }
@@ -21,27 +23,29 @@ export type NewBoxState = ActionResponse & {
 }
 export async function newBox(
   prevState: NewBoxState,
-  formData: FormData
+  formData: FormData,
 ): Promise<NewBoxState> {
+  // Get current authentified user
+  const { id: userId } = await getCurrentUser()
+
   const raw = {
     name: formData.get('name') as string,
   }
 
-  const values: NewBoxValues = { name: raw.name }
+  const values: NewBoxValues = raw
   try {
     const data = NewBoxSchema.parse(raw)
 
-    let shortId = ''
+    let shortId = generateShortId()
     while (true) {
-      shortId = generateShortId()
       // Check for uniqueness of shortId for this user
-      const existingBox = await getUserBoxByShortId(shortId)
-      if (!existingBox) {
-        break
-      }
+      const isShortIdAvailable = !(await getBoxByShortId(userId, shortId))
+      if (isShortIdAvailable) break
+
+      shortId = generateShortId()
     }
 
-    const newBox = await createUserBox(data.name, shortId)
+    const newBox = await createBox(userId, data.name, shortId)
     return {
       success: true,
       message: 'Box created successfully',

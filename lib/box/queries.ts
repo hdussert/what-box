@@ -31,13 +31,6 @@ export async function getUserBoxById(boxId: string): Promise<Box | undefined> {
   return getBoxById(user.id, boxId)
 }
 
-export async function getUserBoxByShortId(
-  shortId: string,
-): Promise<Box | undefined> {
-  const user = await getCurrentUser()
-  return getBoxByShortId(user.id, shortId)
-}
-
 // Multiple boxes queries
 export async function getBoxes(userId: string): Promise<Box[]> {
   return db.query.boxes.findMany({
