@@ -1,22 +1,24 @@
 import { Box, BoxImage, Item } from '@/db/schema'
-import { BOXES_SORTABLE_COLUMNS, SORT_DIRECTIONS } from '@/lib/box/const'
+import { BOXES_SORTABLE_COLUMNS } from '@/lib/box/const'
+
+export type SortOrder = 'asc' | 'desc'
+export type SortOption<T extends string> = {
+  label: string
+  field: T
+  direction: SortOrder
+  value: `${T}_${SortOrder}`
+}
+export type SortValue<T extends string> = SortOption<T>['value']
 
 // --- Generate types from constants for sorting options ---
-export type BoxesSortDirection = (typeof SORT_DIRECTIONS)[number]
 export type BoxesSortField = keyof typeof BOXES_SORTABLE_COLUMNS
-export type BoxesSortValues = `${BoxesSortField}_${BoxesSortDirection}`
-
-export type BoxesSortOptions = {
-  label: string
-  field: BoxesSortField
-  direction: BoxesSortDirection
-  value: BoxesSortValues
-}
+export type BoxesSortOption = SortOption<BoxesSortField>
+export type BoxesSortValue = BoxesSortOption['value']
 
 // --- Query parameters for fetching boxes ---
 export type BoxesQuery = {
   search?: string
-  sort?: BoxesSortValues
+  sort?: BoxesSortValue
 }
 
 export type Paginated<T> = {

@@ -1,23 +1,14 @@
 import { boxes } from '@/db/schema'
-import { BoxesSortOptions, BoxesSortValues } from '@/lib/box/types'
+import { BoxesSortOption, BoxesSortValue } from '@/lib/box/types'
 
-export const SORT_DIRECTIONS = ['asc', 'desc'] as const
-
-// Note : Just add more columns here to make them sortable
+// Note : Safety net, making sure the column exists
 export const BOXES_SORTABLE_COLUMNS = {
   createdAt: boxes.createdAt,
   name: boxes.name,
   shortId: boxes.shortId,
 } as const
 
-export const SORT_OPTIONS_VALUES = Object.keys(BOXES_SORTABLE_COLUMNS).flatMap(
-  (field) =>
-    SORT_DIRECTIONS.map(
-      (direction) => `${field}_${direction}` as BoxesSortValues,
-    ),
-)
-
-export const SORT_OPTIONS: BoxesSortOptions[] = [
+export const BOXES_SORT_OPTIONS: BoxesSortOption[] = [
   {
     label: 'Date',
     field: 'createdAt',
@@ -54,6 +45,6 @@ export const SORT_OPTIONS: BoxesSortOptions[] = [
     direction: 'asc',
     value: 'shortId_asc',
   },
-]
+] as const
 
-export const DEFAULT_BOXES_SORT_OPTION: BoxesSortValues = 'createdAt_desc'
+export const BOXES_DEFAULT_SORT_OPTION: BoxesSortValue = 'createdAt_desc'

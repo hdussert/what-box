@@ -1,6 +1,6 @@
 'use client'
 
-import { useBoxesContext } from '@/app/components/box/table/BoxesContext'
+import { useBoxesPageContext } from '@/app/components/box/dashboard/context/BoxesPageContext'
 import {
   Select,
   SelectContent,
@@ -9,15 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { BoxesSortValues } from '@/lib/box'
-import { SORT_OPTIONS } from '@/lib/box/const'
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from 'lucide-react'
 
-const BoxesSortInput = () => {
-  const { sort, setSort } = useBoxesContext()
+const SortList = () => {
+  const { sort, setSort, sortOptions } = useBoxesPageContext()
   return (
     <Select
-      onValueChange={(value: BoxesSortValues) => setSort(value)}
+      onValueChange={(value: (typeof sortOptions)[number]['value']) =>
+        setSort(value)
+      }
       defaultValue={sort}
     >
       <SelectTrigger>
@@ -25,7 +25,7 @@ const BoxesSortInput = () => {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {SORT_OPTIONS.map((sort) => (
+          {sortOptions.map((sort) => (
             <SelectItem
               key={sort.value}
               value={sort.value}
@@ -45,4 +45,4 @@ const BoxesSortInput = () => {
   )
 }
 
-export default BoxesSortInput
+export default SortList

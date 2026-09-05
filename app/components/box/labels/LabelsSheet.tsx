@@ -1,10 +1,12 @@
-import BoxLabel from '@/app/components/box/labels/BoxLabel'
-import { useBoxTableContext } from '@/app/components/box/table/BoxTableProvider'
+import Label from '@/app/components/box/labels/Label'
+import { Box } from '@/db/schema'
 
-const BoxLabelsSheet = () => {
-  const { getSelectedBoxes } = useBoxTableContext()
-  const boxes = getSelectedBoxes()
+type LabelsSheet = {
+  boxes: Box[]
+}
 
+const BoxLabelsSheet = ({ boxes }: LabelsSheet) => {
+  // const { getSelectedBoxes } = useBoxesPageContext()
   return (
     <>
       <style jsx global>{`
@@ -36,7 +38,7 @@ const BoxLabelsSheet = () => {
 
       <div id="print-area" className="hidden">
         {boxes.map((box) => (
-          <BoxLabel
+          <Label
             key={box.id}
             id={box.id}
             shortId={box.shortId}

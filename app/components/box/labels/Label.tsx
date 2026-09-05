@@ -1,9 +1,9 @@
 import { Box } from '@/db/schema'
 import QRCode from 'react-qr-code'
 
-type BoxLabelProps = Pick<Box, 'id' | 'name' | 'shortId'>
+type LabelProps = Pick<Box, 'id' | 'name' | 'shortId'>
 
-const BoxLabel = ({ name, id, shortId }: BoxLabelProps) => {
+const Label = ({ name, id, shortId }: LabelProps) => {
   const url = `${process.env.NEXT_PUBLIC_APP_URL}/boxes/${id}`
   return (
     <div className="w-full border-b border-r border-black p-4 flex items-start gap-4">
@@ -21,4 +21,4 @@ const BoxLabel = ({ name, id, shortId }: BoxLabelProps) => {
   )
 }
 
-export default BoxLabel
+export default Label
