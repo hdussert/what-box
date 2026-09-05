@@ -1,6 +1,6 @@
-import Boxes from '@/app/components/box/table/Boxes'
+import Boxes from '@/app/components/box/dashboard/Boxes'
 import { getBoxes } from '@/lib/box'
-import { DEFAULT_BOXES_SORT_OPTION, SORT_OPTIONS_VALUES } from '@/lib/box/const'
+import { BOXES_DEFAULT_SORT_OPTION, BOXES_SORT_OPTIONS } from '@/lib/box/const'
 import z from 'zod'
 
 export const dynamic = 'force-dynamic' // ← Force Next.js à re-render à chaque requête
@@ -11,7 +11,9 @@ type DashboardPageProps = {
 
 const searchParamsSchema = z.object({
   search: z.string().trim().default(''),
-  sort: z.enum(SORT_OPTIONS_VALUES).catch(DEFAULT_BOXES_SORT_OPTION),
+  sort: z
+    .enum(BOXES_SORT_OPTIONS.map((option) => option.value))
+    .catch(BOXES_DEFAULT_SORT_OPTION),
 })
 
 export default async function DashboardPage({

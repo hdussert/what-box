@@ -14,15 +14,18 @@ export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
   }
 
   try {
-    // Delete blobs associated with the boxes
+    // Delete the images uploaded (Vercel)
     const images = await getBoxesImages(boxIds)
-    const imagesPathnames = images.map((image) => image.pathname)
-    await deleteFiles(imagesPathnames).catch((error) => {
-      console.error('Failed to delete some image files :', error)
-      // Continue even if the blob deletion fails (shouldn't stop the user)
-    })
 
-    // Delete box records from the database
+    if (images.length) {
+      const imagesPathnames = images.map((image) => image.pathname)
+      await deleteFiles(imagesPathnames).catch((error) => {
+        console.error('Failed to delete some image files :', error)
+        // Continue even if the blob deletion fails (shouldn't stop the user)
+      })
+    }
+
+    // Delete box records (images will be deleted on cascade)
     await deleteBoxes(boxIds)
     revalidatePath('/dashboard')
 
