@@ -1,6 +1,6 @@
 'use client'
 
-import { useNewBoxModal } from '@/app/components/box/new/NewBoxModalProvider'
+import { useNewBoxModalContext } from '@/app/components/box/new/NewBoxModalContext'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { VariantProps } from 'class-variance-authority'
 import { PackagePlus } from 'lucide-react'
@@ -10,7 +10,7 @@ type NewBoxButtonProps = { label?: string } & VariantProps<
 >
 
 const NewBoxButton = (props: NewBoxButtonProps) => {
-  const { openModal } = useNewBoxModal()
+  const { openModal } = useNewBoxModalContext()
   return (
     <Button onClick={openModal} {...props}>
       <PackagePlus />

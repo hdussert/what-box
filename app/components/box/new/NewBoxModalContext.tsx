@@ -19,14 +19,13 @@ const NewBoxModalContext = createContext<NewBoxModalContextValue | null>(null)
 
 export function NewBoxModalProvider({ children }: PropsWithChildren) {
   const [open, setOpen] = useState(false)
-
   const value = useMemo(
     () => ({
       isOpen: open,
       openModal: () => setOpen(true),
       closeModal: () => setOpen(false),
     }),
-    [open]
+    [open],
   )
 
   return (
@@ -37,7 +36,7 @@ export function NewBoxModalProvider({ children }: PropsWithChildren) {
   )
 }
 
-export function useNewBoxModal() {
+export function useNewBoxModalContext() {
   const ctx = useContext(NewBoxModalContext)
   if (!ctx)
     throw new Error('useNewBoxModal must be used within NewBoxModalProvider')

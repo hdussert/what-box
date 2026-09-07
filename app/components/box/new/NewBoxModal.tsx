@@ -1,7 +1,7 @@
 'use client'
 
 import NewBoxForm from '@/app/components/box/new/NewBoxForm'
-import { useNewBoxModal } from '@/app/components/box/new/NewBoxModalProvider'
+import { useNewBoxModalContext } from '@/app/components/box/new/NewBoxModalContext'
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { useRouter } from 'next/navigation'
 
 const NewBoxModal = () => {
-  const { isOpen, closeModal } = useNewBoxModal()
+  const { isOpen, closeModal } = useNewBoxModalContext()
   const router = useRouter()
   const isMobile = useIsMobile()
 
