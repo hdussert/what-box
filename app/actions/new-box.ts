@@ -3,7 +3,6 @@
 import { ActionResponse } from '@/app/actions/response-type'
 import { createBox, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
-import { getCurrentUser } from '@/lib/user'
 import { z } from 'zod'
 
 const NewBoxSchema = z.object({
@@ -26,7 +25,6 @@ export async function newBox(
   formData: FormData,
 ): Promise<NewBoxState> {
   // Get current authentified user
-  const { id: userId } = await getCurrentUser()
 
   const raw = {
     name: formData.get('name') as string,
@@ -45,7 +43,7 @@ export async function newBox(
       shortId = generateShortId()
     }
 
-    const newBox = await createBox(userId, data.name, shortId)
+    const newBox = await createBox(data.name, shortId)
     return {
       success: true,
       message: 'Box created successfully',

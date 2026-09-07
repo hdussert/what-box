@@ -1,6 +1,7 @@
 'use client'
 
 import { newBox, NewBoxState } from '@/app/actions/new-box'
+import { useFilesUploadContext } from '@/app/components/box/image/context/FilesUploadContext'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -20,7 +21,6 @@ type NewBoxFormProps = {
 
 const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
   // Use useActionState hook for the form submission action
-
   const initialState: NewBoxState = {
     success: false,
     message: '',
@@ -30,6 +30,8 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
     },
   }
 
+  const test = useFilesUploadContext()
+  test.addFilesToUpload
   const [state, formAction, isPending] = useActionState<NewBoxState, FormData>(
     newBox,
     initialState,
@@ -38,9 +40,12 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
   useEffect(() => {
     if (!state.message) return
 
+    // Box created
     if (state.success) {
       toast.success(state.message)
-      onSuccess(state.result!.id)
+      // Upload the images
+
+      // onSuccess(state.result!.id)
     } else {
       toast.error(state.message)
     }
@@ -48,31 +53,33 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
   }, [state.success, state.message])
 
   return (
-    <form action={formAction} className={cn('flex flex-col', className)}>
-      <FieldGroup>
-        {state?.message && !state.success && (
-          <FieldError>{state.message}</FieldError>
-        )}
-        <Field>
-          <FieldLabel>Name*</FieldLabel>
-          <Input
-            type="text"
-            name="name"
-            placeholder="Bedroom, Kitchen..."
-            disabled={isPending}
-            defaultValue={state.values.name}
-          />
-          <FieldError>{state.errors?.name}</FieldError>
-        </Field>
-      </FieldGroup>
-      <Button
-        type="submit"
-        className="mt-6 w-full md:self-end md:w-fit"
-        disabled={isPending}
-      >
-        {isPending ? 'Creating...' : 'Create'}
-      </Button>
-    </form>
+    <>
+      <form action={formAction} className={cn('flex flex-col', className)}>
+        <FieldGroup>
+          {state?.message && !state.success && (
+            <FieldError>{state.message}</FieldError>
+          )}
+          <Field>
+            <FieldLabel>Name*</FieldLabel>
+            <Input
+              type="text"
+              name="name"
+              placeholder="Bedroom, Kitchen..."
+              disabled={isPending}
+              defaultValue={state.values.name}
+            />
+            <FieldError>{state.errors?.name}</FieldError>
+          </Field>
+        </FieldGroup>
+        <Button
+          type="submit"
+          className="mt-6 w-full md:self-end md:w-fit"
+          disabled={isPending}
+        >
+          {isPending ? 'Creating...' : 'Create'}
+        </Button>
+      </form>
+    </>
   )
 }
 export default NewBoxForm
