@@ -1,18 +1,15 @@
 'use client'
 
-import {
-  BoxesPageContextValue,
-  useBoxesPage,
-} from '@/app/components/box/dashboard/context/useBoxesPage'
+import { useBoxesPage } from '@/app/components/box/dashboard/context/useBoxesPage'
 import { BoxesPaginated } from '@/lib/box/types'
 import { createContext, useContext } from 'react'
 
+type BoxesPageContextValue = ReturnType<typeof useBoxesPage>
 const BoxesPageContext = createContext<BoxesPageContextValue | null>(null)
 
 type BoxesProviderProps = BoxesPaginated & {
   children: React.ReactNode
 }
-
 export const BoxesPageContextProvider = ({
   children,
   ...props

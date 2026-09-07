@@ -1,6 +1,6 @@
 'use client'
 
-import { useBoxesPageContext } from '@/app/components/box/dashboard/context/BoxesPageContext'
+import { useListParamsContext } from '@/app/components/common/list/ListParamsContext'
 import {
   Select,
   SelectContent,
@@ -12,7 +12,7 @@ import {
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from 'lucide-react'
 
 const SortList = () => {
-  const { sort, setSort, sortOptions } = useBoxesPageContext()
+  const { sort, setSort, sortOptions } = useListParamsContext()
   return (
     <Select
       onValueChange={(value: (typeof sortOptions)[number]['value']) =>

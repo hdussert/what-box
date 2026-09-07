@@ -1,6 +1,6 @@
 'use client'
 
-import { useBoxesPageContext } from '@/app/components/box/dashboard/context/BoxesPageContext'
+import { useListParamsContext } from '@/app/components/common/list/ListParamsContext'
 import { Button } from '@/components/ui/button'
 import {
   InputGroup,
@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react'
 const DEBOUNCE_MS = 200
 
 const SearchList = () => {
-  const { search, setSearch } = useBoxesPageContext()
+  const { search, setSearch } = useListParamsContext()
   const [value, setValue] = useState(search)
 
   // Keep the input in sync with the URL
