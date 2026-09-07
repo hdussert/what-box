@@ -1,23 +1,35 @@
 'use client'
 
-import { SortOption, SortValue } from '@/lib/box'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-type UseListParamsProps<TSort extends string> = {
-  sortOptions: SortOption<TSort>[]
-  defaultSortOption: SortValue<TSort>
+export type SortOrder = 'asc' | 'desc'
+export type SortValue = `${string}_${SortOrder}`
+export type SortOption = {
+  label: string
+  field: string
+  direction: SortOrder
+  value: SortValue
 }
 
-export const useListParams = <TSort extends string>({
+export type UseListParamsProps = {
+  sortOptions: SortOption[]
+  defaultSortOption: SortValue
+}
+
+export const useListParams = ({
   sortOptions,
   defaultSortOption,
-}: UseListParamsProps<TSort>) => {
+}: UseListParamsProps) => {
   const router = useRouter()
   const pathname = usePathname()
-
   const searchParams = useSearchParams()
+
+  // Used as fields values
   const search = searchParams.get('search') ?? ''
-  const sort = searchParams.get('sort') ?? defaultSortOption
+  const sortParam = searchParams.get('sort')
+  const sort =
+    sortOptions.find((option) => option.value === sortParam)?.value ??
+    defaultSortOption
 
   const setSearch = (value: string) => {
     const params = new URLSearchParams(searchParams)
@@ -34,7 +46,7 @@ export const useListParams = <TSort extends string>({
     router.replace(url)
   }
 
-  const setSort = (value: SortValue<TSort>) => {
+  const setSort = (value: SortValue) => {
     const params = new URLSearchParams(searchParams)
     const sort = value === defaultSortOption ? null : value
 

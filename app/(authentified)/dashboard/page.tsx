@@ -1,4 +1,5 @@
 import Boxes from '@/app/components/box/dashboard/Boxes'
+import ListParamsProvider from '@/app/components/common/list/ListParamsContext'
 import { getBoxes } from '@/lib/box'
 import { BOXES_DEFAULT_SORT_OPTION, BOXES_SORT_OPTIONS } from '@/lib/box/const'
 import z from 'zod'
@@ -9,6 +10,7 @@ type DashboardPageProps = {
   searchParams?: Promise<{ search?: string; sort?: string }>
 }
 
+// Make sure the SearchParams match with the ListParamsProvider
 const searchParamsSchema = z.object({
   search: z.string().trim().default(''),
   sort: z
@@ -27,5 +29,12 @@ export default async function DashboardPage({
     sort,
   })
 
-  return <Boxes {...result} />
+  return (
+    <ListParamsProvider
+      sortOptions={BOXES_SORT_OPTIONS}
+      defaultSortOption={BOXES_DEFAULT_SORT_OPTION}
+    >
+      <Boxes {...result} />
+    </ListParamsProvider>
+  )
 }

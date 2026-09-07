@@ -1,5 +1,5 @@
+import { SortOption } from '@/app/components/common/list/useListParams'
 import { boxes } from '@/db/schema'
-import { BoxesSortOption, BoxesSortValue } from '@/lib/box/types'
 
 // Note : Safety net, making sure the column exists
 export const BOXES_SORTABLE_COLUMNS = {
@@ -8,7 +8,7 @@ export const BOXES_SORTABLE_COLUMNS = {
   shortId: boxes.shortId,
 } as const
 
-export const BOXES_SORT_OPTIONS: BoxesSortOption[] = [
+export const BOXES_SORT_OPTIONS: SortOption[] = [
   {
     label: 'Date',
     field: 'createdAt',
@@ -47,4 +47,4 @@ export const BOXES_SORT_OPTIONS: BoxesSortOption[] = [
   },
 ] as const
 
-export const BOXES_DEFAULT_SORT_OPTION: BoxesSortValue = 'createdAt_desc'
+export const BOXES_DEFAULT_SORT_OPTION = BOXES_SORT_OPTIONS[0].value
