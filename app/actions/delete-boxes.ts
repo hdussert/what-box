@@ -2,7 +2,7 @@
 
 import { deleteBoxes } from '@/lib/box'
 import { deleteFiles } from '@/lib/files'
-import { getBoxesImages } from '@/lib/image'
+import { getBoxesImages } from '@/lib/image/image'
 import { revalidatePath } from 'next/cache'
 
 export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {

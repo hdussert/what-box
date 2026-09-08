@@ -1,7 +1,8 @@
 import { randomUUID } from 'crypto'
-import { InferSelectModel } from 'drizzle-orm'
+import { InferSelectModel, sql } from 'drizzle-orm'
 import {
   boolean,
+  check,
   integer,
   snakeCase,
   text,
@@ -19,19 +20,13 @@ const updatedAt = () => timestamp().notNull().defaultNow()
 
 // Foreign keys
 const userIdRef = () =>
-  text()
-    .references(() => users.id, { onDelete: 'cascade' })
-    .notNull()
+  text().references(() => users.id, { onDelete: 'cascade' })
 
 const boxIdRef = () =>
-  text()
-    .references(() => boxes.id, { onDelete: 'cascade' })
-    .notNull()
+  text().references(() => boxes.id, { onDelete: 'cascade' })
 
 const itemIdRef = () =>
-  text()
-    .references(() => items.id, { onDelete: 'cascade' })
-    .notNull()
+  text().references(() => items.id, { onDelete: 'cascade' })
 
 // Tables definitions
 export const users = snakeCase.table('users', {
@@ -49,21 +44,11 @@ export const boxes = snakeCase.table('boxes', {
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 
-  userId: userIdRef(),
+  userId: userIdRef().notNull(),
 
   shortId: text(),
   name: text().notNull(),
   labelPrinted: boolean().default(false),
-})
-
-export const boxImages = snakeCase.table('box_images', {
-  id: id(),
-  createdAt: createdAt(),
-
-  boxId: boxIdRef(),
-
-  url: text().notNull(), // Public URL
-  pathname: text().notNull(), // Storage path
 })
 
 export const items = snakeCase.table('items', {
@@ -71,28 +56,34 @@ export const items = snakeCase.table('items', {
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 
-  userId: userIdRef(),
-  boxId: boxIdRef(),
+  boxId: boxIdRef().notNull(),
 
   name: text().notNull(),
   description: text(),
   quantity: integer(),
 })
 
-export const itemImages = snakeCase.table('item_images', {
-  id: id(),
-  createdAt: createdAt(),
+export const images = snakeCase.table(
+  'images',
+  {
+    id: id(),
+    createdAt: createdAt(),
 
-  itemId: itemIdRef(),
+    boxId: boxIdRef(),
+    itemId: itemIdRef(),
 
-  url: text().notNull(), // Public URL
-  pathname: text().notNull(), // Storage path
-})
+    url: text().notNull(), // Public URL
+    pathname: text().notNull(), // Storage path
+  },
+  (table) => [
+    check(
+      'image_has_exactly_one_parent',
+      sql`(${table.boxId} IS NOT NULL AND ${table.itemId} IS NULL) OR (${table.itemId} IS NOT NULL AND ${table.boxId} IS NULL)`,
+    ),
+  ],
+)
 
 export type User = InferSelectModel<typeof users>
-
 export type Box = InferSelectModel<typeof boxes>
-export type BoxImage = InferSelectModel<typeof boxImages>
-
+export type ImageRecord = InferSelectModel<typeof images>
 export type Item = InferSelectModel<typeof items>
-export type ItemImage = InferSelectModel<typeof itemImages>

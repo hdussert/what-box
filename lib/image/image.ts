@@ -1,39 +1,35 @@
 import { db } from '@/db'
-import { Image, images } from '@/db/schema'
+import { ImageRecord, images } from '@/db/schema'
 import { getCurrentUser } from '@/lib/user'
 import { and, eq, inArray } from 'drizzle-orm'
 import 'server-only'
 
 /** Create a new Image record */
 export async function createImageRecord(
-  userId: string,
   boxId: string,
   url: string,
   pathname: string,
-): Promise<Image> {
+): Promise<ImageRecord> {
   const [image] = await db
     .insert(images)
     .values({
       boxId,
-      userId,
       url,
       pathname,
     })
     .returning()
 
-  if (!image) throw new Error('Failed to save the image info')
+  if (!image) throw new Error('Failed to save the image record')
   return image
 }
 
 /** Delete an Image record by its ID */
-export async function deleteImagesRecord(
-  userId: string,
-  imageIds: string[],
-): Promise<void> {
+export async function deleteImagesRecord(imageIds: string[]): Promise<void> {
+  const user = await getCurrentUser()
   await db.delete(images).where(
     and(
       inArray(images.id, imageIds),
-      eq(images.userId, userId), // ensure the image belongs to the current user
+      eq(images.userId, user.id), // ensure the image belongs to the current user
     ),
   )
 }
@@ -42,7 +38,7 @@ export async function deleteImagesRecord(
 export async function getImagesByIds(
   userId: string,
   imageIds: string[],
-): Promise<Image[]> {
+): Promise<ImageRecord[]> {
   return db.query.images.findMany({
     where: { id: { in: imageIds }, userId },
   })
@@ -50,31 +46,17 @@ export async function getImagesByIds(
 
 /** Fetch images by their pathnames for a specific user */
 export async function getImagesByPathnames(
-  userId: string,
   pathnames: string[],
-): Promise<Image[]> {
+): Promise<ImageRecord[]> {
   return db.query.images.findMany({
     where: { pathname: { in: pathnames }, userId },
   })
 }
 
 /** Fetch images for a specific box belonging to a user */
-export async function getBoxImages(
-  userId: string,
-  boxIds: string[],
-): Promise<Image[]> {
+export async function getBoxesImages(boxIds: string[]): Promise<ImageRecord[]> {
   return db.query.images.findMany({
-    where: { boxId: { in: boxIds }, userId },
+    where: { boxId: { in: boxIds } },
     orderBy: { createdAt: 'desc' },
   })
-}
-
-/** Fetch images for a specific box belonging to the current user */
-export async function getUserBoxImages(
-  boxId: string,
-): Promise<{ images: Image[] }> {
-  // Lazy load to avoid circular dependencies
-  const user = await getCurrentUser()
-  const images = await getBoxImages(user.id, [boxId])
-  return { images }
 }

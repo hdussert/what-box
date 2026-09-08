@@ -3,10 +3,14 @@
 import { ActionResponse } from '@/app/actions/response-type'
 import { createBox, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
+import { IMAGE_MIME } from '@/lib/image/const'
+import { createImageRecord } from '@/lib/image/image'
+import { put } from '@vercel/blob'
 import { z } from 'zod'
 
 const NewBoxSchema = z.object({
   name: z.string().min(1, 'Name is required'),
+  image: z.file().max(4_500_000).mime(IMAGE_MIME).optional(),
 })
 
 type NewBoxData = z.infer<typeof NewBoxSchema>
@@ -28,27 +32,39 @@ export async function newBox(
 
   const raw = {
     name: formData.get('name') as string,
+    image: formData.get('image') as File,
   }
-
   const values: NewBoxValues = raw
+
   try {
     const data = NewBoxSchema.parse(raw)
 
+    // Check for uniqueness of shortId for this user
     let shortId = generateShortId()
     while (true) {
-      // Check for uniqueness of shortId for this user
       const isShortIdAvailable = !(await getBoxByShortId(shortId))
       if (isShortIdAvailable) break
 
       shortId = generateShortId()
     }
 
-    const newBox = await createBox(data.name, shortId)
+    // Create box
+    const box = await createBox(data.name, shortId)
+
+    // Upload files
+    if (data.image) {
+      const blob = await put(data.image.name, data.image, {
+        access: 'public',
+        addRandomSuffix: true,
+      })
+      await createImageRecord(box.id, blob.url, blob.pathname)
+    }
+
     return {
       success: true,
       message: 'Box created successfully',
       values,
-      result: { id: newBox.id },
+      result: { id: box.id },
     }
   } catch (error) {
     if (error instanceof z.ZodError) {

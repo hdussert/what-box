@@ -1,14 +1,14 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardDescription, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { BoxImage, ItemImage } from '@/db/schema'
+import { ImageRecord } from '@/db/schema'
 import { BoxWithAll } from '@/lib/box'
 import { cn } from '@/lib/utils'
 import { ImageIcon, Package } from 'lucide-react'
 import Image from 'next/image'
 
 type FirstImageMiniatureProps = {
-  images: BoxImage[] | ItemImage[]
+  images: ImageRecord[]
 }
 
 const FirstImageMiniature = ({ images }: FirstImageMiniatureProps) => {
@@ -23,8 +23,14 @@ const FirstImageMiniature = ({ images }: FirstImageMiniatureProps) => {
     )
 
   return (
-    <div className="bg-input/30 rounded-md aspect-square w-20 relative">
-      <Image src={''} alt="Box Image miniature" />
+    <div className="bg-input/30 rounded-md aspect-square w-20 relative overflow-hidden">
+      <Image
+        src={images[0].url}
+        alt="Box Image miniature"
+        width={160}
+        height={160}
+        className="object-cover size-full"
+      />
       {hasMultipleImages ? (
         <Badge variant="outline" className="absolute bottom-1 right-1">
           +{images.length - 1} <ImageIcon />
