@@ -1,7 +1,7 @@
 'use client'
 
 import { signOut } from '@/app/actions/sign-out'
-import { useNewBoxModal } from '@/app/components/box/new/NewBoxModalProvider'
+import { useNewBoxModalContext } from '@/app/components/box/new/NewBoxModalContext'
 import {
   SideNavItem,
   SideNavItemProps,
@@ -20,7 +20,7 @@ import { Boxes, LogOut, PackagePlus } from 'lucide-react'
 type SideItemList = Array<SideNavItemProps & { key: string }>
 
 const Side = () => {
-  const { openModal: openNewBoxModal } = useNewBoxModal()
+  const { openModal: openNewBoxModal } = useNewBoxModalContext()
 
   const items: SideItemList = [
     { key: 'dashboard', name: 'My boxes', Icon: Boxes, href: '/dashboard' },

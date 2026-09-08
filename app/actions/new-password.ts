@@ -2,7 +2,7 @@
 
 import { ActionResponse } from '@/app/actions/response-type'
 import { createSession, verifyAccessToken } from '@/lib/session'
-import { updateUserPassword } from '@/lib/user'
+import { updatePassword } from '@/lib/user'
 import { z } from 'zod'
 
 // Define Zod schema for signup validation
@@ -45,8 +45,7 @@ export async function newPassword(
       throw new Error(error)
     }
 
-    // Validate with Zod
-    await updateUserPassword(user.id, password)
+    await updatePassword(user.id, password)
 
     // Create session for the newly registered user
     await createSession(user.id)

@@ -24,7 +24,7 @@ export async function createUser(email: string, password: string) {
 }
 
 // Update user password
-export async function updateUserPassword(userId: string, password: string) {
+export async function updatePassword(userId: string, password: string) {
   const hashedPassword = await hashPassword(password)
   const date = new Date()
 
