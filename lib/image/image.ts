@@ -1,7 +1,7 @@
 import { db } from '@/db'
-import { ImageRecord, images } from '@/db/schema'
+import { boxes, ImageRecord, images, items } from '@/db/schema'
 import { getCurrentUser } from '@/lib/user'
-import { and, eq, inArray } from 'drizzle-orm'
+import { and, inArray, sql } from 'drizzle-orm'
 import 'server-only'
 
 /** Create a new Image record */
@@ -26,10 +26,29 @@ export async function createImageRecord(
 /** Delete an Image record by its ID */
 export async function deleteImagesRecord(imageIds: string[]): Promise<void> {
   const user = await getCurrentUser()
+
   await db.delete(images).where(
     and(
       inArray(images.id, imageIds),
-      eq(images.userId, user.id), // ensure the image belongs to the current user
+      sql`
+          (
+            EXISTS (
+              SELECT 1
+              FROM ${boxes}
+              WHERE ${boxes.id} = ${images.boxId}
+                AND ${boxes.userId} = ${user.id}
+            )
+            OR
+            EXISTS (
+              SELECT 1
+              FROM ${items}
+              INNER JOIN ${boxes}
+                ON ${boxes.id} = ${items.boxId}
+              WHERE ${items.id} = ${images.itemId}
+                AND ${boxes.userId} = ${user.id}
+            )
+          )
+        `,
     ),
   )
 }
@@ -48,8 +67,26 @@ export async function getImagesByIds(
 export async function getImagesByPathnames(
   pathnames: string[],
 ): Promise<ImageRecord[]> {
+  const user = await getCurrentUser()
+
   return db.query.images.findMany({
-    where: { pathname: { in: pathnames }, userId },
+    where: {
+      pathname: { in: pathnames },
+      OR: [
+        {
+          box: {
+            userId: user.id,
+          },
+        },
+        {
+          item: {
+            box: {
+              userId: user.id,
+            },
+          },
+        },
+      ],
+    },
   })
 }
 
