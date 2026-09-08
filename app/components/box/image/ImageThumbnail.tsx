@@ -14,14 +14,14 @@ const ImageThumbnail = ({
   return (
     <div
       className={cn(
-        'w-full h-full overflow-hidden rounded-lg shadow-sm',
-        className
+        'size-full overflow-hidden rounded-lg shadow-sm',
+        className,
       )}
     >
       {isLoading ? <Skeleton className="h-full w-full" /> : null}
       <Image
         {...props}
-        className="h-full w-full object-cover"
+        className="size-full object-cover"
         width={256}
         height={256}
         alt={props.alt}

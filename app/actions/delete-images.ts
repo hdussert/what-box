@@ -2,7 +2,7 @@
 
 import { ActionResponse } from '@/app/actions/response-type'
 import { deleteFiles } from '@/lib/files'
-import { deleteImagesRecord, getImagesByPathnames } from '@/lib/image'
+import { deleteImagesRecord, getImagesByPathnames } from '@/lib/image/image'
 
 export async function deleteImages(
   pathnames: string[],

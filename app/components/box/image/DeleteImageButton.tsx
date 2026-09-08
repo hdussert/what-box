@@ -41,7 +41,7 @@ const DeleteImageButton = ({ pathname }: DeleteImageButtonProps) => {
           size="icon-sm"
           disabled={isDeleting}
           onClick={handleDelete}
-          className="top-1 right-1 absolute opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          className="top-1 right-1 absolute md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500"
         >
           <Trash />
         </Button>

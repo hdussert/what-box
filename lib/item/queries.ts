@@ -1,5 +1,5 @@
 import { db } from '@/db'
-import { Item, items } from '@/db/schema'
+import { boxes, Item, items } from '@/db/schema'
 import { toOrderBy } from '@/lib/item'
 import { getCurrentUser } from '@/lib/user'
 import { and, eq, ilike, sql } from 'drizzle-orm'
@@ -21,7 +21,7 @@ export async function getItems(
 
   const search = query.search?.trim()
   const filters = [
-    eq(items.userId, user.id),
+    eq(boxes.userId, user.id),
     eq(items.boxId, boxId),
     search ? ilike(items.name, `%${search}%`) : undefined,
   ].filter(Boolean)
@@ -31,6 +31,7 @@ export async function getItems(
   const [{ count }] = await db
     .select({ count: sql<number>`count(*)` })
     .from(items)
+    .innerJoin(boxes, eq(items.boxId, boxes.id))
     .where(whereClause)
 
   const total = Number(count) || 0
@@ -62,7 +63,8 @@ export async function getBoxesIdsContainingItem(itemName: string) {
   const itemsList = await db
     .select({ boxId: items.boxId })
     .from(items)
-    .where(and(eq(items.userId, user.id), ilike(items.name, `%${search}%`)))
+    .innerJoin(boxes, eq(items.boxId, boxes.id))
+    .where(and(eq(boxes.userId, user.id), ilike(items.name, `%${search}%`)))
     .groupBy(items.boxId)
 
   const boxesIds = itemsList.map((i) => i.boxId)
