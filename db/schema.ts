@@ -56,6 +56,7 @@ export const items = snakeCase.table('items', {
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 
+  userId: userIdRef().notNull(),
   boxId: boxIdRef().notNull(),
 
   name: text().notNull(),
@@ -69,6 +70,7 @@ export const images = snakeCase.table(
     id: id(),
     createdAt: createdAt(),
 
+    userId: userIdRef().notNull(),
     boxId: boxIdRef(),
     itemId: itemIdRef(),
 

@@ -1,28 +1,19 @@
-import { Item } from '@/db/schema'
-import { ITEMS_SORT_DIRECTIONS, ITEMS_SORTABLE_COLUMNS } from '@/lib/item/const'
+import { SortValue } from '@/app/components/common/list/useListParams'
+import { ImageRecord, Item } from '@/db/schema'
+import { Paginated } from '@/lib/box'
+import { ITEMS_SORTABLE_COLUMNS } from '@/lib/item/const'
 
 export type ItemsSortField = keyof typeof ITEMS_SORTABLE_COLUMNS
-export type ItemsSortDirection = (typeof ITEMS_SORT_DIRECTIONS)[number]
-export type ItemsSortOptions = `${ItemsSortField}_${ItemsSortDirection}`
 
 export type ItemsQuery = {
   search?: string
-  sort?: ItemsSortOptions
-  page?: number
-  pageSize?: number
+  sort?: SortValue
 }
 
-export type Paginated<T> = {
-  items: T[]
-  total: number
-  page: number
-  pageSize: number
-  totalPages: number
-}
+export type ItemWithAll = Item & { images: ImageRecord[] }
+export type ItemsPaginated = Paginated<ItemWithAll>
 
-export type ItemsPaginated = Paginated<Item>
-
-export type ItemCreate = {
+export type CreateItemData = {
   boxId: string
   name: string
   description?: string

@@ -1,6 +1,8 @@
-import ItemTable from '@/app/components/box/item/ItemTable'
+import ListParamsProvider from '@/app/components/common/list/ListParamsContext'
+import { SelectionContextProvider } from '@/app/components/common/selection/SelectionContext'
+import Items from '@/app/components/item/Items'
 import { getItems } from '@/lib/item'
-import { DEFAULT_ITEMS_SORT_OPTION, ITEMS_SORT_OPTIONS } from '@/lib/item/const'
+import { ITEMS_DEFAULT_SORT_OPTION, ITEMS_SORT_OPTIONS } from '@/lib/item/const'
 import { z } from 'zod'
 
 type ItemsSlotProps = {
@@ -10,7 +12,9 @@ type ItemsSlotProps = {
 
 const searchParamsSchema = z.object({
   search: z.string().trim().default(''),
-  sort: z.enum(ITEMS_SORT_OPTIONS).catch(DEFAULT_ITEMS_SORT_OPTION),
+  sort: z
+    .enum(ITEMS_SORT_OPTIONS.map((option) => option.value))
+    .catch(ITEMS_DEFAULT_SORT_OPTION),
 })
 
 const ItemsSlot = async ({ params, searchParams }: ItemsSlotProps) => {
@@ -23,7 +27,16 @@ const ItemsSlot = async ({ params, searchParams }: ItemsSlotProps) => {
     sort,
   })
 
-  return <ItemTable boxId={id} {...result} />
+  return (
+    <ListParamsProvider
+      sortOptions={ITEMS_SORT_OPTIONS}
+      defaultSortOption={ITEMS_DEFAULT_SORT_OPTION}
+    >
+      <SelectionContextProvider>
+        <Items boxId={id} {...result} />
+      </SelectionContextProvider>
+    </ListParamsProvider>
+  )
 }
 
 export default ItemsSlot

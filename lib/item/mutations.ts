@@ -1,11 +1,11 @@
 import { db } from '@/db'
 import { Item, items } from '@/db/schema'
+import { CreateItemData } from '@/lib/item/types'
 import { getCurrentUser } from '@/lib/user'
 import { and, eq, inArray } from 'drizzle-orm'
 import 'server-only'
-import { ItemCreate } from './types'
 
-export async function createItem(data: ItemCreate): Promise<Item> {
+export async function createItem(data: CreateItemData): Promise<Item> {
   const user = await getCurrentUser()
   const [newItem] = await db
     .insert(items)
