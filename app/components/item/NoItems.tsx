@@ -2,7 +2,7 @@
 
 import Typography from '@/components/ui/typography'
 
-const ItemTableEmpty = () => {
+const NoItems = () => {
   return (
     <div className="text-center text-muted-foreground pt-12 pb-6">
       <Typography.H3 className="mb-2">No items found.</Typography.H3>
@@ -13,4 +13,4 @@ const ItemTableEmpty = () => {
   )
 }
 
-export default ItemTableEmpty
+export default NoItems

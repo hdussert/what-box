@@ -57,7 +57,7 @@ export async function newBox(
         access: 'public',
         addRandomSuffix: true,
       })
-      await createImageRecord(box.id, blob.url, blob.pathname)
+      await createImageRecord(box.id, null, blob.url, blob.pathname)
     }
 
     return {

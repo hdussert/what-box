@@ -1,5 +1,5 @@
 import { items } from '@/db/schema'
-import { DEFAULT_ITEMS_SORT_OPTION } from '@/lib/item/const'
+import { ITEMS_DEFAULT_SORT_OPTION } from '@/lib/item/const'
 import { AnyColumn, SQL, sql, SQLWrapper } from 'drizzle-orm'
 import { ItemsSortDirection, ItemsSortField, ItemsSortOptions } from './types'
 
@@ -13,7 +13,7 @@ export function buildSortOption(
 export function parseSort(sort: ItemsSortOptions | undefined) {
   const [field, direction] = sort
     ? sort.split('_')
-    : DEFAULT_ITEMS_SORT_OPTION.split('_')
+    : ITEMS_DEFAULT_SORT_OPTION.split('_')
   return {
     field,
     direction,

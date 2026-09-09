@@ -6,6 +6,8 @@ export const relations = defineRelations(
   (r) => ({
     users: {
       boxes: r.many.boxes(),
+      items: r.many.items(),
+      images: r.many.images(),
     },
     boxes: {
       images: r.many.images(),
@@ -17,6 +19,11 @@ export const relations = defineRelations(
       }),
     },
     images: {
+      owner: r.one.users({
+        from: r.images.userId,
+        to: r.users.id,
+        optional: false,
+      }),
       box: r.one.boxes({
         from: r.images.boxId,
         to: r.boxes.id,
@@ -31,6 +38,11 @@ export const relations = defineRelations(
 
     items: {
       images: r.many.images(),
+      owner: r.one.users({
+        from: r.items.userId,
+        to: r.users.id,
+        optional: false,
+      }),
       box: r.one.boxes({
         from: r.items.boxId,
         to: r.boxes.id,
