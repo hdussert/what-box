@@ -40,19 +40,14 @@ const FirstImageMiniature = ({ images }: FirstImageMiniatureProps) => {
   )
 }
 
-type BoxesListItemProps = {
+type BoxCard = {
   box: BoxWithAll
   onClick: () => void
   selected: boolean
   isSelecting: boolean
 }
 
-const BoxCard = ({
-  box,
-  onClick,
-  selected,
-  isSelecting,
-}: BoxesListItemProps) => {
+const BoxCard = ({ box, onClick, selected, isSelecting }: BoxCard) => {
   return (
     <div className="flex items-center gap-3">
       {isSelecting ? <Checkbox checked={selected} onClick={onClick} /> : null}

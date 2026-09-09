@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import { useActionState, useEffect } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 type NewBoxFormProps = {
@@ -29,6 +29,7 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
       name: '',
     },
   }
+  const [image, setImage] = useState<File>()
 
   const [state, formAction, isPending] = useActionState<NewBoxState, FormData>(
     newBox,
@@ -41,6 +42,7 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
     // Box created
     if (state.success) {
       toast.success(state.message)
+      setImage(undefined)
       onSuccess(state.result!.id)
     } else {
       toast.error(state.message)
@@ -50,7 +52,13 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
 
   return (
     <form action={formAction} className={cn('flex flex-col', className)}>
-      <ImageInput name="image" label="Image" description="(Optional)" />
+      <ImageInput
+        name="image"
+        label="Image"
+        description="(Optional)"
+        value={image}
+        onChange={setImage}
+      />
       <FieldGroup>
         {state?.message && !state.success && (
           <FieldError>{state.message}</FieldError>

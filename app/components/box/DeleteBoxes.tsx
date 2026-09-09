@@ -1,5 +1,5 @@
 import { deleteBoxesAndAssociatedDatas } from '@/app/actions/delete-boxes'
-import ToolbarButton from '@/app/components/box/dashboard/ToolbarButton'
+import ToolbarButton from '@/app/components/common/list/ToolbarButton'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,

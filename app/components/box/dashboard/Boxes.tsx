@@ -1,39 +1,21 @@
 'use client'
 
 import BoxesHeader from '@/app/components/box/dashboard/BoxesHeader'
-import BoxesList from '@/app/components/box/dashboard/BoxesList'
-import BoxesToolbar from '@/app/components/box/dashboard/BoxesToolbar'
-import {
-  BoxesPageContextProvider,
-  useBoxesPageContext,
-} from '@/app/components/box/dashboard/context/BoxesPageContext'
-import NoBoxes from '@/app/components/box/dashboard/NoBoxes'
-import { SelectionContextProvider } from '@/app/components/common/selection/SelectionContext'
-import { BoxesPaginated } from '@/lib/box/types'
+import BoxesList from '@/app/components/box/list/BoxesList'
+import BoxesToolbar from '@/app/components/box/list/BoxesToolbar'
+import NoBoxes from '@/app/components/box/list/NoBoxes'
+import { BoxesPaginated } from '@/lib/box'
 
-type BoxesProps = BoxesPaginated
-
-const _Boxes = () => {
-  const { items: boxes, total } = useBoxesPageContext()
-
+const Boxes = (props: BoxesPaginated) => {
+  const { items: boxes, total } = props
   const isEmpty = total === 0
 
   return (
     <div className="flex gap-2 flex-col">
-      <BoxesHeader />
+      <BoxesHeader total={total} />
       <BoxesToolbar />
       {isEmpty ? <NoBoxes /> : <BoxesList boxes={boxes} />}
     </div>
-  )
-}
-
-const Boxes = (props: BoxesProps) => {
-  return (
-    <BoxesPageContextProvider {...props}>
-      <SelectionContextProvider>
-        <_Boxes />
-      </SelectionContextProvider>
-    </BoxesPageContextProvider>
   )
 }
 
