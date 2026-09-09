@@ -1,7 +1,7 @@
 'use client'
 
-import ToolbarButton from '@/app/components/box/dashboard/ToolbarButton'
 import LabelsSheet from '@/app/components/box/labels/LabelsSheet'
+import ToolbarButton from '@/app/components/common/list/ToolbarButton'
 import { Box } from '@/db/schema'
 import { Printer } from 'lucide-react'
 

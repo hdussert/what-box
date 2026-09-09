@@ -1,5 +1,6 @@
 import Boxes from '@/app/components/box/dashboard/Boxes'
 import ListParamsProvider from '@/app/components/common/list/ListParamsContext'
+import { SelectionContextProvider } from '@/app/components/common/selection/SelectionContext'
 import { getBoxes } from '@/lib/box'
 import { BOXES_DEFAULT_SORT_OPTION, BOXES_SORT_OPTIONS } from '@/lib/box/const'
 import z from 'zod'
@@ -34,7 +35,9 @@ export default async function DashboardPage({
       sortOptions={BOXES_SORT_OPTIONS}
       defaultSortOption={BOXES_DEFAULT_SORT_OPTION}
     >
-      <Boxes {...result} />
+      <SelectionContextProvider>
+        <Boxes {...result} />
+      </SelectionContextProvider>
     </ListParamsProvider>
   )
 }

@@ -1,4 +1,4 @@
-import ToolbarButton from '@/app/components/box/dashboard/ToolbarButton'
+import ToolbarButton from '@/app/components/common/list/ToolbarButton'
 import { useSelectionContext } from '@/app/components/common/selection/SelectionContext'
 import SelectionCount from '@/app/components/common/selection/SelectionCount'
 

@@ -1,6 +1,6 @@
 'use client'
 
-import BoxCard from '@/app/components/box/dashboard/BoxCard'
+import BoxCard from '@/app/components/box/list/BoxCard'
 import { useSelectionContext } from '@/app/components/common/selection/SelectionContext'
 import { BoxWithAll } from '@/lib/box'
 import { useRouter } from 'next/navigation'
