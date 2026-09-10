@@ -18,29 +18,29 @@ const NewItemSchema = z.object({
 })
 
 type NewItemData = z.infer<typeof NewItemSchema>
-type NewItemValues = NewItemData
+type NewItemValues = Omit<NewItemData, 'image'>
 
 type NewItemResult = {
   id: string
 }
 
 export type NewItemState = ActionResponse & {
-  values: Omit<NewItemValues, 'image'>
+  values: NewItemValues
   result?: NewItemResult
 }
 
 export async function newItem(
   prevState: NewItemState,
   formData: FormData,
+  image: File | undefined,
 ): Promise<NewItemState> {
   const raw = {
     boxId: formData.get('boxId') as string,
     name: formData.get('name') as string,
-    image: formData.get('image') as File,
+    image: image,
     description: formData.get('description') as string,
     quantity: Number(formData.get('quantity')),
   }
-
   const values: NewItemValues = raw
 
   try {

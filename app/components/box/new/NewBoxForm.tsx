@@ -32,7 +32,7 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
   const [image, setImage] = useState<File>()
 
   const [state, formAction, isPending] = useActionState<NewBoxState, FormData>(
-    newBox,
+    (prevState, formData) => newBox(prevState, formData, image),
     initialState,
   )
 
@@ -47,13 +47,11 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
     } else {
       toast.error(state.message)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.success, state.message])
+  }, [state, state.success, state.message])
 
   return (
     <form action={formAction} className={cn('flex flex-col', className)}>
       <ImageInput
-        name="image"
         label="Image"
         description="(Optional)"
         value={image}
