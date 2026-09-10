@@ -33,7 +33,7 @@ const NewItemForm = ({ boxId, className }: NewItemFormProps) => {
   }
   const [image, setImage] = useState<File>()
   const [state, formAction, isPending] = useActionState<NewItemState, FormData>(
-    newItem,
+    (prevState, formData) => newItem(prevState, formData, image),
     initialState,
   )
 
@@ -49,14 +49,13 @@ const NewItemForm = ({ boxId, className }: NewItemFormProps) => {
     } else {
       toast.error(state.message)
     }
-  }, [state.success, state.message])
+  }, [state, state.success, state.message])
 
   return (
     <form action={formAction} className={cn('flex gap-3', className)}>
       <input type="hidden" name="boxId" value={boxId} />
 
       <ImageInput
-        name="image"
         label="Image"
         description="(Optional)"
         value={image}

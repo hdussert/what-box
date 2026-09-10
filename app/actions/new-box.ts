@@ -14,7 +14,7 @@ const NewBoxSchema = z.object({
 })
 
 type NewBoxData = z.infer<typeof NewBoxSchema>
-type NewBoxValues = NewBoxData
+type NewBoxValues = Omit<NewBoxData, 'image'>
 
 type NewBoxResult = {
   id: string
@@ -27,12 +27,13 @@ export type NewBoxState = ActionResponse & {
 export async function newBox(
   prevState: NewBoxState,
   formData: FormData,
+  image?: File,
 ): Promise<NewBoxState> {
   // Get current authentified user
 
   const raw = {
     name: formData.get('name') as string,
-    image: formData.get('image') as File,
+    image: image,
   }
   const values: NewBoxValues = raw
 
