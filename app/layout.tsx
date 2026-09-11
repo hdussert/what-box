@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: PropsWithChildren) => {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body
         className={`dark font-sans ${inter.variable} ${jetBrainsMono.variable} antialiased`}
       >
