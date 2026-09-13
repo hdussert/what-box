@@ -9,7 +9,7 @@ import { put } from '@vercel/blob'
 import { z } from 'zod'
 
 const NewBoxSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z.string().trim().min(1, 'Name is required'),
   image: z.file().max(4_500_000).mime(IMAGE_MIME).optional(),
 })
 
