@@ -43,7 +43,7 @@ export const useListParams = ({
 
     const query = params.toString()
     const url = query ? `${pathname}?${query}` : pathname
-    router.replace(url)
+    router.replace(url, { scroll: false })
   }
 
   const setSort = (value: SortValue) => {
@@ -58,7 +58,7 @@ export const useListParams = ({
 
     const query = params.toString()
     const url = query ? `${pathname}?${query}` : pathname
-    router.replace(url)
+    router.replace(url, { scroll: false })
   }
 
   return {
