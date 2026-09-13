@@ -5,6 +5,7 @@ import { PropsWithChildren } from 'react'
 type ToolbarButtonProps = PropsWithChildren<
   {
     onClick?: () => void
+    disabled?: boolean
   } & VariantProps<typeof buttonVariants>
 >
 

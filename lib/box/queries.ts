@@ -1,23 +1,34 @@
 import { db } from '@/db'
-import { Box, boxes } from '@/db/schema'
+import { boxes } from '@/db/schema'
 import { getBoxesIdsContainingItem } from '@/lib/item'
 import { getCurrentUser } from '@/lib/user'
 import { and, eq, ilike, inArray, or, sql } from 'drizzle-orm'
 import 'server-only'
-import { BoxesPaginated, BoxesQuery } from './types'
+import { BoxesPaginated, BoxesQuery, BoxWithAll } from './types'
 import { toOrderBy } from './utils'
 
 // Single box queries
-export async function getBoxById(boxId: string): Promise<Box | undefined> {
+export async function getBoxById(
+  boxId: string,
+): Promise<BoxWithAll | undefined> {
   const user = await getCurrentUser()
   return db.query.boxes.findFirst({
     where: { id: boxId, userId: user.id },
+    with: { images: true, items: true },
   })
 }
 
-export async function getBoxByShortId(
-  shortId: string,
-): Promise<Box | undefined> {
+export async function getBoxesByIds(
+  boxesIds: string[],
+): Promise<BoxWithAll[] | undefined> {
+  const user = await getCurrentUser()
+  return db.query.boxes.findMany({
+    where: { id: { in: boxesIds }, userId: user.id },
+    with: { images: true, items: true },
+  })
+}
+
+export async function getBoxByShortId(shortId: string) {
   const user = await getCurrentUser()
   return db.query.boxes.findFirst({
     where: { shortId, userId: user.id },

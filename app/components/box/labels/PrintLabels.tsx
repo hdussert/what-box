@@ -1,26 +1,41 @@
 'use client'
 
-import LabelsSheet from '@/app/components/box/labels/LabelsSheet'
+import { getBoxesForLabels } from '@/app/actions/get-boxes-for-labels'
+import BoxLabelsSheet from '@/app/components/box/labels/LabelsSheet'
 import ToolbarButton from '@/app/components/common/list/ToolbarButton'
-import { Box } from '@/db/schema'
-import { Printer } from 'lucide-react'
+import { BoxWithAll } from '@/lib/box'
+import { LoaderCircle, Printer } from 'lucide-react'
+import { useState, useTransition } from 'react'
+import { toast } from 'sonner'
 
-type PrintLabelsProps = {
-  boxesIds: string[]
-}
+type PrintLabelsProps = { boxesIds: string[] }
+
 const PrintLabels = ({ boxesIds }: PrintLabelsProps) => {
-  // TODO : Fetch the boxes everytime the button is pressed ?
-  const boxes: Box[] = []
+  const [boxes, setBoxes] = useState<BoxWithAll[]>()
+  const [isPending, startTransition] = useTransition()
+
   const print = () => {
-    // boxes = getBoxesByIds(boxesIds)...
-    window.print()
+    if (!boxesIds.length) {
+      toast.error('Nothing to print !')
+      return
+    }
+
+    startTransition(async () => {
+      const fetchedBoxes = await getBoxesForLabels(boxesIds)
+      setBoxes(fetchedBoxes)
+      // Important: wait until React has rendered the labels.
+      requestAnimationFrame(() => {
+        window.print()
+      })
+    })
   }
+
   return (
     <>
-      <ToolbarButton onClick={print}>
-        <Printer />
+      <ToolbarButton onClick={print} disabled={isPending}>
+        {isPending ? <LoaderCircle /> : <Printer />}
       </ToolbarButton>
-      <LabelsSheet boxes={boxes} />
+      {boxes ? <BoxLabelsSheet boxes={boxes} /> : null}
     </>
   )
 }

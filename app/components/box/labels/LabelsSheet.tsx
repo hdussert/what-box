@@ -1,8 +1,8 @@
 import Label from '@/app/components/box/labels/Label'
-import { Box } from '@/db/schema'
+import { BoxWithAll } from '@/lib/box'
 
 type LabelsSheet = {
-  boxes: Box[]
+  boxes: BoxWithAll[]
 }
 
 const BoxLabelsSheet = ({ boxes }: LabelsSheet) => {
