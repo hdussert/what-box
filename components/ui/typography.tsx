@@ -20,7 +20,7 @@ const H3 = ({ className, ...props }: ComponentProps<'h3'>) => (
 )
 
 const P = ({ className, ...props }: ComponentProps<'p'>) => (
-  <p className={cn('text-base', className)} {...props}>
+  <p className={cn('text-base text-muted-foreground', className)} {...props}>
     {props.children}
   </p>
 )
