@@ -16,11 +16,6 @@ const SearchList = () => {
   const { search, setSearch } = useListParamsContext()
   const [value, setValue] = useState(search)
 
-  // Keep the input in sync with the URL
-  useEffect(() => {
-    setValue(search)
-  }, [search])
-
   // Debounce URL updates
   useEffect(() => {
     if (value === search) return
