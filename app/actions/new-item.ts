@@ -10,11 +10,15 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 const NewItemSchema = z.object({
-  boxId: z.string().min(1, 'Box is required'),
-  name: z.string().min(1, 'Name is required'),
+  boxId: z.string().trim().min(1, 'Box is required'),
+  name: z.string().trim().min(1, 'Name is required'),
   image: z.file().max(4_500_000).mime(IMAGE_MIME).optional(),
-  description: z.string().optional(),
-  quantity: z.number().int().min(0),
+  description: z
+    .string()
+    .trim()
+    .transform((val) => (val === '' ? null : val))
+    .nullable(),
+  quantity: z.number().int().min(1, 'Quantity must be 0 or more'),
 })
 
 type NewItemData = z.infer<typeof NewItemSchema>
