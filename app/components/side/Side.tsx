@@ -20,7 +20,7 @@ import { Boxes, LogOut, PackagePlus } from 'lucide-react'
 type SideItemList = Array<SideNavItemProps & { key: string }>
 
 const Side = () => {
-  const { openModal: openNewBoxModal } = useNewBoxModalContext()
+  const { openNewBoxModal } = useNewBoxModalContext()
 
   const items: SideItemList = [
     { key: 'dashboard', name: 'My boxes', Icon: Boxes, href: '/dashboard' },

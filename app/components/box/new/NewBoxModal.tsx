@@ -20,18 +20,13 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { useRouter } from 'next/navigation'
 
 const NewBoxModal = () => {
-  const { isOpen, closeModal } = useNewBoxModalContext()
+  const { open, onOpenChange, closeNewBoxModal } = useNewBoxModalContext()
   const router = useRouter()
   const isMobile = useIsMobile()
 
   if (isMobile) {
     return (
-      <Drawer
-        open={isOpen}
-        onOpenChange={(open) => {
-          if (!open) closeModal()
-        }}
-      >
+      <Drawer open={open} onOpenChange={onOpenChange} noBodyStyles>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>New Box</DrawerTitle>
@@ -42,7 +37,7 @@ const NewBoxModal = () => {
           <NewBoxForm
             onSuccess={(boxId) => {
               router.push('/boxes/' + boxId)
-              closeModal()
+              closeNewBoxModal()
             }}
             className="px-4 mb-12"
           />
@@ -51,13 +46,7 @@ const NewBoxModal = () => {
     )
   }
   return (
-    <Dialog
-      modal
-      open={isOpen}
-      onOpenChange={(open) => {
-        if (!open) closeModal()
-      }}
-    >
+    <Dialog modal open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New box</DialogTitle>
@@ -68,7 +57,7 @@ const NewBoxModal = () => {
         <NewBoxForm
           onSuccess={(boxId) => {
             router.push('/boxes/' + boxId)
-            closeModal()
+            closeNewBoxModal()
           }}
         />
       </DialogContent>

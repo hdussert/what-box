@@ -1,33 +1,25 @@
 'use client'
 
 import NewBoxModal from '@/app/components/box/new/NewBoxModal'
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import { createContext, PropsWithChildren, useContext, useState } from 'react'
 
 type NewBoxModalContextValue = {
-  isOpen: boolean
-  openModal: () => void
-  closeModal: () => void
+  open: boolean
+  onOpenChange: (bool: boolean) => void
+  openNewBoxModal: () => void
+  closeNewBoxModal: () => void
 }
 
 const NewBoxModalContext = createContext<NewBoxModalContextValue | null>(null)
 
 export function NewBoxModalProvider({ children }: PropsWithChildren) {
-  const [open, setOpen] = useState(false)
-  const value = useMemo(
-    () => ({
-      isOpen: open,
-      openModal: () => setOpen(true),
-      closeModal: () => setOpen(false),
-    }),
-    [open],
-  )
-
+  const [open, onOpenChange] = useState(false)
+  const value = {
+    open,
+    onOpenChange,
+    openNewBoxModal: () => onOpenChange(true),
+    closeNewBoxModal: () => onOpenChange(false),
+  }
   return (
     <NewBoxModalContext.Provider value={value}>
       {children}

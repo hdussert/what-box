@@ -53,7 +53,7 @@ const ItemCard = ({ item, onClick, selected, isSelecting }: ItemCardProps) => {
       {isSelecting ? <Checkbox checked={selected} onClick={onClick} /> : null}
       <Card
         className={cn(
-          'p-2 flex-1 flex-row gap-4 cursor-pointer hover:brightness-120 transition relative',
+          'p-0 pr-4 flex-1 flex-row gap-4 cursor-pointer hover:brightness-120 transition relative items-center',
           {
             'ring-2 ring-primary': selected,
           },
@@ -61,22 +61,19 @@ const ItemCard = ({ item, onClick, selected, isSelecting }: ItemCardProps) => {
         onClick={onClick}
       >
         <FirstImageMiniature images={item.images} />
-        <div className="flex flex-col w-full">
-          <div className="flex flex-row justify-between">
-            <CardTitle>{item.name}</CardTitle>
-            <CardDescription className="font-mono">
-              {item.quantity}
-            </CardDescription>
-          </div>
-          <CardDescription className="font-mono text-xs">
+        <div className="flex flex-col gap-1 flex-1">
+          <CardTitle>{item.name}</CardTitle>
+          <CardDescription className="text-xs">
             {item.createdAt.toLocaleDateString('en-US', {
-              year: 'numeric',
+              year: '2-digit',
               month: '2-digit',
               day: '2-digit',
             })}
           </CardDescription>
-          <CardDescription>{item.description}</CardDescription>
         </div>
+        <CardDescription className="font-mono">
+          &times; {item.quantity}
+        </CardDescription>
       </Card>
     </div>
   )

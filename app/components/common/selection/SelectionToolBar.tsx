@@ -1,6 +1,7 @@
-import ToolbarButton from '@/app/components/common/list/ToolbarButton'
+import ToolbarButton from '@/app/components/common/ToolbarButton'
 import { useSelectionContext } from '@/app/components/common/selection/SelectionContext'
 import SelectionCount from '@/app/components/common/selection/SelectionCount'
+import { ReactNode } from 'react'
 
 type SelectionActions = {
   selectedIds: string[]
@@ -8,10 +9,14 @@ type SelectionActions = {
 }
 
 type SelectionToolbarProps = {
-  actions?: (actions: SelectionActions) => React.ReactNode
+  selectionActions?: (actions: SelectionActions) => ReactNode
+  actions?: ReactNode
 }
 
-const SelectionToolbar = ({ actions }: SelectionToolbarProps) => {
+const SelectionToolbar = ({
+  selectionActions,
+  actions,
+}: SelectionToolbarProps) => {
   const {
     isSelecting,
     stopSelecting,
@@ -22,7 +27,8 @@ const SelectionToolbar = ({ actions }: SelectionToolbarProps) => {
 
   if (!isSelecting) {
     return (
-      <div className="flex justify-end">
+      <div className="flex justify-between">
+        <div>{actions}</div>
         <ToolbarButton onClick={startSelecting}>Select</ToolbarButton>
       </div>
     )
@@ -31,7 +37,7 @@ const SelectionToolbar = ({ actions }: SelectionToolbarProps) => {
   return (
     <div className="flex items-center justify-between">
       <div>
-        {actions?.({
+        {selectionActions?.({
           selectedIds,
           clearSelection,
         })}
