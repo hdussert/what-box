@@ -6,6 +6,7 @@ import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME } from '@/lib/image/const'
 import { createImageRecord } from '@/lib/image/image'
 import { put } from '@vercel/blob'
+import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 const NewBoxSchema = z.object({
@@ -61,6 +62,7 @@ export async function newBox(
       await createImageRecord(box.id, null, blob.url, blob.pathname)
     }
 
+    revalidatePath('/dashboard')
     return {
       success: true,
       message: 'Box created successfully',
