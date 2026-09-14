@@ -47,4 +47,4 @@ export const BOXES_SORT_OPTIONS: SortOption[] = [
   },
 ] as const
 
-export const BOXES_DEFAULT_SORT_OPTION = BOXES_SORT_OPTIONS[0].value
+export const BOXES_DEFAULT_SORT_OPTION = BOXES_SORT_OPTIONS[1].value

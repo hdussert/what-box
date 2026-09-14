@@ -1,5 +1,5 @@
-import { deleteBoxesAndAssociatedDatas } from '@/app/actions/delete-boxes'
-import ToolbarButton from '@/app/components/common/list/ToolbarButton'
+import { deleteItemsAndAssociatedDatas } from '@/app/actions/delete-items'
+import ToolbarButton from '@/app/components/common/ToolbarButton'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -26,15 +26,15 @@ import { Trash } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
-type DeleteBoxesDialogProps = {
-  boxesIds: string[]
+type DeleteItemsDialogProps = {
+  itemsIds: string[]
   successCallback?: () => void
 }
 
-export function DeleteBoxes({
-  boxesIds,
+export function DeleteItemsDialog({
+  itemsIds,
   successCallback,
-}: DeleteBoxesDialogProps) {
+}: DeleteItemsDialogProps) {
   const [open, onOpenChange] = useState(false)
   const isMobile = useIsMobile()
 
@@ -42,13 +42,13 @@ export function DeleteBoxes({
 
   const handleDelete = () => {
     startTransition(async () => {
-      const result = await deleteBoxesAndAssociatedDatas(boxesIds)
+      const result = await deleteItemsAndAssociatedDatas(itemsIds)
 
       if (result.success) {
-        toast.success(`${result.deleted} box(es) deleted`)
+        toast.success(`${result.deleted} item(s) deleted`)
         successCallback?.()
       } else {
-        toast.error(result.error || 'Failed to delete boxes')
+        toast.error(result.error || 'Failed to delete items')
       }
       onOpenChange(false)
     })
@@ -56,7 +56,7 @@ export function DeleteBoxes({
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
+      <Drawer open={open} onOpenChange={onOpenChange} noBodyStyles>
         <DrawerTrigger asChild>
           <ToolbarButton>
             <Trash />
@@ -64,11 +64,8 @@ export function DeleteBoxes({
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Delete {boxesIds.length} box(es)?</DrawerTitle>
-            <DrawerDescription>
-              This action cannot be undone. All images and items in these boxes
-              will also be deleted.
-            </DrawerDescription>
+            <DrawerTitle>Delete {itemsIds.length} item(s)?</DrawerTitle>
+            <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose disabled={isPending}>Cancel</DrawerClose>
@@ -93,9 +90,9 @@ export function DeleteBoxes({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete {boxesIds.length} box(es)?</DialogTitle>
+          <DialogTitle>Delete {itemsIds.length} item(s)?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. All images and items in these boxes
+            This action cannot be undone. All images and items in these items
             will also be deleted.
           </DialogDescription>
         </DialogHeader>

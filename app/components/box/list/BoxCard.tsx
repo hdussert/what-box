@@ -49,11 +49,11 @@ type BoxCard = {
 
 const BoxCard = ({ box, onClick, selected, isSelecting }: BoxCard) => {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-3 w-full">
       {isSelecting ? <Checkbox checked={selected} onClick={onClick} /> : null}
       <Card
         className={cn(
-          'p-2 flex-1 flex-row gap-4 cursor-pointer hover:brightness-120 transition relative',
+          'p-0 pr-4 flex-1 flex-row gap-4 cursor-pointer hover:brightness-120 transition items-center min-w-0',
           {
             'ring-2 ring-primary': selected,
           },
@@ -61,26 +61,27 @@ const BoxCard = ({ box, onClick, selected, isSelecting }: BoxCard) => {
         onClick={onClick}
       >
         <FirstImageMiniature images={box.images} />
-        <div className="flex flex-col w-full">
-          <div className="flex flex-row justify-between">
-            <CardTitle>{box.name}</CardTitle>
-            <CardDescription className="font-mono">
+        <div className="flex flex-col flex-1 min-w-0 gap-1">
+          <div className="flex justify-between items-center">
+            <CardDescription className="text-xs font-mono">
               {box.shortId}
             </CardDescription>
+
+            <CardDescription className="text-xs">
+              {box.createdAt.toLocaleDateString('en-US', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+              })}
+            </CardDescription>
           </div>
-          <CardDescription className="font-mono text-xs">
-            {box.createdAt.toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            })}
-          </CardDescription>
-          <CardDescription>
+
+          <CardTitle>{box.name}</CardTitle>
+          <CardDescription className="leading-none whitespace-nowrap text-ellipsis overflow-hidden text-xs">
             {box.items.length
-              ? `Objects (${box.items.length}) : ${box.items
-                  .slice(0, 3)
+              ? `Items (${box.items.length}) : ${box.items
                   .map((item, index) => item.name)
-                  .join(', ')} ...`
+                  .join(', ')}`
               : 'Empty'}
           </CardDescription>
         </div>

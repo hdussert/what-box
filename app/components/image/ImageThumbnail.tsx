@@ -9,12 +9,7 @@ const ImageThumbnail = ({
   ...props
 }: ImageThumbnailProps) => {
   return (
-    <div
-      className={cn(
-        'size-full overflow-hidden rounded-lg shadow-sm',
-        className,
-      )}
-    >
+    <div className={cn('overflow-hidden rounded-md shadow-sm', className)}>
       <Image
         {...props}
         className="size-full object-cover data-[loaded=false]:animate-pulse data-[loaded=false]:bg-accent"

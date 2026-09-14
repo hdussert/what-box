@@ -1,7 +1,7 @@
 'use client'
 
 import { newBox, NewBoxState } from '@/app/actions/new-box'
-import ImageInput from '@/app/components/ImageInput'
+import ImageInput from '@/app/components/image/ImageInput'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -43,6 +43,7 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
     if (state.success) {
       toast.success(state.message)
       setImage(undefined)
+
       onSuccess(state.result!.id)
     } else {
       toast.error(state.message)
@@ -50,34 +51,32 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
   }, [state, state.success, state.message])
 
   return (
-    <form action={formAction} className={cn('flex flex-col', className)}>
-      <ImageInput
-        label="Image"
-        description="(Optional)"
-        value={image}
-        onChange={setImage}
-      />
-      <FieldGroup>
-        {state?.message && !state.success && (
-          <FieldError>{state.message}</FieldError>
-        )}
-        <Field>
-          <FieldLabel>Name*</FieldLabel>
-          <Input
-            type="text"
-            name="name"
-            placeholder="Bedroom, Kitchen..."
-            disabled={isPending}
-            defaultValue={state.values.name}
-          />
-          <FieldError>{state.errors?.name}</FieldError>
-        </Field>
-      </FieldGroup>
-      <Button
-        type="submit"
-        className="mt-6 w-full md:self-end md:w-fit"
-        disabled={isPending}
-      >
+    <form action={formAction} className={cn('flex flex-col gap-3', className)}>
+      <div className="flex gap-3 items-center">
+        <ImageInput
+          label="Picture"
+          description="(Optional)"
+          value={image}
+          onChange={setImage}
+        />
+        <FieldGroup>
+          {state?.message && !state.success && (
+            <FieldError>{state.message}</FieldError>
+          )}
+          <Field>
+            <FieldLabel>Name*</FieldLabel>
+            <Input
+              type="text"
+              name="name"
+              placeholder="Bedroom, Kitchen..."
+              disabled={isPending}
+              defaultValue={state.values.name}
+            />
+            <FieldError>{state.errors?.name}</FieldError>
+          </Field>
+        </FieldGroup>
+      </div>
+      <Button type="submit" className="self-end" disabled={isPending}>
         {isPending ? 'Creating...' : 'Create'}
       </Button>
     </form>

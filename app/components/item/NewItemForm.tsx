@@ -1,7 +1,7 @@
 'use client'
 
 import { newItem, NewItemState } from '@/app/actions/new-item'
-import ImageInput from '@/app/components/ImageInput'
+import ImageInput from '@/app/components/image/ImageInput'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 type NewItemFormProps = {
   boxId: string
   className?: string
+  onSuccess?: () => void
 }
 
 const NewItemForm = ({ boxId, className }: NewItemFormProps) => {
@@ -52,69 +53,54 @@ const NewItemForm = ({ boxId, className }: NewItemFormProps) => {
   }, [state, state.success, state.message])
 
   return (
-    <form action={formAction} className={cn('flex gap-3', className)}>
+    <form action={formAction} className={cn('flex flex-col gap-3', className)}>
       <input type="hidden" name="boxId" value={boxId} />
 
-      <ImageInput
-        label="Image"
-        description="(Optional)"
-        value={image}
-        onChange={setImage}
-      />
-
-      <div className="flex-1">
+      <div className="flex-1 flex items-center gap-2">
+        <ImageInput
+          label="Picture"
+          description="(Optional)"
+          value={image}
+          onChange={setImage}
+          className="size-24"
+        />
         <FieldGroup>
           {state.message && !state.success && (
             <FieldError>{state.message}</FieldError>
           )}
 
-          <Field>
-            <FieldLabel>Name*</FieldLabel>
-            <Input
-              ref={nameInputRef}
-              type="text"
-              name="name"
-              placeholder="Item name..."
-              disabled={isPending}
-              defaultValue={state.values.name}
-            />
-            <FieldError>{state.errors?.name}</FieldError>
-          </Field>
+          <div className="flex gap-2">
+            <Field>
+              <FieldLabel>Name</FieldLabel>
+              <Input
+                ref={nameInputRef}
+                type="text"
+                name="name"
+                placeholder="Item name..."
+                disabled={isPending}
+                defaultValue={state.values.name}
+              />
+              <FieldError>{state.errors?.name}</FieldError>
+            </Field>
 
-          <Field>
-            <FieldLabel>Quantity*</FieldLabel>
-            <Input
-              type="number"
-              name="quantity"
-              min={1}
-              placeholder="1"
-              disabled={isPending}
-              defaultValue={state.values.quantity}
-            />
-            <FieldError>{state.errors?.quantity}</FieldError>
-          </Field>
-
-          <Field>
-            <FieldLabel>Description</FieldLabel>
-            <Input
-              type="text"
-              name="description"
-              placeholder="Optional description..."
-              disabled={isPending}
-              defaultValue={state.values.description}
-            />
-            <FieldError>{state.errors?.description}</FieldError>
-          </Field>
+            <Field className="flex-1">
+              <FieldLabel>Quantity</FieldLabel>
+              <Input
+                type="number"
+                name="quantity"
+                min={1}
+                placeholder="1"
+                disabled={isPending}
+                defaultValue={state.values.quantity}
+              />
+              <FieldError>{state.errors?.quantity}</FieldError>
+            </Field>
+          </div>
         </FieldGroup>
-
-        <Button
-          type="submit"
-          className="mt-6 w-full md:self-end md:w-fit"
-          disabled={isPending}
-        >
-          {isPending ? 'Creating...' : 'Create'}
-        </Button>
       </div>
+      <Button type="submit" disabled={isPending} className="self-end">
+        {isPending ? 'Creating...' : 'Create'}
+      </Button>
     </form>
   )
 }
