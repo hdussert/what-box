@@ -10,7 +10,7 @@ type ToolbarButtonProps = PropsWithChildren<
 >
 
 const ToolbarButton = ({ onClick, children, ...props }: ToolbarButtonProps) => (
-  <Button variant="ghost" onClick={onClick} {...props}>
+  <Button variant="ghost" size="sm" onClick={onClick} {...props}>
     {children}
   </Button>
 )
