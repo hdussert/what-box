@@ -1,12 +1,12 @@
 import Hero from '@/app/components/marketing/Hero'
 import HowTo from '@/app/components/marketing/HowTo'
 import Story from '@/app/components/marketing/Story'
-import { getCurrentUser } from '@/lib/user'
+import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 
 const MarketingPage = async () => {
   // Redirect to dashboard if user is authenticated
-  const user = await getCurrentUser()
+  const user = await getSession()
   if (user) {
     redirect('/dashboard')
   }
