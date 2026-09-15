@@ -1,4 +1,4 @@
-import { SortOption } from '@/app/components/common/list/useListParams'
+import { SortOption } from '@/components/list/types'
 import { items } from '@/db/schema'
 
 export const ITEMS_SORTABLE_COLUMNS = {

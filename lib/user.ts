@@ -61,7 +61,7 @@ export const getUserById = cache(async (id: string) => {
  */
 export const getCurrentUser = async () => {
   const user = await getSession()
-  if (!user) redirect('/signin')
+  if (!user) redirect('/')
 
   return user
 }

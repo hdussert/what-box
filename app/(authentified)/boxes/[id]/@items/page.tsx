@@ -1,6 +1,6 @@
-import ListParamsProvider from '@/app/components/common/list/ListParamsContext'
-import { SelectionContextProvider } from '@/app/components/common/selection/SelectionContext'
-import Items from '@/app/components/item/Items'
+import Items from '@/components/items/Items'
+import ListProvider from '@/components/list/ListProvider'
+import { SelectionProvider } from '@/components/selection/SelectionProvider'
 import { getItems } from '@/lib/item'
 import { ITEMS_DEFAULT_SORT_OPTION, ITEMS_SORT_OPTIONS } from '@/lib/item/const'
 import { z } from 'zod'
@@ -28,14 +28,14 @@ const ItemsSlot = async ({ params, searchParams }: ItemsSlotProps) => {
   })
 
   return (
-    <ListParamsProvider
+    <ListProvider
       sortOptions={ITEMS_SORT_OPTIONS}
       defaultSortOption={ITEMS_DEFAULT_SORT_OPTION}
     >
-      <SelectionContextProvider>
+      <SelectionProvider>
         <Items boxId={id} {...result} />
-      </SelectionContextProvider>
-    </ListParamsProvider>
+      </SelectionProvider>
+    </ListProvider>
   )
 }
 

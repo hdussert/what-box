@@ -1,4 +1,4 @@
-import { SortValue } from '@/app/components/common/list/useListParams'
+import { SortValue } from '@/components/list/types'
 import { boxes } from '@/db/schema'
 import { BOXES_DEFAULT_SORT_OPTION } from '@/lib/box/const'
 import { AnyColumn, SQL, sql, SQLWrapper } from 'drizzle-orm'

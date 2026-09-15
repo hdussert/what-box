@@ -1,5 +1,5 @@
-import { DialogProvider } from '@/app/components/dialog/DialogContext'
-import Side from '@/app/components/side/Side'
+import { DialogProvider } from '@/components/dialog/DialogProvider'
+import Side from '@/components/side/Side'
 import {
   SidebarInset,
   SidebarProvider,
