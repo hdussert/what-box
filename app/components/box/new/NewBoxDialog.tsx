@@ -1,7 +1,7 @@
 'use client'
 
 import NewBoxForm from '@/app/components/box/new/NewBoxForm'
-import { useNewBoxModalContext } from '@/app/components/box/new/NewBoxModalContext'
+import { DialogBaseProps } from '@/app/components/dialog/DialogContext'
 import {
   Dialog,
   DialogContent,
@@ -19,14 +19,15 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useRouter } from 'next/navigation'
 
-const NewBoxModal = () => {
-  const { open, onOpenChange, closeNewBoxModal } = useNewBoxModalContext()
+type NewBoxDialogProps = DialogBaseProps
+
+const NewBoxDialog = ({ open, setOpen }: NewBoxDialogProps) => {
   const router = useRouter()
   const isMobile = useIsMobile()
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange} noBodyStyles>
+      <Drawer open={open} onOpenChange={setOpen} noBodyStyles>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>New Box</DrawerTitle>
@@ -37,7 +38,7 @@ const NewBoxModal = () => {
           <NewBoxForm
             onSuccess={(boxId) => {
               router.push('/boxes/' + boxId)
-              closeNewBoxModal()
+              setOpen(false)
             }}
             className="px-4 mb-12"
           />
@@ -46,7 +47,7 @@ const NewBoxModal = () => {
     )
   }
   return (
-    <Dialog modal open={open} onOpenChange={onOpenChange}>
+    <Dialog modal open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New box</DialogTitle>
@@ -57,7 +58,7 @@ const NewBoxModal = () => {
         <NewBoxForm
           onSuccess={(boxId) => {
             router.push('/boxes/' + boxId)
-            closeNewBoxModal()
+            setOpen(false)
           }}
         />
       </DialogContent>
@@ -65,4 +66,4 @@ const NewBoxModal = () => {
   )
 }
 
-export default NewBoxModal
+export default NewBoxDialog

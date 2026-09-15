@@ -1,7 +1,8 @@
 'use client'
 
 import { signOut } from '@/app/actions/sign-out'
-import { useNewBoxModalContext } from '@/app/components/box/new/NewBoxModalContext'
+import NewBoxDialog from '@/app/components/box/new/NewBoxDialog'
+import { useDialog } from '@/app/components/dialog/DialogContext'
 import {
   SideNavItem,
   SideNavItemProps,
@@ -20,7 +21,7 @@ import { Boxes, LogOut, PackagePlus } from 'lucide-react'
 type SideItemList = Array<SideNavItemProps & { key: string }>
 
 const Side = () => {
-  const { openNewBoxModal } = useNewBoxModalContext()
+  const { openDialog } = useDialog()
 
   const items: SideItemList = [
     { key: 'dashboard', name: 'My boxes', Icon: Boxes, href: '/dashboard' },
@@ -28,7 +29,7 @@ const Side = () => {
       key: 'new-box',
       name: 'New box',
       Icon: PackagePlus,
-      onClick: openNewBoxModal,
+      onClick: () => openDialog(NewBoxDialog, {}),
     },
   ]
   return (

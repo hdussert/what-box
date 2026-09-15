@@ -1,6 +1,5 @@
 'use client'
 
-import NewBoxModal from '@/app/components/box/new/NewBoxModal'
 import Typography from '@/components/ui/typography'
 
 const NoBoxes = () => {
@@ -10,7 +9,6 @@ const NoBoxes = () => {
       <Typography.P className="text-sm mb-4">
         Create your first box and start organizing your items
       </Typography.P>
-      <NewBoxModal />
     </div>
   )
 }

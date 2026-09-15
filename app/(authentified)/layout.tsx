@@ -1,4 +1,4 @@
-import { NewBoxModalProvider } from '@/app/components/box/new/NewBoxModalContext'
+import { DialogProvider } from '@/app/components/dialog/DialogContext'
 import Side from '@/app/components/side/Side'
 import {
   SidebarInset,
@@ -10,7 +10,7 @@ import { PropsWithChildren } from 'react'
 const DashboardLayout = ({ children }: PropsWithChildren) => {
   return (
     <SidebarProvider>
-      <NewBoxModalProvider>
+      <DialogProvider>
         <Side />
         <SidebarInset>
           <header className="flex h-14 shrink-0 items-center gap-2 border-b px-2 md:px-6">
@@ -20,7 +20,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
             {children}
           </main>
         </SidebarInset>
-      </NewBoxModalProvider>
+      </DialogProvider>
     </SidebarProvider>
   )
 }
