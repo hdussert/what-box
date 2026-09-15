@@ -1,16 +1,10 @@
+import { SortValue } from '@/app/components/common/list/useListParams'
 import { items } from '@/db/schema'
 import { ITEMS_DEFAULT_SORT_OPTION } from '@/lib/item/const'
 import { AnyColumn, SQL, sql, SQLWrapper } from 'drizzle-orm'
-import { ItemsSortDirection, ItemsSortField, ItemsSortOptions } from './types'
+import { ItemsSortField } from './types'
 
-export function buildSortOption(
-  field: ItemsSortField,
-  direction: ItemsSortDirection,
-): ItemsSortOptions {
-  return `${field}_${direction}`
-}
-
-export function parseSort(sort: ItemsSortOptions | undefined) {
+export function parseSort(sort: SortValue | undefined) {
   const [field, direction] = sort
     ? sort.split('_')
     : ITEMS_DEFAULT_SORT_OPTION.split('_')
@@ -21,7 +15,7 @@ export function parseSort(sort: ItemsSortOptions | undefined) {
 }
 
 export function toOrderBy(
-  sort: ItemsSortOptions | undefined,
+  sort: SortValue | undefined,
   itemsTable: typeof items,
   asc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
   desc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
