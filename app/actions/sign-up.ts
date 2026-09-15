@@ -25,7 +25,7 @@ export type SignUpState = ActionResponse & {
 
 export async function signUp(
   prevState: SignUpState,
-  formData: FormData
+  formData: FormData,
 ): Promise<SignUpState> {
   const raw = {
     email: formData.get('email') as string,
