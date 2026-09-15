@@ -1,15 +1,20 @@
 'use client'
 
-import { useNewBoxModalContext } from '@/app/components/box/new/NewBoxModalContext'
+import NewBoxDialog from '@/app/components/box/new/NewBoxDialog'
 import ToolbarButton from '@/app/components/common/ToolbarButton'
+import { useDialog } from '@/app/components/dialog/DialogContext'
 import { PackagePlus } from 'lucide-react'
 
 type NewBoxButtonProps = { label: string }
 
 const NewBoxButton = ({ label }: NewBoxButtonProps) => {
-  const { openNewBoxModal } = useNewBoxModalContext()
+  const { openDialog } = useDialog()
   return (
-    <ToolbarButton onClick={openNewBoxModal}>
+    <ToolbarButton
+      onClick={() => {
+        openDialog(NewBoxDialog, {})
+      }}
+    >
       <PackagePlus />
       {label}
     </ToolbarButton>
