@@ -25,7 +25,6 @@ export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
       })
     }
 
-    // Delete box records (images will be deleted on cascade)
     await deleteBoxes(boxIds)
     revalidatePath('/dashboard')
 
