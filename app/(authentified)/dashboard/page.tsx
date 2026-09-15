@@ -1,6 +1,6 @@
-import Boxes from '@/app/components/box/dashboard/Boxes'
-import ListParamsProvider from '@/app/components/common/list/ListParamsContext'
-import { SelectionContextProvider } from '@/app/components/common/selection/SelectionContext'
+import Boxes from '@/components/boxes/Boxes'
+import ListProvider from '@/components/list/ListProvider'
+import { SelectionProvider } from '@/components/selection/SelectionProvider'
 import { getBoxes } from '@/lib/box'
 import { BOXES_DEFAULT_SORT_OPTION, BOXES_SORT_OPTIONS } from '@/lib/box/const'
 import z from 'zod'
@@ -31,13 +31,13 @@ export default async function DashboardPage({
   })
 
   return (
-    <ListParamsProvider
+    <ListProvider
       sortOptions={BOXES_SORT_OPTIONS}
       defaultSortOption={BOXES_DEFAULT_SORT_OPTION}
     >
-      <SelectionContextProvider>
+      <SelectionProvider>
         <Boxes {...result} />
-      </SelectionContextProvider>
-    </ListParamsProvider>
+      </SelectionProvider>
+    </ListProvider>
   )
 }

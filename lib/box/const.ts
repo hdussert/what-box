@@ -1,4 +1,4 @@
-import { SortOption } from '@/app/components/common/list/useListParams'
+import { SortOption } from '@/components/list/types'
 import { boxes } from '@/db/schema'
 
 // Note : Safety net, making sure the column exists

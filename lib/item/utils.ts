@@ -1,4 +1,4 @@
-import { SortValue } from '@/app/components/common/list/useListParams'
+import { SortValue } from '@/components/list/types'
 import { items } from '@/db/schema'
 import { ITEMS_DEFAULT_SORT_OPTION } from '@/lib/item/const'
 import { AnyColumn, SQL, sql, SQLWrapper } from 'drizzle-orm'

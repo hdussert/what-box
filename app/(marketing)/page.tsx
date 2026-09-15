@@ -1,6 +1,6 @@
-import Hero from '@/app/components/marketing/Hero'
-import HowTo from '@/app/components/marketing/HowTo'
-import Story from '@/app/components/marketing/Story'
+import Hero from '@/components/marketing/Hero'
+import HowTo from '@/components/marketing/HowTo'
+import Story from '@/components/marketing/Story'
 import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 

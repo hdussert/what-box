@@ -1,4 +1,4 @@
-import { SortValue } from '@/app/components/common/list/useListParams'
+import { SortValue } from '@/components/list/types'
 import { Box, ImageRecord, Item } from '@/db/schema'
 import { BOXES_SORTABLE_COLUMNS } from '@/lib/box/const'
 

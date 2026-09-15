@@ -1,4 +1,4 @@
-import BoxHeader from '@/app/components/box/BoxHeader'
+import BoxHeader from '@/components/boxes/BoxHeader'
 import { getBoxById } from '@/lib/box'
 
 // ==================== Main Box Page Component ====================

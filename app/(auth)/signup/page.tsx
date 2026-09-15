@@ -1,4 +1,4 @@
-import SignUpForm from '@/app/components/auth/SignUpForm'
+import SignUpForm from '@/components/auth/SignUpForm'
 import { Card, CardContent } from '@/components/ui/card'
 import Typography from '@/components/ui/typography'
 import Link from 'next/link'

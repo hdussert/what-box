@@ -1,4 +1,4 @@
-import NewPasswordForm from '@/app/components/auth/NewPasswordForm'
+import NewPasswordForm from '@/components/auth/NewPasswordForm'
 import { Card, CardContent } from '@/components/ui/card'
 import Typography from '@/components/ui/typography'
 import Link from 'next/link'

@@ -1,4 +1,4 @@
-import ForgotPasswordForm from '@/app/components/auth/ForgotPasswordForm'
+import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm'
 import { Card, CardContent } from '@/components/ui/card'
 import Typography from '@/components/ui/typography'
 import Link from 'next/link'

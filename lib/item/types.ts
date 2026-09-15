@@ -1,4 +1,4 @@
-import { SortValue } from '@/app/components/common/list/useListParams'
+import { SortValue } from '@/components/list/types'
 import { ImageRecord, Item } from '@/db/schema'
 import { Paginated } from '@/lib/box'
 import { ITEMS_SORTABLE_COLUMNS } from '@/lib/item/const'
