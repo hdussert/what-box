@@ -1,30 +1,38 @@
 'use server'
 
 import { ActionResponse } from '@/actions/response-type'
-import { deleteFiles } from '@/lib/files'
-import { deleteImagesRecord, getImagesByPathnames } from '@/lib/image/image'
+import {
+  deleteImagesRecord,
+  getImagesByPathnames,
+} from '@/lib/image/image-record'
+import { deleteImagesFiles } from '@/lib/image/image-upload'
 
 export async function deleteImages(
   pathnames: string[],
 ): Promise<ActionResponse> {
   try {
     if (pathnames.length === 0) {
-      throw new Error('No image IDs provided for deletion')
+      throw new Error('No image pathnames provided for deletion')
     }
 
     const images = await getImagesByPathnames(pathnames)
+
     if (images.length === 0) {
-      throw new Error('No images found for the provided IDs')
+      throw new Error('No images found for the provided pathnames')
     }
 
-    // Delete image records from Vercel bucket
-    await deleteFiles(pathnames).catch(() => {
-      console.error('Failed to delete image files') // Silently log the error
-    })
-
-    // Delete image records from the database
-    const imageIds = images.map((img) => img.id)
+    const imageIds = images.map((image) => image.id)
     await deleteImagesRecord(imageIds)
+
+    // Failure here should not affect the user
+    try {
+      await deleteImagesFiles(pathnames)
+    } catch (error) {
+      console.error('Failed to delete image files', {
+        pathnames,
+        error,
+      })
+    }
 
     return {
       success: true,
@@ -33,7 +41,8 @@ export async function deleteImages(
   } catch (error) {
     return {
       success: false,
-      message: (error as Error).message || 'Failed to delete images',
+      message:
+        error instanceof Error ? error.message : 'Failed to delete images',
     }
   }
 }

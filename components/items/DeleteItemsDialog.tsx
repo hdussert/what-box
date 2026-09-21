@@ -1,5 +1,5 @@
 import { deleteItemsAndAssociatedDatas } from '@/actions/items/delete-items'
-import ToolbarButton from '@/components/ToolbarButton'
+import { DialogBaseProps } from '@/components/dialog/DialogProvider'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -9,7 +9,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import {
   Drawer,
@@ -19,30 +18,29 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { Trash } from 'lucide-react'
-import { useState, useTransition } from 'react'
+import { useTransition } from 'react'
 import { toast } from 'sonner'
 
 type DeleteItemsDialogProps = {
-  itemsIds: string[]
+  itemIds: string[]
   successCallback?: () => void
-}
+} & DialogBaseProps
 
 export function DeleteItemsDialog({
-  itemsIds,
+  open,
+  setOpen,
+  itemIds,
   successCallback,
 }: DeleteItemsDialogProps) {
-  const [open, onOpenChange] = useState(false)
   const isMobile = useIsMobile()
 
   const [isPending, startTransition] = useTransition()
 
   const handleDelete = () => {
     startTransition(async () => {
-      const result = await deleteItemsAndAssociatedDatas(itemsIds)
+      const result = await deleteItemsAndAssociatedDatas(itemIds)
 
       if (result.success) {
         toast.success(`${result.deleted} item(s) deleted`)
@@ -50,25 +48,22 @@ export function DeleteItemsDialog({
       } else {
         toast.error(result.error || 'Failed to delete items')
       }
-      onOpenChange(false)
+      setOpen(false)
     })
   }
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange} noBodyStyles>
-        <DrawerTrigger asChild>
-          <ToolbarButton>
-            <Trash />
-          </ToolbarButton>
-        </DrawerTrigger>
+      <Drawer open={open} onOpenChange={setOpen} noBodyStyles>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Delete {itemsIds.length} item(s)?</DrawerTitle>
+            <DrawerTitle>Delete {itemIds.length} item(s)?</DrawerTitle>
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <DrawerClose disabled={isPending}>Cancel</DrawerClose>
+            <DrawerClose disabled={isPending} asChild>
+              <Button variant="secondary">Cancel</Button>
+            </DrawerClose>
             <Button
               variant="destructive"
               onClick={handleDelete}
@@ -82,22 +77,19 @@ export function DeleteItemsDialog({
     )
   }
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <ToolbarButton>
-          <Trash />
-        </ToolbarButton>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete {itemsIds.length} item(s)?</DialogTitle>
+          <DialogTitle>Delete {itemIds.length} item(s)?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. All images and items in these items
             will also be deleted.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose disabled={isPending}>Cancel</DialogClose>
+          <DialogClose disabled={isPending} asChild>
+            <Button variant="secondary">Cancel</Button>
+          </DialogClose>
           <Button
             variant="destructive"
             onClick={handleDelete}

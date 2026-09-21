@@ -4,8 +4,8 @@ import { ActionResponse } from '@/actions/response-type'
 import { createBox, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME } from '@/lib/image/const'
-import { createImageRecord } from '@/lib/image/image'
-import { put } from '@vercel/blob'
+import { createImage } from '@/lib/image/image'
+import { getCurrentUser } from '@/lib/user'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -39,6 +39,7 @@ export async function newBox(
   const values: NewBoxValues = raw
 
   try {
+    const user = await getCurrentUser()
     const data = NewBoxSchema.parse(raw)
 
     // Check for uniqueness of shortId for this user
@@ -55,11 +56,10 @@ export async function newBox(
 
     // Upload files
     if (data.image) {
-      const blob = await put(data.image.name, data.image, {
-        access: 'public',
-        addRandomSuffix: true,
+      await createImage({
+        boxId: box.id,
+        image: data.image,
       })
-      await createImageRecord(box.id, null, blob.url, blob.pathname)
     }
 
     revalidatePath('/dashboard')

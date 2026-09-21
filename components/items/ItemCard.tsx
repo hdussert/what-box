@@ -1,81 +1,102 @@
-import { Badge } from '@/components/ui/badge'
-import { Card, CardDescription, CardTitle } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
-import { ImageRecord } from '@/db/schema'
+import ImageEditable from '@/components/images/ImageEditable'
+import DeleteItemsButton from '@/components/items/DeleteItemsButton'
+import ItemDetails from '@/components/items/ItemDetails'
+import UpdateItemForm from '@/components/items/UpdateItemForm'
+import ToolbarButton from '@/components/ToolbarButton'
+import { Card, CardDescription } from '@/components/ui/card'
 import { ItemWithAll } from '@/lib/item'
 import { cn } from '@/lib/utils'
-import { ImageIcon, Package } from 'lucide-react'
-import Image from 'next/image'
-
-type FirstImageMiniatureProps = {
-  images: ImageRecord[]
-}
-
-const FirstImageMiniature = ({ images }: FirstImageMiniatureProps) => {
-  const hasNoImages = images.length == 0
-  const hasMultipleImages = images.length > 1
-
-  if (hasNoImages)
-    return (
-      <div className="bg-input/30 rounded-md aspect-square w-20 flex items-center justify-center">
-        <Package size={48} />
-      </div>
-    )
-
-  return (
-    <div className="bg-input/30 rounded-md aspect-square w-20 relative overflow-hidden">
-      <Image
-        src={images[0].url}
-        alt="Box Image miniature"
-        width={160}
-        height={160}
-        className="object-cover size-full"
-      />
-      {hasMultipleImages ? (
-        <Badge variant="outline" className="absolute bottom-1 right-1">
-          +{images.length - 1} <ImageIcon />
-        </Badge>
-      ) : null}
-    </div>
-  )
-}
+import { useEffect, useState } from 'react'
 
 type ItemCardProps = {
   item: ItemWithAll
-  onClick: () => void
-  selected: boolean
-  isSelecting: boolean
+  isSelected: boolean
+  isFocused: boolean
 }
 
-const ItemCard = ({ item, onClick, selected, isSelecting }: ItemCardProps) => {
+const ItemCard = ({ item, isSelected, isFocused }: ItemCardProps) => {
+  const [isEditing, setIsEditing] = useState(false)
+
+  useEffect(() => {
+    if (!isFocused) {
+      setIsEditing(false)
+    }
+  }, [isFocused])
+
+  const image = item.images[0]
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsEditing(true)
+  }
+
+  const handleCancel = () => {
+    setIsEditing(false)
+  }
+
+  const handleSuccess = () => {
+    setIsEditing(false)
+  }
+
   return (
-    <div className="flex items-center gap-3">
-      {isSelecting ? <Checkbox checked={selected} onClick={onClick} /> : null}
-      <Card
-        className={cn(
-          'p-0 pr-4 flex-1 flex-row gap-4 cursor-pointer hover:brightness-120 transition relative items-center',
-          {
-            'ring-2 ring-primary': selected,
-          },
-        )}
-        onClick={onClick}
+    <Card
+      className={cn(
+        'p-0 flex-1 flex-row gap-2 hover:brightness-120 transition relative',
+        isSelected && 'ring-2 ring-primary',
+      )}
+      onClick={(e) => {
+        if (isEditing) {
+          e.stopPropagation()
+        }
+      }}
+    >
+      <div
+        onClick={(e) => {
+          if (isFocused) {
+            e.stopPropagation()
+          }
+        }}
       >
-        <FirstImageMiniature images={item.images} />
-        <div className="flex flex-col gap-1 flex-1">
-          <CardTitle>{item.name}</CardTitle>
-          <CardDescription className="text-xs">
-            {item.createdAt.toLocaleDateString('en-US', {
-              year: '2-digit',
-              month: '2-digit',
-              day: '2-digit',
-            })}
-          </CardDescription>
-        </div>
-        <CardDescription className="font-mono">
-          &times; {item.quantity}
+        <ImageEditable
+          itemId={item.id}
+          boxId={item.boxId}
+          image={image}
+          isEditing={isEditing}
+          inputDisabled={!isFocused}
+          className={cn('relative size-20 transition-all', {
+            'size-40': isFocused,
+          })}
+        />
+      </div>
+
+      <div className="flex flex-1 p-2">
+        {isEditing ? (
+          <UpdateItemForm
+            item={item}
+            onCancel={handleCancel}
+            onSuccess={handleSuccess}
+          />
+        ) : (
+          <ItemDetails item={item} isFocused={isFocused} />
+        )}
+
+        <CardDescription className="text-xs">
+          {item.createdAt.toLocaleDateString('en-US', {
+            year: '2-digit',
+            month: '2-digit',
+            day: '2-digit',
+          })}
         </CardDescription>
-      </Card>
-    </div>
+
+        {isFocused && !isEditing && (
+          <div className="absolute bottom-2 right-2 animate-in fade-in">
+            <ToolbarButton onClick={handleEdit}>Edit</ToolbarButton>
+
+            <DeleteItemsButton itemIds={[item.id]} />
+          </div>
+        )}
+      </div>
+    </Card>
   )
 }
 

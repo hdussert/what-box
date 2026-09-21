@@ -1,7 +1,5 @@
-''
-
 import BoxHeaderToolbar from '@/components/boxes/BoxHeaderToolbar'
-import ImageThumbnail from '@/components/images/ImageThumbnail'
+import ImagePreview from '@/components/images/ImagePreview'
 import Typography from '@/components/ui/typography'
 import { BoxWithAll } from '@/lib/box'
 import { Package } from 'lucide-react'
@@ -16,7 +14,7 @@ const BoxHeader = ({ box }: HeaderProps) => {
       <BoxHeaderToolbar boxId={box.id} />
       <div className="flex">
         {box.images[0] ? (
-          <ImageThumbnail
+          <ImagePreview
             src={box.images[0].url}
             alt={`${box.name} image`}
             className="aspect-square flex-1 bg-card "

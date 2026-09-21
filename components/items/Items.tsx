@@ -1,6 +1,6 @@
 import ItemsList from '@/components/items/ItemsList'
-import ItemsToolbar from '@/components/items/ItemTableToolbar'
-import NoItems from '@/components/items/NoItems'
+import ItemsListEmpty from '@/components/items/ItemsListEmpty'
+import ItemsToolbar from '@/components/items/ItemsToolbar'
 
 import { ItemsPaginated } from '@/lib/item/types'
 
@@ -15,7 +15,7 @@ const Items = (props: ItemsProps) => {
   return (
     <div>
       <ItemsToolbar boxId={boxId} />
-      {isEmpty ? <NoItems /> : <ItemsList items={items} />}
+      {isEmpty ? <ItemsListEmpty /> : <ItemsList items={items} />}
     </div>
   )
 }

@@ -16,6 +16,11 @@ export type ItemsPaginated = Paginated<ItemWithAll>
 export type CreateItemData = {
   boxId: string
   name: string
-  description: string | null
+  quantity: number
+}
+
+export type UpdateItemData = {
+  id: string
+  name: string
   quantity: number
 }

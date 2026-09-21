@@ -60,8 +60,7 @@ export const items = snakeCase.table('items', {
   boxId: boxIdRef().notNull(),
 
   name: text().notNull(),
-  description: text(),
-  quantity: integer(),
+  quantity: integer().notNull(),
 })
 
 export const images = snakeCase.table(

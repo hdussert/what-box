@@ -7,7 +7,7 @@ const Story = () => {
           <i>&ldquo;Where are the blankets?&rdquo;</i>
         </li>
         <li>
-          <i>&ldquo;The cutlery — is it in the box at the back?&rdquo;</i>
+          <i>&ldquo;The cutlery, is it in the box at the back?&rdquo;</i>
         </li>
         <li>
           <i>&ldquo;What&apos;s in that one?&rdquo;</i>
@@ -15,7 +15,7 @@ const Story = () => {
       </ul>
       Save time by inventoring your items with <b>WhatBox</b>.
       <br />
-      No more digging around — everything is right at your fingertips.
+      No more digging around, everything is right at your fingertips.
     </div>
   )
 }

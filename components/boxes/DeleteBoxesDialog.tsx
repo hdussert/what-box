@@ -1,6 +1,6 @@
 'use client'
 
-import { deleteBoxesAndAssociatedDatas } from '@/actions/boxes/delete-boxes'
+import { deleteBoxesAction } from '@/actions/boxes/delete-boxes'
 import ToolbarButton from '@/components/ToolbarButton'
 import { Button } from '@/components/ui/button'
 import {
@@ -37,14 +37,14 @@ export function DeleteBoxesDialog({
   boxesIds,
   successCallback,
 }: DeleteBoxesDialogProps) {
-  const [open, onOpenChange] = useState(false)
+  const [open, setOpen] = useState(false)
   const isMobile = useIsMobile()
 
   const [isPending, startTransition] = useTransition()
 
   const handleDelete = () => {
     startTransition(async () => {
-      const result = await deleteBoxesAndAssociatedDatas(boxesIds)
+      const result = await deleteBoxesAction(boxesIds)
 
       if (result.success) {
         toast.success(`${result.deleted} box(es) deleted`)
@@ -52,13 +52,13 @@ export function DeleteBoxesDialog({
       } else {
         toast.error(result.error || 'Failed to delete boxes')
       }
-      onOpenChange(false)
+      setOpen(false)
     })
   }
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange} noBodyStyles>
+      <Drawer open={open} onOpenChange={setOpen} noBodyStyles>
         <DrawerTrigger asChild>
           <ToolbarButton>
             <Trash />
@@ -87,7 +87,7 @@ export function DeleteBoxesDialog({
     )
   }
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <ToolbarButton>
           <Trash />
