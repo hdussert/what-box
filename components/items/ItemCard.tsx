@@ -4,12 +4,12 @@ import ItemDetails from '@/components/items/ItemDetails'
 import UpdateItemForm from '@/components/items/UpdateItemForm'
 import ToolbarButton from '@/components/ToolbarButton'
 import { Card, CardDescription } from '@/components/ui/card'
-import { ItemWithImages } from '@/lib/item'
+import { Item } from '@/db/schema'
 import { cn } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 
 type ItemCardProps = {
-  item: ItemWithImages
+  item: Item
   isSelected: boolean
   isFocused: boolean
 }
@@ -22,8 +22,6 @@ const ItemCard = ({ item, isSelected, isFocused }: ItemCardProps) => {
       setIsEditing(false)
     }
   }, [isFocused])
-
-  const image = item.images[0]
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -60,7 +58,7 @@ const ItemCard = ({ item, isSelected, isFocused }: ItemCardProps) => {
         <EditableImage
           itemId={item.id}
           boxId={item.boxId}
-          image={image}
+          imageUrl={item.imageUrl}
           isEditing={isEditing}
           isInputDisabled={!isFocused}
           className={cn('relative size-20 transition-all', {

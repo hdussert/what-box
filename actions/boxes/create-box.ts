@@ -4,7 +4,7 @@ import { ActionResponse } from '@/actions/types'
 import { createBox, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME_TYPES } from '@/lib/image/const'
-import { createImage } from '@/lib/image/mutations'
+import { saveImage } from '@/lib/image/mutations'
 import { getCurrentUser } from '@/lib/user'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -56,10 +56,7 @@ export async function createBoxAction(
 
     // Upload files
     if (data.image) {
-      await createImage({
-        boxId: box.id,
-        image: data.image,
-      })
+      await saveImage({ boxId: box.id, image: data.image })
     }
 
     revalidatePath('/dashboard')

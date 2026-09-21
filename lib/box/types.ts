@@ -1,5 +1,5 @@
 import { SortValue } from '@/components/list/types'
-import { Box, ImageRecord, Item } from '@/db/schema'
+import { Box, Item } from '@/db/schema'
 import { BOXES_SORTABLE_COLUMNS } from '@/lib/box/const'
 import { Paginated } from '@/lib/types'
 
@@ -12,7 +12,7 @@ export type BoxesQuery = {
   sort?: SortValue
 }
 
-export type BoxWithRelations = Box & { images: ImageRecord[]; items: Item[] }
+export type BoxWithRelations = Box & { items: Item[] }
 export type BoxesPaginated = Paginated<BoxWithRelations>
 
 export type UpdateBoxData = {

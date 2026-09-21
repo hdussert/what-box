@@ -1,44 +1,9 @@
-import { Badge } from '@/components/ui/badge'
+import ImagePreview from '@/components/images/ImagePreview'
 import { Card, CardDescription, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { ImageRecord } from '@/db/schema'
 import { BoxWithRelations } from '@/lib/box'
 import { cn } from '@/lib/utils'
-import { ImageIcon, Package } from 'lucide-react'
-import Image from 'next/image'
-
-type FirstImageMiniatureProps = {
-  images: ImageRecord[]
-}
-
-const FirstImageMiniature = ({ images }: FirstImageMiniatureProps) => {
-  const hasNoImages = images.length == 0
-  const hasMultipleImages = images.length > 1
-
-  if (hasNoImages)
-    return (
-      <div className="bg-input/30 rounded-md aspect-square w-20 flex items-center justify-center">
-        <Package size={48} />
-      </div>
-    )
-
-  return (
-    <div className="bg-input/30 rounded-md aspect-square w-20 relative overflow-hidden">
-      <Image
-        src={images[0].url}
-        alt="Box Image miniature"
-        width={160}
-        height={160}
-        className="object-cover size-full"
-      />
-      {hasMultipleImages ? (
-        <Badge variant="outline" className="absolute bottom-1 right-1">
-          +{images.length - 1} <ImageIcon />
-        </Badge>
-      ) : null}
-    </div>
-  )
-}
+import { Package } from 'lucide-react'
 
 type BoxCardProps = {
   box: BoxWithRelations
@@ -60,7 +25,17 @@ const BoxCard = ({ box, onClick, isSelected, isSelecting }: BoxCardProps) => {
         )}
         onClick={onClick}
       >
-        <FirstImageMiniature images={box.images} />
+        {box.imageUrl ? (
+          <ImagePreview
+            src={box.imageUrl}
+            alt="Box image"
+            className="aspect-square w-20"
+          />
+        ) : (
+          <div className="bg-input/30 rounded-md aspect-square w-20 flex items-center justify-center">
+            <Package size={48} />
+          </div>
+        )}
         <div className="flex flex-col flex-1 min-w-0 gap-1">
           <div className="flex justify-between items-center">
             <CardDescription className="text-xs font-mono">

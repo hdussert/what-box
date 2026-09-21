@@ -3,12 +3,12 @@ import ToolbarButton from '@/components/ToolbarButton'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { ItemWithImages } from '@/lib/item'
+import { Item } from '@/db/schema'
 import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
 
 type UpdateItemFormProps = {
-  item: ItemWithImages
+  item: Item
   onCancel: () => void
   onSuccess: () => void
 }

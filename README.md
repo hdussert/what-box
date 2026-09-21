@@ -62,12 +62,11 @@ How a request flows:
 
 ```
 users ──< boxes ──< items
-  │         │          │
-  └─────────┴──< images ┘   (an image belongs to exactly one box OR one item)
 ```
 
+- A box and an item each have at most one image, stored on their own row (`imageUrl` and `imagePathname`).
 - Deleting a user, box or item cascades in the database.
-- **It does not cascade to Vercel Blob.** Remove image files through `lib/image` so the files are deleted along with their records.
+- **It does not cascade to Vercel Blob.** Remove image files through `lib/image` so the files are deleted along with the box or item.
 - A box's QR code encodes `<NEXT_PUBLIC_APP_URL>/boxes/<box id>`.
 
 ## Getting started
@@ -128,7 +127,7 @@ Schema changes are applied through **migrations**, not `db:push`.
 
 ### 1) Change the schema
 
-Edit `db/schema.ts` (tables: `users`, `boxes`, `items`, `images`).
+Edit `db/schema.ts` (tables: `users`, `boxes`, `items`).
 
 ### 2) Generate a migration
 

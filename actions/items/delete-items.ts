@@ -1,6 +1,6 @@
 'use server'
 
-import { getImagesByItemIds } from '@/lib/image/records'
+import { getImagePathnamesByItemIds } from '@/lib/image/queries'
 import { deleteImageFiles } from '@/lib/image/storage'
 import { deleteItems } from '@/lib/item'
 import { revalidatePath } from 'next/cache'
@@ -15,17 +15,16 @@ export async function deleteItemsAction(itemIds: string[]) {
 
   try {
     // Delete the images uploaded (Vercel)
-    const images = await getImagesByItemIds(itemIds)
+    const pathnames = await getImagePathnamesByItemIds(itemIds)
 
-    if (images.length) {
-      const imagesPathnames = images.map((image) => image.pathname)
-      await deleteImageFiles(imagesPathnames).catch((error) => {
+    if (pathnames.length) {
+      await deleteImageFiles(pathnames).catch((error) => {
         console.error('Failed to delete some image files :', error)
         // Continue even if the blob deletion fails (shouldn't stop the user)
       })
     }
 
-    // Delete items records (images will be deleted on cascade)
+    // Delete items records
     await deleteItems(itemIds)
     revalidatePath('/dashboard')
 

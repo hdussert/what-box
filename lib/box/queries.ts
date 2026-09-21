@@ -14,7 +14,7 @@ export async function getBoxById(
   const user = await getCurrentUser()
   return db.query.boxes.findFirst({
     where: { id: boxId, userId: user.id },
-    with: { images: true, items: true },
+    with: { items: true },
   })
 }
 
@@ -24,7 +24,7 @@ export async function getBoxesByIds(
   const user = await getCurrentUser()
   return db.query.boxes.findMany({
     where: { id: { in: boxIds }, userId: user.id },
-    with: { images: true, items: true },
+    with: { items: true },
   })
 }
 
@@ -83,7 +83,6 @@ export async function getBoxes(
             ],
           }
         : true,
-      images: true,
     },
   })
 

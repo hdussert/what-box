@@ -1,6 +1,7 @@
 import { db } from '@/db'
 import { Box, boxes } from '@/db/schema'
 import { UpdateBoxData } from '@/lib/box/types'
+import { StoredImage } from '@/lib/image/types'
 import { getCurrentUser } from '@/lib/user'
 import { and, eq, inArray } from 'drizzle-orm'
 import 'server-only'
@@ -27,6 +28,28 @@ export async function updateBox({ id, ...data }: UpdateBoxData): Promise<Box> {
 
   if (!updatedBox) {
     throw new Error('Failed to update the box')
+  }
+
+  return updatedBox
+}
+
+export async function updateBoxImage(
+  id: string,
+  image: StoredImage | null,
+): Promise<Box> {
+  const user = await getCurrentUser()
+  const [updatedBox] = await db
+    .update(boxes)
+    .set({
+      imageUrl: image?.url ?? null,
+      imagePathname: image?.pathname ?? null,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(boxes.userId, user.id), eq(boxes.id, id)))
+    .returning()
+
+  if (!updatedBox) {
+    throw new Error('Failed to update the box image')
   }
 
   return updatedBox
