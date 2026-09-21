@@ -12,7 +12,7 @@ import { useEffect, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
 type ImageEditableProps = {
-  itemId: string
+  itemId?: string
   boxId: string
   image?: ImageRecord
   isEditing?: boolean
@@ -72,7 +72,7 @@ const ImageEditable = ({
   }, [newImage])
 
   return image ? (
-    <ImagePreview src={image.url} alt={image.itemId!} className={className}>
+    <ImagePreview src={image.url} alt="Image" className={className}>
       {isEditing ? (
         <Button
           type="button"
