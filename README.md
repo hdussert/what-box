@@ -1,54 +1,169 @@
-## Getting Started
+# WhatBox
 
-First, run the development server:
+> Find your items in an instant.
+
+WhatBox is a small web app to inventory what you store in boxes, so you never have to dig through them again.
+
+## What it does
+
+You have boxes in the attic, the basement or the garage, and you can never remember which one holds the blankets, the cutlery or the winter tires. WhatBox keeps that inventory for you:
+
+1. **Create a box** and give it a name and a photo.
+2. **List what's inside**: each item has a name, a quantity and its own photos.
+3. **Print a QR code label** and stick it on the box. Each box also gets a short ID (e.g. `BOX 7K2Q9X`).
+4. **Find things later**: search for an item and see which box holds it, or scan a box's QR code to open its content.
+
+Other features:
+
+- Email/password accounts with a password reset by email. Everything is private to the account that created it.
+- Search across boxes _and_ the items inside them, with sorting by date, name, ID or quantity.
+- Multi-select on the dashboard for bulk delete and bulk label printing.
+- Photos in JPEG, PNG or WebP (5 MB max per upload).
+- Dark-only, mobile-first UI.
+
+## Tech stack
+
+| Concern    | Choice                                                                                           |
+| ---------- | ------------------------------------------------------------------------------------------------ |
+| Framework  | [Next.js](https://nextjs.org) (App Router, server components, server actions), React, TypeScript |
+| Database   | Postgres on [Neon](https://neon.tech), accessed with [Drizzle ORM](https://orm.drizzle.team)     |
+| Auth       | Custom: bcrypt password hashes, JWT (`jose`) in a cookie                                         |
+| Files      | [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) for images                            |
+| Email      | [Resend](https://resend.com) (password reset)                                                    |
+| UI         | Tailwind CSS 4, shadcn/ui-style primitives on Radix, Sonner toasts, `react-qr-code`              |
+| Validation | [Zod](https://zod.dev) for forms and server actions, `@t3-oss/env-nextjs` for env vars           |
+| Hosting    | [Vercel](https://vercel.com)                                                                     |
+
+## Architecture
+
+The code is organized by layer, then by feature (`box`, `item`, `image`, `auth`):
+
+```
+app/           Routing only. Route groups: (marketing) landing page,
+               (auth) sign in / sign up / password reset,
+               (authentified) dashboard and box pages
+actions/       Server actions: one per mutation, validated with Zod,
+               they return an ActionResponse instead of throwing
+lib/           Data layer: queries and mutations per domain (box, item, image, user...)
+db/            Drizzle schema, relations and client
+components/    UI by feature; components/ui holds the shared primitives
+drizzle/       Generated SQL migrations (commit them)
+env.ts         Typed and validated environment variables
+```
+
+How a request flows:
+
+- **Reads:** server components in `app/` call `lib/*` queries directly. Client components never fetch data.
+- **Writes:** a client form calls a server action in `actions/`, which validates the input and calls `lib/*`. Actions never touch `db` directly.
+- **Authorization lives in the data layer.** There is no middleware: every `lib/*` query or mutation calls `getCurrentUser()` and scopes its `where` by `userId`.
+- **Sessions:** a 7-day JWT stored in a cookie. Changing a password sets `users.tokenInvalidBefore`, which revokes every token issued before that moment.
+
+### Data model
+
+```
+users ──< boxes ──< items
+  │         │          │
+  └─────────┴──< images ┘   (an image belongs to exactly one box OR one item)
+```
+
+- Deleting a user, box or item cascades in the database.
+- **It does not cascade to Vercel Blob.** Remove image files through `lib/image` so the files are deleted along with their records.
+- A box's QR code encodes `<NEXT_PUBLIC_APP_URL>/boxes/<box id>`.
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 20.9+ (Next.js 16 requirement)
+- [Yarn 1](https://classic.yarnpkg.com) (this project uses yarn, not npm)
+- The [Vercel CLI](https://vercel.com/docs/cli) (`npm i -g vercel`), logged in (`vercel login`) with access to the project
+
+### 1. Install dependencies
 
 ```bash
-npm run dev
-# or
+yarn install
+```
+
+### 2. Environment variables
+
+Link the folder to the Vercel project once (`vercel link`), then pull the development variables:
+
+```bash
+yarn env:pull
+```
+
+This writes `.env.development.local` (git-ignored). Variables are validated on startup by `env.ts`, and the app won't start if one is missing or invalid.
+
+| Variable                | Purpose                                                     |
+| ----------------------- | ----------------------------------------------------------- |
+| `DATABASE_URL`          | Neon Postgres connection string                             |
+| `JWT_SECRET`            | Secret used to sign session tokens (at least 32 characters) |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob token, for image storage                        |
+| `RESEND_API_KEY`        | Resend API key, for password reset emails                   |
+| `NEXT_PUBLIC_APP_URL`   | Base URL encoded in the QR code labels                      |
+
+> `NEXT_PUBLIC_APP_URL` is required. Labels printed from a dev environment point to your dev URL, so print the ones you'll actually stick on boxes from production.
+
+### 3. Set up the database
+
+There is no local database to install. `DATABASE_URL` points to a hosted Neon Postgres database: the app talks to it over HTTPS through `@neondatabase/serverless`, and Drizzle Kit connects to it with the same URL to run migrations.
+
+Apply the migrations:
+
+```bash
+yarn db:migrate
+```
+
+### 4. Run the development server
+
+```bash
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-I’m the GitHub Copilot Chat Assistant.
+The app is available at [http://localhost:3000](http://localhost:3000).
 
-## Database schema & migrations (Drizzle + Postgres/Neon)
+## Database
 
-This project uses **Drizzle ORM** with **Postgres (Neon)**. Schema changes are applied via **migrations**.
+Schema changes are applied through **migrations**, not `db:push`.
 
-### Env notes
+### 1) Change the schema
 
-Pull env vars from Vercel (so `DATABASE_URL` points to the correct DB):
+Edit `db/schema.ts` (tables: `users`, `boxes`, `items`, `images`).
+
+### 2) Generate a migration
 
 ```bash
-vercel env pull .env.development.local --environment=development
+yarn db:generate
 ```
 
-### 1) Make a schema change
+This creates a folder `drizzle/<timestamp>_<name>/` containing `migration.sql` and a `snapshot.json`. **Read the generated SQL** before applying it (dropping a column or adding `NOT NULL` on a table that already has rows can lose data or fail), and **commit the folder**.
 
-Edit the schema in `db/schema.ts` (tables: `users`, `boxes`, `boxes_images`, etc.).
-
-### 2) Generate a migration (creates SQL files)
-
-Generate migration files after any schema edit:
+### 3) Apply it
 
 ```bash
-# Development
-yarn db:generate:dev
-
+yarn db:migrate
 ```
 
-This writes migration SQL files to the configured `out` folder (e.g. `./drizzle`) and updates `drizzle/meta/_journal.json`. **Commit these migration files**.
+If nothing is applied, check that `drizzle/` contains migration folders and that `DATABASE_URL` points to the database you expect.
 
-### 3) Apply migrations to the database (updates tables)
+> ⚠️ Every `db:*` script has a `:prod` variant (`db:migrate:prod`, `db:studio:prod`...) that runs against the **production** database with `.env.production.local` (`yarn env:pull:prod`). Only use them on purpose.
 
-Run migrations against the target environment:
+## Scripts
 
-```bash
-# Development
-yarn db:migrate:dev
-```
+| Script                                 | What it does                             |
+| -------------------------------------- | ---------------------------------------- |
+| `yarn dev`                             | Start the dev server (Turbopack)         |
+| `yarn build` / `yarn start`            | Production build / serve the build       |
+| `yarn lint`                            | Run ESLint                               |
+| `yarn tsc --noEmit`                    | Type-check                               |
+| `yarn env:pull` / `yarn env:pull:prod` | Pull env vars from Vercel (dev / prod)   |
+| `yarn db:generate`                     | Generate a migration from schema changes |
+| `yarn db:migrate`                      | Apply pending migrations                 |
+| `yarn db:studio`                       | Open Drizzle Studio to browse the data   |
 
-> If migrations aren’t being picked up, check you have `*.sql` files under `./drizzle` and that `drizzle/meta/_journal.json` contains migration entries.
+There is no test runner yet. Before opening a PR, run `yarn lint` and `yarn tsc --noEmit`. Errors under `.next/types/` come from stale generated files and can be ignored.
+
+## Contributing
+
+- Work on a branch and open a PR into `main`, using [conventional commits](https://www.conventionalcommits.org) (`feat:`, `fix:`, `refactor:`...).
+- Coding conventions and project rules are documented in [`CLAUDE.md`](./CLAUDE.md), which is written for AI coding assistants but is a good read for humans too.
