@@ -18,6 +18,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Run `yarn lint` and `yarn tsc --noEmit`. Errors under `.next/types/` come from stale generated files, not your change; only errors in source files count.
 
+## Design principles
+
+Global guidelines to aim for, not rules to apply blindly. When one conflicts with clarity or the task at hand, use judgment.
+
+- **KISS** (keep it stupid simple): pick the simplest solution that works. No speculative abstractions, options or generality for cases that don't exist yet.
+- **SRP** (single responsibility): each function, component and module does one thing and has one reason to change.
+- **DRY** (don't repeat yourself): don't duplicate knowledge or logic. Wait for the third occurrence before extracting, and don't merge code that only looks alike but changes for different reasons.
+- **YAGNI** (you aren't gonna need it): build what the task needs now, not what it might need later.
+- **Fail fast**: validate at boundaries and return errors early instead of letting bad state travel deeper.
+- **Least astonishment**: names, signatures and behavior should match what a reader would expect.
+
 ## Coding conventions
 
 - Booleans start with a verb: `isOpen`, `hasImage`, `canDelete`.
