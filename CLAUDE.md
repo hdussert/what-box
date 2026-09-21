@@ -7,7 +7,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Package manager is **yarn**. `package-lock.json` is stale; ignore it.
 - Every `db:*` script has a `:prod` variant that runs against the **production** database.
 - There is no test runner.
-- Image uploads in dev only work through a public URL (Vercel Blob calls back to the server): run `ngrok http 3000` and update `LOCAL_PUBLIC_URL` in `.env.development.local` each time ngrok restarts.
 
 ## Invariants
 
