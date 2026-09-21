@@ -1,6 +1,6 @@
 'use server'
 
-import { ActionResponse } from '@/actions/response-type'
+import { ActionResponse } from '@/actions/types'
 import { verifyPassword } from '@/lib/password'
 import { createSession } from '@/lib/session'
 import { getUserByEmail } from '@/lib/user'
@@ -13,12 +13,12 @@ const SignInSchema = z.object({
 })
 
 export type SignInData = z.infer<typeof SignInSchema>
-type SigninValues = Pick<SignInData, 'email'>
+type SignInValues = Pick<SignInData, 'email'>
 export type SignInState = ActionResponse & {
-  values: SigninValues
+  values: SignInValues
 }
 
-export async function signIn(
+export async function signInAction(
   prevState: SignInState,
   formData: FormData,
 ): Promise<SignInState> {
@@ -27,7 +27,7 @@ export async function signIn(
     password: formData.get('password') as string,
   }
 
-  const values: SigninValues = { email: raw.email }
+  const values: SignInValues = { email: raw.email }
   try {
     // Validate with Zod
     const data = SignInSchema.parse(raw)

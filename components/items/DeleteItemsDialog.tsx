@@ -1,4 +1,4 @@
-import { deleteItemsAndAssociatedDatas } from '@/actions/items/delete-items'
+import { deleteItemsAction } from '@/actions/items/delete-items'
 import { DialogBaseProps } from '@/components/dialog/DialogProvider'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,20 +19,20 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer'
-import { useIsMobile } from '@/hooks/use-mobile'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { useTransition } from 'react'
 import { toast } from 'sonner'
 
 type DeleteItemsDialogProps = {
   itemIds: string[]
-  successCallback?: () => void
+  onSuccess?: () => void
 } & DialogBaseProps
 
 export function DeleteItemsDialog({
-  open,
-  setOpen,
+  isOpen,
+  setIsOpen,
   itemIds,
-  successCallback,
+  onSuccess,
 }: DeleteItemsDialogProps) {
   const isMobile = useIsMobile()
 
@@ -40,21 +40,21 @@ export function DeleteItemsDialog({
 
   const handleDelete = () => {
     startTransition(async () => {
-      const result = await deleteItemsAndAssociatedDatas(itemIds)
+      const result = await deleteItemsAction(itemIds)
 
       if (result.success) {
         toast.success(`${result.deleted} item(s) deleted`)
-        successCallback?.()
+        onSuccess?.()
       } else {
         toast.error(result.error || 'Failed to delete items')
       }
-      setOpen(false)
+      setIsOpen(false)
     })
   }
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={setOpen} noBodyStyles>
+      <Drawer open={isOpen} onOpenChange={setIsOpen} noBodyStyles>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Delete {itemIds.length} item(s)?</DrawerTitle>
@@ -77,7 +77,7 @@ export function DeleteItemsDialog({
     )
   }
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete {itemIds.length} item(s)?</DialogTitle>

@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardDescription, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ImageRecord } from '@/db/schema'
-import { BoxWithAll } from '@/lib/box'
+import { BoxWithRelations } from '@/lib/box'
 import { cn } from '@/lib/utils'
 import { ImageIcon, Package } from 'lucide-react'
 import Image from 'next/image'
@@ -40,22 +40,22 @@ const FirstImageMiniature = ({ images }: FirstImageMiniatureProps) => {
   )
 }
 
-type BoxCard = {
-  box: BoxWithAll
+type BoxCardProps = {
+  box: BoxWithRelations
   onClick: () => void
-  selected: boolean
+  isSelected: boolean
   isSelecting: boolean
 }
 
-const BoxCard = ({ box, onClick, selected, isSelecting }: BoxCard) => {
+const BoxCard = ({ box, onClick, isSelected, isSelecting }: BoxCardProps) => {
   return (
     <div className="flex items-center gap-3 w-full">
-      {isSelecting ? <Checkbox checked={selected} onClick={onClick} /> : null}
+      {isSelecting ? <Checkbox checked={isSelected} onClick={onClick} /> : null}
       <Card
         className={cn(
           'p-0 pr-4 flex-1 flex-row gap-4 cursor-pointer hover:brightness-120 transition items-center min-w-0',
           {
-            'ring-2 ring-primary': selected,
+            'ring-2 ring-primary': isSelected,
           },
         )}
         onClick={onClick}

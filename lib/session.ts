@@ -12,8 +12,8 @@ interface JWTPayload {
 
 const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET)
 const JWT_EXPIRATION = '7d' // 7 days expiration time
-const REFRESH_THRESHOLD = 24 * 60 * 60 // 24 hours refresh threshold in seconds
-const JWT_TOKEN_COOKIE_NAME = 'auth_token'
+const REFRESH_THRESHOLD_SECONDS = 24 * 60 * 60 // 24 hours refresh threshold in seconds
+const SESSION_COOKIE_NAME = 'auth_token'
 
 export async function generateJWT(payload: JWTPayload) {
   return await new jose.SignJWT(payload)
@@ -68,7 +68,7 @@ export async function shouldRefreshToken(token: string): Promise<boolean> {
     // Get expiration time
     const exp = payload.exp as number
     const now = Math.floor(Date.now() / 1000)
-    const isTokenExpiringSoon = exp - now < REFRESH_THRESHOLD
+    const isTokenExpiringSoon = exp - now < REFRESH_THRESHOLD_SECONDS
 
     return isTokenExpiringSoon // If token expires within the threshold, refresh it
   } catch {
@@ -83,7 +83,7 @@ export async function createSession(userId: string) {
 
     const cookieStore = await cookies()
     cookieStore.set({
-      name: JWT_TOKEN_COOKIE_NAME,
+      name: SESSION_COOKIE_NAME,
       value: token,
       httpOnly: true,
       secure: env.NODE_ENV === 'production',
@@ -101,7 +101,7 @@ export async function createSession(userId: string) {
 
 export async function getSession() {
   const cookieStore = await cookies()
-  const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME)?.value
+  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value
   if (!token) return null
 
   // TODO: Check errors, display toasts (like "Session expired")
@@ -114,5 +114,5 @@ export async function getSession() {
 // Delete session by clearing the JWT cookie
 export async function deleteSession() {
   const cookieStore = await cookies()
-  cookieStore.delete(JWT_TOKEN_COOKIE_NAME)
+  cookieStore.delete(SESSION_COOKIE_NAME)
 }

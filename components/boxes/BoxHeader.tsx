@@ -1,19 +1,19 @@
 import BoxHeaderToolbar from '@/components/boxes/BoxHeaderToolbar'
 import BoxName from '@/components/boxes/BoxName'
-import ImageEditable from '@/components/images/ImageEditable'
+import EditableImage from '@/components/images/EditableImage'
 import Typography from '@/components/ui/typography'
-import { BoxWithAll } from '@/lib/box'
+import { BoxWithRelations } from '@/lib/box'
 
-type HeaderProps = {
-  box: BoxWithAll
+type BoxHeaderProps = {
+  box: BoxWithRelations
 }
 
-const BoxHeader = ({ box }: HeaderProps) => {
+const BoxHeader = ({ box }: BoxHeaderProps) => {
   return (
     <div className="flex flex-col gap-3">
       <BoxHeaderToolbar boxId={box.id} />
       <div className="flex">
-        <ImageEditable
+        <EditableImage
           boxId={box.id}
           image={box.images[0]}
           isEditing

@@ -1,13 +1,13 @@
 import { SortValue } from '@/components/list/types'
 import { items } from '@/db/schema'
-import { ITEMS_DEFAULT_SORT_OPTION } from '@/lib/item/const'
+import { ITEMS_DEFAULT_SORT } from '@/lib/item/const'
 import { AnyColumn, SQL, sql, SQLWrapper } from 'drizzle-orm'
 import { ItemsSortField } from './types'
 
 export function parseSort(sort: SortValue | undefined) {
   const [field, direction] = sort
     ? sort.split('_')
-    : ITEMS_DEFAULT_SORT_OPTION.split('_')
+    : ITEMS_DEFAULT_SORT.split('_')
   return {
     field,
     direction,

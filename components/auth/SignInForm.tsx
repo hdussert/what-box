@@ -1,6 +1,6 @@
 'use client'
 
-import { SignInState, signIn } from '@/actions/auth/sign-in'
+import { SignInState, signInAction } from '@/actions/auth/sign-in'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -23,7 +23,7 @@ const SignInForm = () => {
 
   // Use useActionState hook for the form submission action
   const [state, formAction, isPending] = useActionState<SignInState, FormData>(
-    signIn,
+    signInAction,
     initialState,
   )
 

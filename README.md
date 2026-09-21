@@ -41,7 +41,7 @@ The code is organized by layer, then by feature (`box`, `item`, `image`, `auth`)
 ```
 app/           Routing only. Route groups: (marketing) landing page,
                (auth) sign in / sign up / password reset,
-               (authentified) dashboard and box pages
+               (authenticated) dashboard and box pages
 actions/       Server actions: one per mutation, validated with Zod,
                they return an ActionResponse instead of throwing
 lib/           Data layer: queries and mutations per domain (box, item, image, user...)

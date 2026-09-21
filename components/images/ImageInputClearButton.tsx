@@ -2,13 +2,13 @@ import { Button } from '@/components/ui/button'
 
 type ImageInputClearButtonProps = {
   disabled?: boolean
-  clearInput: () => void
+  onClear: () => void
   className?: string
 }
 
 const ImageInputClearButton = ({
   disabled,
-  clearInput,
+  onClear,
   className,
 }: ImageInputClearButtonProps) => {
   return (
@@ -17,7 +17,7 @@ const ImageInputClearButton = ({
       variant="secondary"
       className={className}
       disabled={disabled}
-      onClick={clearInput}
+      onClick={onClear}
     >
       Remove this image
     </Button>

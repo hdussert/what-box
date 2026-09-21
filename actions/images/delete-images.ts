@@ -1,13 +1,10 @@
 'use server'
 
-import { ActionResponse } from '@/actions/response-type'
-import {
-  deleteImagesRecord,
-  getImagesByPathnames,
-} from '@/lib/image/image-record'
-import { deleteImagesFiles } from '@/lib/image/image-upload'
+import { ActionResponse } from '@/actions/types'
+import { deleteImageRecords, getImagesByPathnames } from '@/lib/image/records'
+import { deleteImageFiles } from '@/lib/image/storage'
 
-export async function deleteImages(
+export async function deleteImagesAction(
   pathnames: string[],
 ): Promise<ActionResponse> {
   try {
@@ -22,11 +19,11 @@ export async function deleteImages(
     }
 
     const imageIds = images.map((image) => image.id)
-    await deleteImagesRecord(imageIds)
+    await deleteImageRecords(imageIds)
 
     // Failure here should not affect the user
     try {
-      await deleteImagesFiles(pathnames)
+      await deleteImageFiles(pathnames)
     } catch (error) {
       console.error('Failed to delete image files', {
         pathnames,

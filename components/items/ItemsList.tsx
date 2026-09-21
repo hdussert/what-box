@@ -1,16 +1,16 @@
 'use client'
 
 import ItemCard from '@/components/items/ItemCard'
-import ItemListItem from '@/components/items/ItemListItem'
+import ItemRow from '@/components/items/ItemRow'
 import { useSelection } from '@/components/selection/SelectionProvider'
-import { ItemWithAll } from '@/lib/item'
+import { ItemWithImages } from '@/lib/item'
 import { useEffect, useState } from 'react'
 
-type BoxesListProps = {
-  items: ItemWithAll[]
+type ItemsListProps = {
+  items: ItemWithImages[]
 }
 
-const ItemsList = ({ items }: BoxesListProps) => {
+const ItemsList = ({ items }: ItemsListProps) => {
   const { isSelecting, isSelected, toggleSelect } = useSelection()
   const [itemFocused, setItemFocused] = useState<string>()
 
@@ -28,17 +28,17 @@ const ItemsList = ({ items }: BoxesListProps) => {
     setItemFocused(itemId)
   }
 
-  const onClick = (item: ItemWithAll) => {
+  const onClick = (item: ItemWithImages) => {
     return isSelecting ? toggleSelect(item.id) : toggleFocused(item.id) // navigateToItemPage
   }
 
   return (
     <div className="flex gap-2 flex-col py-2">
       {items.map((item, index) => (
-        <ItemListItem
+        <ItemRow
           key={index}
           isSelecting={isSelecting}
-          selected={isSelected(item.id)}
+          isSelected={isSelected(item.id)}
           onClick={() => onClick(item)}
         >
           <ItemCard
@@ -46,7 +46,7 @@ const ItemsList = ({ items }: BoxesListProps) => {
             isSelected={isSelected(item.id)}
             isFocused={itemFocused === item.id}
           />
-        </ItemListItem>
+        </ItemRow>
       ))}
     </div>
   )

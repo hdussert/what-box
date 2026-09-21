@@ -1,1 +1,1 @@
-export const IMAGE_MIME = ['image/jpeg', 'image/png', 'image/webp']
+export const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp']

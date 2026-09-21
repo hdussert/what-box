@@ -16,7 +16,7 @@ const jetBrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'What Box',
+  title: 'WhatBox',
   description: 'Inventory management made simple',
 }
 
