@@ -17,9 +17,6 @@ export const env = createEnv({
     RESEND_API_KEY: z.string(),
     // Present on Vercel deployments; absent locally
     VERCEL: z.string().optional(),
-
-    LOCAL_PUBLIC_URL:
-      process.env.NODE_ENV === 'development' ? z.url() : z.url().optional(),
   },
 
   /**
@@ -28,7 +25,8 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    // Base URL encoded in the box QR code labels
+    NEXT_PUBLIC_APP_URL: z.url(),
   },
 
   /**
@@ -45,8 +43,7 @@ export const env = createEnv({
 
     RESEND_API_KEY: process.env.RESEND_API_KEY,
 
-    LOCAL_PUBLIC_URL: process.env.LOCAL_PUBLIC_URL,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
 
   /**
