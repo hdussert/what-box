@@ -5,7 +5,6 @@ export const ITEMS_SORTABLE_COLUMNS = {
   createdAt: items.createdAt,
   name: items.name,
   quantity: items.quantity,
-  description: items.description,
 } as const
 
 export const ITEMS_SORT_OPTIONS: SortOption[] = [
@@ -44,18 +43,6 @@ export const ITEMS_SORT_OPTIONS: SortOption[] = [
     field: 'quantity',
     direction: 'asc',
     value: 'quantity_asc',
-  },
-  {
-    label: 'Description',
-    field: 'description',
-    direction: 'desc',
-    value: 'description_desc',
-  },
-  {
-    label: 'Description',
-    field: 'description',
-    direction: 'asc',
-    value: 'description_asc',
   },
 ]
 

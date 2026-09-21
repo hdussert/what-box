@@ -2,10 +2,8 @@
 
 import { ActionResponse } from '@/actions/response-type'
 import { IMAGE_MIME } from '@/lib/image/const'
-import { createImageRecord } from '@/lib/image/image'
+import { createImage } from '@/lib/image/image'
 import { createItem } from '@/lib/item/mutations'
-import { getCurrentUser } from '@/lib/user'
-import { put } from '@vercel/blob'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -13,12 +11,12 @@ const NewItemSchema = z.object({
   boxId: z.string().trim().min(1, 'Box is required'),
   name: z.string().trim().min(1, 'Name is required'),
   image: z.file().max(4_500_000).mime(IMAGE_MIME).optional(),
-  description: z
-    .string()
-    .trim()
-    .transform((val) => (val === '' ? null : val))
-    .nullable(),
-  quantity: z.number().int().min(1, 'Quantity must be 0 or more'),
+
+  quantity: z
+    .number()
+    .int()
+    .min(1, 'Quantity must be 0 or more')
+    .max(2147483647, 'Quantity must be 2147483647 or less'),
 })
 
 type NewItemData = z.infer<typeof NewItemSchema>
@@ -42,7 +40,6 @@ export async function newItem(
     boxId: formData.get('boxId') as string,
     name: formData.get('name') as string,
     image: image,
-    description: formData.get('description') as string,
     quantity: Number(formData.get('quantity')),
   }
   const values: NewItemValues = raw
@@ -50,24 +47,20 @@ export async function newItem(
   try {
     const data = NewItemSchema.parse(raw)
 
-    const user = await getCurrentUser()
-
     // Create item
     const item = await createItem({
       boxId: data.boxId,
       name: data.name,
-      description: data.description,
       quantity: data.quantity,
     })
 
     // Upload image
     if (data.image) {
-      const blob = await put(data.image.name, data.image, {
-        access: 'public',
-        addRandomSuffix: true,
+      await createImage({
+        boxId: data.boxId,
+        itemId: item.id,
+        image: data.image,
       })
-
-      await createImageRecord(null, item.id, blob.url, blob.pathname)
     }
 
     revalidatePath(`/boxes/${data.boxId}`)
@@ -78,7 +71,6 @@ export async function newItem(
       values: {
         boxId: data.boxId,
         name: '',
-        description: '',
         quantity: 1,
       },
       result: {
@@ -97,7 +89,7 @@ export async function newItem(
 
     return {
       success: false,
-      message: (error as Error).message,
+      message: 'Internal server error', //(error as Error).message,
       error: 'Failed to create item',
       values,
     }

@@ -6,33 +6,27 @@ import {
   PackageSearch,
   QrCode,
   ScanSearch,
-  Tags,
 } from 'lucide-react'
 
 const STORING_STEPS = [
   {
     title: 'Create a box',
-    description: 'Create a new box in WhatBox',
+    description: 'Create a new box',
     icon: PackageOpen,
   },
   {
     title: 'Take pictures',
-    description: "Add photos of what's inside",
+    description: 'List the items stored inside',
     icon: Camera,
   },
   {
-    title: 'Add tags',
-    description: 'Tag your items for easy searching',
-    icon: Tags,
-  },
-  {
     title: 'Print QR code',
-    description: 'Print and stick the QR label on the box',
+    description: 'Print and stick the QR code on the box',
     icon: QrCode,
   },
   {
     title: 'Done!',
-    description: 'Done! Your box is ready to store',
+    description: 'Your box is ready !',
     icon: PackageCheck,
   },
 ]

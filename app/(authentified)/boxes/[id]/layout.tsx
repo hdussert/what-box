@@ -19,9 +19,7 @@ export default async function Layout({ children, items, params }: LayoutProps) {
   return (
     <>
       {children}
-      <div className="xl:flex-row flex flex-col gap-4">
-        <div className="xl:w-2/3">{items}</div>
-      </div>
+      {items}
     </>
   )
 }

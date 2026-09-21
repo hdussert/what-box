@@ -54,12 +54,13 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
     <form action={formAction} className={cn('flex flex-col gap-3', className)}>
       <div className="flex gap-3 items-center">
         <ImageInput
-          label="Picture"
+          label="Image"
           description="(Optional)"
-          value={image}
-          onChange={setImage}
+          image={image}
+          setImage={setImage}
+          className="flex-1"
         />
-        <FieldGroup>
+        <FieldGroup className="flex-2">
           {state?.message && !state.success && (
             <FieldError>{state.message}</FieldError>
           )}

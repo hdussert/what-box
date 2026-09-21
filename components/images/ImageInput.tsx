@@ -1,117 +1,105 @@
-import ImageThumbnail from '@/components/images/ImageThumbnail'
-import { Button } from '@/components/ui/button'
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from '@/components/ui/field'
+import ImageInputClearButton from '@/components/images/ImageInputClearButton'
+import ImageInputPreview from '@/components/images/ImageInputPreview'
+import { FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { IMAGE_MIME } from '@/lib/image/const'
 import { cn } from '@/lib/utils'
-import { Plus, X } from 'lucide-react'
-import { InputHTMLAttributes, useEffect, useRef, useState } from 'react'
+import { ImagePlus, LoaderCircle } from 'lucide-react'
+import { InputHTMLAttributes, useRef, useState } from 'react'
 
-type InputImageProps = {
-  label: string
-  description: string
-  value?: File
-  onChange: (file?: File) => void
+type ImageInputProps = {
+  label?: string
+  description?: string
+  image?: File
+  setImage: (file?: File) => void
+  loading?: boolean
 } & Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'ref' | 'onChange' | 'value'
 >
 
+const MAX_IMAGE_SIZE = 4.9 * 1000 * 1000
+const MAX_IMAGE_SIZE_READABLE = '4.9MB'
+
 const ImageInput = ({
+  className,
   label,
   description,
-  value,
-  onChange,
-  className,
+  image,
+  setImage,
+  disabled,
+  loading,
   ...props
-}: InputImageProps) => {
-  const [previewUrl, setPreviewUrl] = useState<string>()
+}: ImageInputProps) => {
   const [error, setError] = useState<string>()
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const openImagePicker = () => {
+  const openInput = (event: React.MouseEvent<HTMLElement>) => {
     inputRef.current?.click()
   }
-
-  useEffect(() => {
-    if (!value) {
-      setPreviewUrl(undefined)
-      if (inputRef.current) {
-        inputRef.current.value = ''
-      }
-      return
-    }
-
-    // Check size
-    setError(undefined)
-    if (value.size > 1000 * 1000 * 4.9) {
-      setError('File can not exceed 4.9MB')
-      onChange(undefined)
-      return
-    }
-
-    const url = URL.createObjectURL(value)
-    setPreviewUrl(url)
-
-    return () => URL.revokeObjectURL(url)
-  }, [value])
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.files?.[0])
-  }
-
-  const clearSelection = () => {
+  const clearInput = () => {
     if (inputRef.current) {
       inputRef.current.value = ''
     }
-
-    onChange(undefined)
+    setImage(undefined)
   }
-  return previewUrl ? (
-    <ImageThumbnail
-      src={previewUrl}
-      alt="box image"
-      className="relative size-24 shrink-0"
-    >
-      <Button
-        type="button"
-        variant="secondary"
-        size="icon-sm"
-        className="absolute top-2 right-2"
-        onClick={clearSelection}
-      >
-        <X />
-      </Button>
-    </ImageThumbnail>
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    setError(undefined)
+    if (!file) {
+      setImage(undefined)
+      return
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      setError(`File can not exceed ${MAX_IMAGE_SIZE_READABLE}`)
+      return
+    }
+
+    setImage(file)
+  }
+
+  return image ? (
+    <ImageInputPreview image={image} className={cn('relative', className)}>
+      {loading ? (
+        <div className="absolute inset-0 bg-secondary/80 flex items-center justify-center">
+          <LoaderCircle size={48} className="animate-spin " />
+        </div>
+      ) : (
+        <ImageInputClearButton
+          disabled={disabled}
+          clearInput={clearInput}
+          className="absolute inset-0 h-full opacity-0 hover:opacity-100"
+        />
+      )}
+    </ImageInputPreview>
   ) : (
-    <Field className={cn('size-24', className)}>
+    <div className={cn('flex flex-col *:w-full', className)}>
       <Input
         {...props}
         ref={inputRef}
         onChange={handleChange}
+        disabled={disabled}
         className="sr-only"
         type="file"
-
         accept={IMAGE_MIME.join(',')}
       />
 
       <div
-        className="flex flex-col justify-center items-center bg-input/30 rounded-md p-4 w-fit border border-dashed cursor-pointer aspect-square"
-        onClick={openImagePicker}
+        onClick={disabled ? undefined : openInput}
+        className={cn(
+          { 'cursor-pointer': !disabled },
+          'flex flex-col justify-center items-center bg-input/30 rounded-md p-4 w-fit aspect-square relative',
+        )}
       >
-        <Plus />
-        <FieldLabel className="justify-center">{label}</FieldLabel>
-        <FieldDescription className="text-center">
-          {description}
-        </FieldDescription>
+        <ImagePlus size={48} />
+        <FieldLabel>{label}</FieldLabel>
+        <FieldDescription>{description}</FieldDescription>
         <FieldError>{error}</FieldError>
       </div>
-    </Field>
+    </div>
   )
 }
 

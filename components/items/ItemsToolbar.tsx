@@ -1,6 +1,6 @@
 'use client'
 
-import { DeleteItemsDialog } from '@/components/items/DeleteItemsDialog'
+import DeleteItemsButton from '@/components/items/DeleteItemsButton'
 import { NewItemDialog } from '@/components/items/NewItemDialog'
 import ListControls from '@/components/list/ListControls'
 import SelectionToolbar from '@/components/selection/SelectionToolBar'
@@ -15,9 +15,9 @@ const ItemsToolbar = ({ boxId }: ItemsToolbarProps) => {
       <ListControls />
       <SelectionToolbar
         selectionActions={({ selectedIds, clearSelection }) => [
-          <DeleteItemsDialog
+          <DeleteItemsButton
             key="delete"
-            itemsIds={selectedIds}
+            itemIds={selectedIds}
             successCallback={clearSelection}
           />,
         ]}

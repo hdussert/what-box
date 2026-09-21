@@ -1,11 +1,11 @@
 'use server'
 
 import { deleteBoxes } from '@/lib/box'
-import { deleteFiles } from '@/lib/files'
-import { getBoxesImages } from '@/lib/image/image'
+import { getBoxesImages } from '@/lib/image/image-record'
+import { deleteImagesFiles } from '@/lib/image/image-upload'
 import { revalidatePath } from 'next/cache'
 
-export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
+export async function deleteBoxesAction(boxIds: string[]) {
   if (boxIds.length === 0) {
     return {
       success: false,
@@ -19,7 +19,7 @@ export async function deleteBoxesAndAssociatedDatas(boxIds: string[]) {
 
     if (images.length) {
       const imagesPathnames = images.map((image) => image.pathname)
-      await deleteFiles(imagesPathnames).catch((error) => {
+      await deleteImagesFiles(imagesPathnames).catch((error) => {
         console.error('Failed to delete some image files :', error)
         // Continue even if the blob deletion fails (shouldn't stop the user)
       })
