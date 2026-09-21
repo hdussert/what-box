@@ -1,9 +1,7 @@
 'use client'
 import GoBackButton from '@/components/GoBackButton'
-import ToolbarButton from '@/components/ToolbarButton'
 import { DeleteBoxesDialog } from '@/components/boxes/DeleteBoxesDialog'
 import LabelsPrintButton from '@/components/boxes/labels/LabelsPrintButton'
-import { Pen } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 type BoxHeaderToolbarProps = {
@@ -16,9 +14,6 @@ const BoxHeaderToolbar = ({ boxId }: BoxHeaderToolbarProps) => {
       <GoBackButton />
       <div>
         <LabelsPrintButton boxIds={[boxId]} />
-        <ToolbarButton>
-          <Pen />
-        </ToolbarButton>
         <DeleteBoxesDialog
           boxesIds={[boxId]}
           successCallback={() => router.replace('/')}

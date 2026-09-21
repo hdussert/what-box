@@ -18,3 +18,8 @@ export type Paginated<T> = {
 
 export type BoxWithAll = Box & { images: ImageRecord[]; items: Item[] }
 export type BoxesPaginated = Paginated<BoxWithAll>
+
+export type UpdateBoxData = {
+  id: string
+  name: string
+}
