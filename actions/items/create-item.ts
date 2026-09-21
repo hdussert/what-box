@@ -2,7 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { IMAGE_MIME_TYPES } from '@/lib/image/const'
-import { createImage } from '@/lib/image/mutations'
+import { saveImage } from '@/lib/image/mutations'
 import { createItem } from '@/lib/item/mutations'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -56,7 +56,7 @@ export async function createItemAction(
 
     // Upload image
     if (data.image) {
-      await createImage({
+      await saveImage({
         boxId: data.boxId,
         itemId: item.id,
         image: data.image,

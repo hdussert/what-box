@@ -1,5 +1,5 @@
 import { SortValue } from '@/components/list/types'
-import { ImageRecord, Item } from '@/db/schema'
+import { Item } from '@/db/schema'
 import { ITEMS_SORTABLE_COLUMNS } from '@/lib/item/const'
 import { Paginated } from '@/lib/types'
 
@@ -10,8 +10,7 @@ export type ItemsQuery = {
   sort?: SortValue
 }
 
-export type ItemWithImages = Item & { images: ImageRecord[] }
-export type ItemsPaginated = Paginated<ItemWithImages>
+export type ItemsPaginated = Paginated<Item>
 
 export type CreateItemData = {
   boxId: string

@@ -46,7 +46,6 @@ export async function getItems(
     orderBy: (table, { desc, asc }) => toOrderBy(query.sort, table, desc, asc),
     limit: 20,
     offset: 0,
-    with: { images: true },
   })
 
   return { rows: itemsList, total }

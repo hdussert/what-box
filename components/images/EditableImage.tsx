@@ -1,11 +1,10 @@
 'use client'
 
 import { addImageAction } from '@/actions/images/add-image'
-import { deleteImagesAction } from '@/actions/images/delete-images'
+import { deleteImageAction } from '@/actions/images/delete-image'
 import ImageInput from '@/components/images/ImageInput'
 import ImagePreview from '@/components/images/ImagePreview'
 import { Button } from '@/components/ui/button'
-import { ImageRecord } from '@/db/schema'
 import { Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useTransition } from 'react'
@@ -14,14 +13,14 @@ import { toast } from 'sonner'
 type EditableImageProps = {
   itemId?: string
   boxId: string
-  image?: ImageRecord
+  imageUrl?: string | null
   isEditing?: boolean
   className?: string
   isInputDisabled?: boolean
 }
 
 const EditableImage = ({
-  image,
+  imageUrl,
   isEditing,
   isInputDisabled,
   itemId,
@@ -52,11 +51,11 @@ const EditableImage = ({
   }
 
   const deleteImage = () => {
-    if (!image) {
+    if (!imageUrl) {
       return
     }
     startTransition(async () => {
-      const result = await deleteImagesAction([image.pathname])
+      const result = await deleteImageAction({ boxId, itemId })
       if (result.success) {
         setNewImage(undefined)
         toast.success('Image deleted !')
@@ -71,8 +70,8 @@ const EditableImage = ({
     handleChange()
   }, [newImage])
 
-  return image ? (
-    <ImagePreview src={image.url} alt="Image" className={className}>
+  return imageUrl ? (
+    <ImagePreview src={imageUrl} alt="Image" className={className}>
       {isEditing ? (
         <Button
           type="button"

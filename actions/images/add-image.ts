@@ -2,7 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { IMAGE_MIME_TYPES } from '@/lib/image/const'
-import { createImage } from '@/lib/image/mutations'
+import { saveImage } from '@/lib/image/mutations'
 import z from 'zod'
 
 const AddImageSchema = z.object({
@@ -18,11 +18,7 @@ export async function addImageAction(
 ): Promise<ActionResponse> {
   try {
     const { image, boxId, itemId = null } = AddImageSchema.parse(data)
-    await createImage({
-      boxId,
-      itemId,
-      image,
-    })
+    await saveImage({ boxId, itemId, image })
 
     return {
       success: true,

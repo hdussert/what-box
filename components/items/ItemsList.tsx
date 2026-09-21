@@ -3,11 +3,11 @@
 import ItemCard from '@/components/items/ItemCard'
 import ItemRow from '@/components/items/ItemRow'
 import { useSelection } from '@/components/selection/SelectionProvider'
-import { ItemWithImages } from '@/lib/item'
+import { Item } from '@/db/schema'
 import { useEffect, useState } from 'react'
 
 type ItemsListProps = {
-  items: ItemWithImages[]
+  items: Item[]
 }
 
 const ItemsList = ({ items }: ItemsListProps) => {
@@ -28,7 +28,7 @@ const ItemsList = ({ items }: ItemsListProps) => {
     setItemFocused(itemId)
   }
 
-  const onClick = (item: ItemWithImages) => {
+  const onClick = (item: Item) => {
     return isSelecting ? toggleSelect(item.id) : toggleFocused(item.id) // navigateToItemPage
   }
 

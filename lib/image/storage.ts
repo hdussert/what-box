@@ -1,13 +1,8 @@
+import { UploadImageData } from '@/lib/image/types'
 import { buildImagePath } from '@/lib/image/utils'
 import { getCurrentUser } from '@/lib/user'
 import { del, put } from '@vercel/blob'
 import 'server-only'
-
-type UploadImageData = {
-  boxId: string
-  itemId?: string | null
-  image: File
-}
 
 export async function uploadImageFile({
   boxId,

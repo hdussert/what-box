@@ -1,8 +1,7 @@
 import { randomUUID } from 'crypto'
-import { InferSelectModel, sql } from 'drizzle-orm'
+import { InferSelectModel } from 'drizzle-orm'
 import {
   boolean,
-  check,
   integer,
   snakeCase,
   text,
@@ -25,9 +24,6 @@ const userIdRef = () =>
 const boxIdRef = () =>
   text().references(() => boxes.id, { onDelete: 'cascade' })
 
-const itemIdRef = () =>
-  text().references(() => items.id, { onDelete: 'cascade' })
-
 // Tables definitions
 export const users = snakeCase.table('users', {
   id: id(),
@@ -49,6 +45,9 @@ export const boxes = snakeCase.table('boxes', {
   shortId: text(),
   name: text().notNull(),
   labelPrinted: boolean().default(false),
+
+  imageUrl: text(), // Public URL
+  imagePathname: text(), // Storage path
 })
 
 export const items = snakeCase.table('items', {
@@ -61,30 +60,11 @@ export const items = snakeCase.table('items', {
 
   name: text().notNull(),
   quantity: integer().notNull(),
+
+  imageUrl: text(), // Public URL
+  imagePathname: text(), // Storage path
 })
-
-export const images = snakeCase.table(
-  'images',
-  {
-    id: id(),
-    createdAt: createdAt(),
-
-    userId: userIdRef().notNull(),
-    boxId: boxIdRef(),
-    itemId: itemIdRef(),
-
-    url: text().notNull(), // Public URL
-    pathname: text().notNull(), // Storage path
-  },
-  (table) => [
-    check(
-      'image_has_exactly_one_parent',
-      sql`(${table.boxId} IS NOT NULL AND ${table.itemId} IS NULL) OR (${table.itemId} IS NOT NULL AND ${table.boxId} IS NULL)`,
-    ),
-  ],
-)
 
 export type User = InferSelectModel<typeof users>
 export type Box = InferSelectModel<typeof boxes>
-export type ImageRecord = InferSelectModel<typeof images>
 export type Item = InferSelectModel<typeof items>

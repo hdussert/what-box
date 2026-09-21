@@ -1,25 +1,49 @@
-import { createImageRecord } from '@/lib/image/records'
+import { getBoxById, updateBoxImage } from '@/lib/box'
 import { deleteImageFiles, uploadImageFile } from '@/lib/image/storage'
+import { ImageOwner, UploadImageData } from '@/lib/image/types'
+import { getItemById, updateItemImage } from '@/lib/item'
 import 'server-only'
 
-type CreateImageData = {
-  boxId: string
-  itemId?: string | null
-  image: File
-}
-
-export async function createImage(data: CreateImageData) {
+/** Upload an image and set it as the box's (or the item's) image */
+export async function saveImage(data: UploadImageData): Promise<void> {
+  const { boxId, itemId } = data
   const blob = await uploadImageFile(data)
+  const image = { url: blob.url, pathname: blob.pathname }
+
   try {
-    return await createImageRecord({
-      boxId: data.boxId,
-      itemId: data.itemId,
-      url: blob.url,
-      pathname: blob.pathname,
-    })
+    if (itemId) {
+      await updateItemImage(itemId, image)
+    } else {
+      await updateBoxImage(boxId, image)
+    }
   } catch (error) {
     // Clean up if DB fails
     await deleteImageFiles(blob.pathname)
     throw error
+  }
+}
+
+/** Remove the box's (or the item's) image and delete its file */
+export async function deleteImage({
+  boxId,
+  itemId,
+}: ImageOwner): Promise<void> {
+  const owner = itemId ? await getItemById(itemId) : await getBoxById(boxId)
+  const pathname = owner?.imagePathname
+  if (!pathname) {
+    throw new Error('No image found')
+  }
+
+  if (itemId) {
+    await updateItemImage(itemId, null)
+  } else {
+    await updateBoxImage(boxId, null)
+  }
+
+  // Failure here should not affect the user
+  try {
+    await deleteImageFiles(pathname)
+  } catch (error) {
+    console.error('Failed to delete image file', { pathname, error })
   }
 }
