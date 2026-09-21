@@ -1,9 +1,9 @@
 import { CardDescription, CardTitle } from '@/components/ui/card'
-import { ItemWithAll } from '@/lib/item'
+import { ItemWithImages } from '@/lib/item'
 import { cn } from '@/lib/utils'
 
 type ItemDetailsProps = {
-  item: ItemWithAll
+  item: ItemWithImages
   isFocused: boolean
 }
 const ItemDetails = ({ item, isFocused }: ItemDetailsProps) => (

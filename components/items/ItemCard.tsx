@@ -1,15 +1,15 @@
-import ImageEditable from '@/components/images/ImageEditable'
+import EditableImage from '@/components/images/EditableImage'
 import DeleteItemsButton from '@/components/items/DeleteItemsButton'
 import ItemDetails from '@/components/items/ItemDetails'
 import UpdateItemForm from '@/components/items/UpdateItemForm'
 import ToolbarButton from '@/components/ToolbarButton'
 import { Card, CardDescription } from '@/components/ui/card'
-import { ItemWithAll } from '@/lib/item'
+import { ItemWithImages } from '@/lib/item'
 import { cn } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 
 type ItemCardProps = {
-  item: ItemWithAll
+  item: ItemWithImages
   isSelected: boolean
   isFocused: boolean
 }
@@ -57,12 +57,12 @@ const ItemCard = ({ item, isSelected, isFocused }: ItemCardProps) => {
           }
         }}
       >
-        <ImageEditable
+        <EditableImage
           itemId={item.id}
           boxId={item.boxId}
           image={image}
           isEditing={isEditing}
-          inputDisabled={!isFocused}
+          isInputDisabled={!isFocused}
           className={cn('relative size-20 transition-all', {
             'size-40': isFocused,
           })}

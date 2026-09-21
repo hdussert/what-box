@@ -1,24 +1,21 @@
 'use server'
 
-import { ActionResponse } from '@/actions/response-type'
-import { IMAGE_MIME } from '@/lib/image/const'
-import { createImage } from '@/lib/image/image'
+import { ActionResponse } from '@/actions/types'
+import { IMAGE_MIME_TYPES } from '@/lib/image/const'
+import { createImage } from '@/lib/image/mutations'
 import z from 'zod'
 
 const AddImageSchema = z.object({
-  image: z.file().max(4_500_000).mime(IMAGE_MIME),
-  boxId: z.string().trim().min(1, 'Owner ID is required'),
-  itemId: z
-    .string()
-    .trim()
-    .min(1, 'Owner ID is required')
-    .optional()
-    .nullable(),
+  image: z.file().max(4_500_000).mime(IMAGE_MIME_TYPES),
+  boxId: z.string().trim().min(1, 'Box is required'),
+  itemId: z.string().trim().min(1, 'Item is required').optional().nullable(),
 })
 
 type AddImageData = z.infer<typeof AddImageSchema>
 
-export async function addImage(data: AddImageData): Promise<ActionResponse> {
+export async function addImageAction(
+  data: AddImageData,
+): Promise<ActionResponse> {
   try {
     const { image, boxId, itemId = null } = AddImageSchema.parse(data)
     await createImage({

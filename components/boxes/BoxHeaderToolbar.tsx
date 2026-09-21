@@ -1,7 +1,7 @@
 'use client'
 import GoBackButton from '@/components/GoBackButton'
-import { DeleteBoxesDialog } from '@/components/boxes/DeleteBoxesDialog'
-import LabelsPrintButton from '@/components/boxes/labels/LabelsPrintButton'
+import { DeleteBoxesButton } from '@/components/boxes/DeleteBoxesButton'
+import PrintLabelsButton from '@/components/boxes/labels/PrintLabelsButton'
 import { useRouter } from 'next/navigation'
 
 type BoxHeaderToolbarProps = {
@@ -13,10 +13,10 @@ const BoxHeaderToolbar = ({ boxId }: BoxHeaderToolbarProps) => {
     <div className="flex items-center justify-between">
       <GoBackButton />
       <div>
-        <LabelsPrintButton boxIds={[boxId]} />
-        <DeleteBoxesDialog
-          boxesIds={[boxId]}
-          successCallback={() => router.replace('/')}
+        <PrintLabelsButton boxIds={[boxId]} />
+        <DeleteBoxesButton
+          boxIds={[boxId]}
+          onSuccess={() => router.replace('/')}
         />
       </div>
     </div>

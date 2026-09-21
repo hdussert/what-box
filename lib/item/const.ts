@@ -46,4 +46,4 @@ export const ITEMS_SORT_OPTIONS: SortOption[] = [
   },
 ]
 
-export const ITEMS_DEFAULT_SORT_OPTION = ITEMS_SORT_OPTIONS[1].value
+export const ITEMS_DEFAULT_SORT = ITEMS_SORT_OPTIONS[1].value

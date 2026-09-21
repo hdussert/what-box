@@ -16,7 +16,7 @@ const Hero = () => {
             <a href="#features">Learn more</a>
           </Button>
           <Button asChild>
-            <Link href="/signup">Sign Up</Link>
+            <Link href="/sign-up">Sign Up</Link>
           </Button>
         </div>
       </div>

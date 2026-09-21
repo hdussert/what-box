@@ -11,10 +11,10 @@ const Navbar = () => {
       </Link>
       <div className="ml-auto flex gap-4">
         <Button asChild variant="outline">
-          <Link href="/signin">Sign In</Link>
+          <Link href="/sign-in">Sign In</Link>
         </Button>
         <Button asChild>
-          <Link href="/signup">Sign Up</Link>
+          <Link href="/sign-up">Sign Up</Link>
         </Button>
       </div>
     </nav>

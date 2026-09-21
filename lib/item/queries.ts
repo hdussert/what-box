@@ -49,10 +49,10 @@ export async function getItems(
     with: { images: true },
   })
 
-  return { items: itemsList, total }
+  return { rows: itemsList, total }
 }
 
-export async function getBoxesIdsContainingItem(itemName: string) {
+export async function getBoxIdsByItemName(itemName: string) {
   const user = await getCurrentUser()
   const search = itemName.trim()
 
@@ -66,6 +66,6 @@ export async function getBoxesIdsContainingItem(itemName: string) {
     .where(and(eq(items.userId, user.id), ilike(items.name, `%${search}%`)))
     .groupBy(items.boxId)
 
-  const boxesIds = itemsList.map((i) => i.boxId)
-  return boxesIds
+  const boxIds = itemsList.map((i) => i.boxId)
+  return boxIds
 }

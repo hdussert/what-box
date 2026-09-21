@@ -1,16 +1,16 @@
 import { db } from '@/db'
 import { boxes } from '@/db/schema'
-import { getBoxesIdsContainingItem } from '@/lib/item'
+import { getBoxIdsByItemName } from '@/lib/item'
 import { getCurrentUser } from '@/lib/user'
 import { and, eq, ilike, inArray, or, sql } from 'drizzle-orm'
 import 'server-only'
-import { BoxesPaginated, BoxesQuery, BoxWithAll } from './types'
+import { BoxesPaginated, BoxesQuery, BoxWithRelations } from './types'
 import { toOrderBy } from './utils'
 
 // Single box queries
 export async function getBoxById(
   boxId: string,
-): Promise<BoxWithAll | undefined> {
+): Promise<BoxWithRelations | undefined> {
   const user = await getCurrentUser()
   return db.query.boxes.findFirst({
     where: { id: boxId, userId: user.id },
@@ -19,11 +19,11 @@ export async function getBoxById(
 }
 
 export async function getBoxesByIds(
-  boxesIds: string[],
-): Promise<BoxWithAll[] | undefined> {
+  boxIds: string[],
+): Promise<BoxWithRelations[] | undefined> {
   const user = await getCurrentUser()
   return db.query.boxes.findMany({
-    where: { id: { in: boxesIds }, userId: user.id },
+    where: { id: { in: boxIds }, userId: user.id },
     with: { images: true, items: true },
   })
 }
@@ -42,10 +42,8 @@ export async function getBoxes(
   const search = query.search?.trim() // Search can mean "box name" but also "an item inside a box"
 
   // Boxes containing an item we are searching
-  const boxesContainingMachingItem = search
-    ? await getBoxesIdsContainingItem(search)
-    : []
-  const searchHasMatchingItems = search && boxesContainingMachingItem.length > 0
+  const boxIdsWithMatchingItem = search ? await getBoxIdsByItemName(search) : []
+  const searchHasMatchingItems = search && boxIdsWithMatchingItem.length > 0
 
   // Count the boxes matching the results (used for pagination)
   const [{ count }] = await db
@@ -56,7 +54,7 @@ export async function getBoxes(
         eq(boxes.userId, user.id),
         or(
           search ? ilike(boxes.name, `%${search}%`) : undefined, // Search in box name
-          search ? inArray(boxes.id, boxesContainingMachingItem) : undefined, // Search in items names (via box IDs)
+          search ? inArray(boxes.id, boxIdsWithMatchingItem) : undefined, // Search in items names (via box IDs)
         ),
       ),
     )
@@ -68,7 +66,7 @@ export async function getBoxes(
       userId: user.id,
       OR: [
         { name: { ilike: `%${search}%` } },
-        { id: { in: boxesContainingMachingItem } },
+        { id: { in: boxIdsWithMatchingItem } },
       ],
     },
     orderBy: (table, { desc, asc }) => toOrderBy(query.sort, table, desc, asc),
@@ -89,5 +87,5 @@ export async function getBoxes(
     },
   })
 
-  return { items: boxesResult, total }
+  return { rows: boxesResult, total }
 }

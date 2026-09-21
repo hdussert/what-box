@@ -1,10 +1,10 @@
 'use client'
 
-import { DeleteBoxesDialog } from '@/components/boxes/DeleteBoxesDialog'
-import LabelsPrintButton from '@/components/boxes/labels/LabelsPrintButton'
-import NewBoxButton from '@/components/boxes/new/NewBoxButton'
+import { DeleteBoxesButton } from '@/components/boxes/DeleteBoxesButton'
+import PrintLabelsButton from '@/components/boxes/labels/PrintLabelsButton'
+import NewBoxButton from '@/components/boxes/NewBoxButton'
 import ListControls from '@/components/list/ListControls'
-import SelectionToolbar from '@/components/selection/SelectionToolBar'
+import SelectionToolbar from '@/components/selection/SelectionToolbar'
 import { Separator } from '@/components/ui/separator'
 
 const BoxesToolbar = () => {
@@ -14,12 +14,12 @@ const BoxesToolbar = () => {
       <Separator className="mt-2 mb-1" />
       <SelectionToolbar
         selectionActions={({ selectedIds, clearSelection }) => [
-          <DeleteBoxesDialog
+          <DeleteBoxesButton
             key="delete"
-            boxesIds={selectedIds}
-            successCallback={clearSelection}
+            boxIds={selectedIds}
+            onSuccess={clearSelection}
           />,
-          <LabelsPrintButton key="print" boxIds={selectedIds} />,
+          <PrintLabelsButton key="print" boxIds={selectedIds} />,
         ]}
         actions={<NewBoxButton label="Add" />}
       />

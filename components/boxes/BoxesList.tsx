@@ -2,11 +2,11 @@
 
 import BoxCard from '@/components/boxes/BoxCard'
 import { useSelection } from '@/components/selection/SelectionProvider'
-import { BoxWithAll } from '@/lib/box'
+import { BoxWithRelations } from '@/lib/box'
 import { useRouter } from 'next/navigation'
 
 type BoxesListProps = {
-  boxes: BoxWithAll[]
+  boxes: BoxWithRelations[]
 }
 
 const BoxesList = ({ boxes }: BoxesListProps) => {
@@ -22,7 +22,7 @@ const BoxesList = ({ boxes }: BoxesListProps) => {
           key={index}
           box={box}
           onClick={() => onClick(box.id)}
-          selected={isSelected(box.id)}
+          isSelected={isSelected(box.id)}
           isSelecting={isSelecting}
         />
       ))}

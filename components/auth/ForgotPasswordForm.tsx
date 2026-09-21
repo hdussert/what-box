@@ -1,6 +1,6 @@
 'use client'
 
-import { forgotPassword } from '@/actions/auth/forgot-password'
+import { forgotPasswordAction } from '@/actions/auth/forgot-password'
 import { SignInState } from '@/actions/auth/sign-in'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
@@ -21,7 +21,7 @@ const initialState: SignInState = {
 const ForgotPasswordForm = () => {
   // Use useActionState hook for the form submission action
   const [state, formAction, isPending] = useActionState<SignInState, FormData>(
-    forgotPassword,
+    forgotPasswordAction,
     initialState,
   )
 

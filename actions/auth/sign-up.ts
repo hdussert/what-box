@@ -1,6 +1,6 @@
 'use server'
 
-import { ActionResponse } from '@/actions/response-type'
+import { ActionResponse } from '@/actions/types'
 import { createSession } from '@/lib/session'
 import { createUser, getUserByEmail } from '@/lib/user'
 import { z } from 'zod'
@@ -18,12 +18,12 @@ const SignUpSchema = z
   })
 
 export type SignUpData = z.infer<typeof SignUpSchema>
-export type SignupValues = Pick<SignUpData, 'email'>
+export type SignUpValues = Pick<SignUpData, 'email'>
 export type SignUpState = ActionResponse & {
-  values: SignupValues
+  values: SignUpValues
 }
 
-export async function signUp(
+export async function signUpAction(
   prevState: SignUpState,
   formData: FormData,
 ): Promise<SignUpState> {
@@ -33,7 +33,7 @@ export async function signUp(
     confirmPassword: formData.get('confirmPassword') as string,
   }
 
-  const values: SignupValues = { email: raw.email }
+  const values: SignUpValues = { email: raw.email }
 
   try {
     // Validate with Zod

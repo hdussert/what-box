@@ -4,19 +4,16 @@ import ToolbarButton from '@/components/ToolbarButton'
 
 type DeleteItemsButtonProps = {
   itemIds: string[]
-  successCallback?: () => void
+  onSuccess?: () => void
 }
 
-const DeleteItemsButton = ({
-  itemIds,
-  successCallback,
-}: DeleteItemsButtonProps) => {
+const DeleteItemsButton = ({ itemIds, onSuccess }: DeleteItemsButtonProps) => {
   const { openDialog } = useDialog()
   return (
     <ToolbarButton
       onClick={(event) => {
         event.stopPropagation()
-        openDialog(DeleteItemsDialog, { itemIds, successCallback })
+        openDialog(DeleteItemsDialog, { itemIds, onSuccess })
       }}
     >
       Delete

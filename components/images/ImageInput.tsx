@@ -2,7 +2,7 @@ import ImageInputClearButton from '@/components/images/ImageInputClearButton'
 import ImageInputPreview from '@/components/images/ImageInputPreview'
 import { FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { IMAGE_MIME } from '@/lib/image/const'
+import { IMAGE_MIME_TYPES } from '@/lib/image/const'
 import { cn } from '@/lib/utils'
 import { ImagePlus, LoaderCircle } from 'lucide-react'
 import { InputHTMLAttributes, useRef, useState } from 'react'
@@ -12,7 +12,7 @@ type ImageInputProps = {
   description?: string
   image?: File
   setImage: (file?: File) => void
-  loading?: boolean
+  isLoading?: boolean
 } & Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'ref' | 'onChange' | 'value'
@@ -28,7 +28,7 @@ const ImageInput = ({
   image,
   setImage,
   disabled,
-  loading,
+  isLoading,
   ...props
 }: ImageInputProps) => {
   const [error, setError] = useState<string>()
@@ -63,14 +63,14 @@ const ImageInput = ({
 
   return image ? (
     <ImageInputPreview image={image} className={cn('relative', className)}>
-      {loading ? (
+      {isLoading ? (
         <div className="absolute inset-0 bg-secondary/80 flex items-center justify-center">
           <LoaderCircle size={48} className="animate-spin " />
         </div>
       ) : (
         <ImageInputClearButton
           disabled={disabled}
-          clearInput={clearInput}
+          onClear={clearInput}
           className="absolute inset-0 h-full opacity-0 hover:opacity-100"
         />
       )}
@@ -84,7 +84,7 @@ const ImageInput = ({
         disabled={disabled}
         className="sr-only"
         type="file"
-        accept={IMAGE_MIME.join(',')}
+        accept={IMAGE_MIME_TYPES.join(',')}
       />
 
       <div

@@ -1,6 +1,6 @@
 'use client'
 
-import UpdateBoxForm from '@/components/boxes/update/UpdateBoxForm'
+import UpdateBoxForm from '@/components/boxes/UpdateBoxForm'
 import { Button } from '@/components/ui/button'
 import Typography from '@/components/ui/typography'
 import { Box } from '@/db/schema'

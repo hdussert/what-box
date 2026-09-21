@@ -3,7 +3,7 @@
 import { deleteSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 
-export async function signOut(): Promise<void> {
+export async function signOutAction(): Promise<void> {
   await deleteSession()
   redirect('/')
 }

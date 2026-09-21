@@ -1,6 +1,6 @@
 'use server'
 
-import { ActionResponse } from '@/actions/response-type'
+import { ActionResponse } from '@/actions/types'
 import { updateItem } from '@/lib/item'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'

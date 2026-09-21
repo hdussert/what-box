@@ -1,6 +1,6 @@
 'use client'
 
-import { newItem, NewItemState } from '@/actions/items/new-item'
+import { createItemAction, CreateItemState } from '@/actions/items/create-item'
 import ImageInput from '@/components/images/ImageInput'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +21,7 @@ type NewItemFormProps = {
 }
 
 const NewItemForm = ({ boxId, className }: NewItemFormProps) => {
-  const initialState: NewItemState = {
+  const initialState: CreateItemState = {
     success: false,
     message: '',
     errors: undefined,
@@ -32,8 +32,11 @@ const NewItemForm = ({ boxId, className }: NewItemFormProps) => {
     },
   }
   const [image, setImage] = useState<File>()
-  const [state, formAction, isPending] = useActionState<NewItemState, FormData>(
-    (prevState, formData) => newItem(prevState, formData, image),
+  const [state, formAction, isPending] = useActionState<
+    CreateItemState,
+    FormData
+  >(
+    (prevState, formData) => createItemAction(prevState, formData, image),
     initialState,
   )
 

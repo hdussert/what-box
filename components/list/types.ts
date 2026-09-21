@@ -1,8 +1,8 @@
-export type SortOrder = 'asc' | 'desc'
-export type SortValue = `${string}_${SortOrder}`
+export type SortDirection = 'asc' | 'desc'
+export type SortValue = `${string}_${SortDirection}`
 export type SortOption = {
   label: string
   field: string
-  direction: SortOrder
+  direction: SortDirection
   value: SortValue
 }

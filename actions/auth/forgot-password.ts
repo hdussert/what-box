@@ -1,6 +1,6 @@
 'use server'
 
-import { ActionResponse } from '@/actions/response-type'
+import { ActionResponse } from '@/actions/types'
 import { ForgotPasswordEmailTemplate } from '@/components/auth/ForgotPasswordEmailTemplate'
 import { env } from '@/env'
 import { resend } from '@/lib/email/resend'
@@ -19,7 +19,7 @@ export type ForgotPasswordState = ActionResponse & {
   values: ForgotPasswordValues
 }
 
-export async function forgotPassword(
+export async function forgotPasswordAction(
   prevState: ForgotPasswordState,
   formData: FormData,
 ): Promise<ForgotPasswordState> {
@@ -44,7 +44,7 @@ export async function forgotPassword(
           ? 'https://whatbox.vercel.app/'
           : 'http://localhost:3001'
 
-      const newPasswordLink = `${domain}/new-password?token=${token}`
+      const resetPasswordLink = `${domain}/reset-password?token=${token}`
 
       // TODO: handle errors (not sure if it throws properly)
       resend.emails.send({
@@ -52,8 +52,8 @@ export async function forgotPassword(
         to: [user.email],
         subject: 'Password reset',
         react: ForgotPasswordEmailTemplate({
-          firstName: user.email,
-          link: newPasswordLink,
+          email: user.email,
+          link: resetPasswordLink,
         }),
       })
     }

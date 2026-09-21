@@ -1,12 +1,12 @@
 'use server'
 
-import { getItemsImages } from '@/lib/image/image-record'
-import { deleteImagesFiles } from '@/lib/image/image-upload'
+import { getImagesByItemIds } from '@/lib/image/records'
+import { deleteImageFiles } from '@/lib/image/storage'
 import { deleteItems } from '@/lib/item'
 import { revalidatePath } from 'next/cache'
 
-export async function deleteItemsAndAssociatedDatas(itemsIds: string[]) {
-  if (itemsIds.length === 0) {
+export async function deleteItemsAction(itemIds: string[]) {
+  if (itemIds.length === 0) {
     return {
       success: false,
       message: 'No items selected for deletion',
@@ -15,23 +15,23 @@ export async function deleteItemsAndAssociatedDatas(itemsIds: string[]) {
 
   try {
     // Delete the images uploaded (Vercel)
-    const images = await getItemsImages(itemsIds)
+    const images = await getImagesByItemIds(itemIds)
 
     if (images.length) {
       const imagesPathnames = images.map((image) => image.pathname)
-      await deleteImagesFiles(imagesPathnames).catch((error) => {
+      await deleteImageFiles(imagesPathnames).catch((error) => {
         console.error('Failed to delete some image files :', error)
         // Continue even if the blob deletion fails (shouldn't stop the user)
       })
     }
 
     // Delete items records (images will be deleted on cascade)
-    await deleteItems(itemsIds)
+    await deleteItems(itemIds)
     revalidatePath('/dashboard')
 
     return {
       success: true,
-      deleted: itemsIds.length,
+      deleted: itemIds.length,
     }
   } catch (error) {
     console.error('Error deleting items and associated data:', error)

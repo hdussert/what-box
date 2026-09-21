@@ -10,8 +10,8 @@ import {
 } from 'react'
 
 export type DialogBaseProps = {
-  open: boolean
-  setOpen: (open: boolean) => void
+  isOpen: boolean
+  setIsOpen: (isOpen: boolean) => void
 }
 
 type DialogComponent<P = {}> = ComponentType<P & DialogBaseProps>
@@ -30,18 +30,18 @@ const DialogContext = createContext<DialogContextValue | null>(null)
 
 export function DialogProvider({ children }: { children: ReactNode }) {
   const [dialog, setDialog] = useState<DialogState | null>(null)
-  const [open, setOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const openDialog = useCallback(
     <P,>(component: DialogComponent<P>, props: P) => {
       setDialog({ component, props })
-      setOpen(true)
+      setIsOpen(true)
     },
     [],
   )
 
   const closeDialog = useCallback(() => {
-    setOpen(false)
+    setIsOpen(false)
   }, [])
 
   return (
@@ -49,7 +49,11 @@ export function DialogProvider({ children }: { children: ReactNode }) {
       {children}
 
       {dialog && (
-        <dialog.component {...dialog.props} open={open} setOpen={setOpen} />
+        <dialog.component
+          {...dialog.props}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
       )}
     </DialogContext.Provider>
   )
