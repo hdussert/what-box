@@ -78,11 +78,13 @@ const EditableImage = ({
 
   return imageUrl ? (
     <ImagePreview src={imageUrl} alt="Image" className={className}>
-      <EditableImageMenu
-        disabled={isPending}
-        onReplace={replaceImage}
-        onDelete={deleteImage}
-      />
+      {isInputDisabled ? null : (
+        <EditableImageMenu
+          disabled={isPending}
+          onReplace={replaceImage}
+          onDelete={deleteImage}
+        />
+      )}
     </ImagePreview>
   ) : (
     <ImageInput
