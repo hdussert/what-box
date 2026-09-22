@@ -20,7 +20,7 @@ type NewItemFormProps = {
   onSuccess?: () => void
 }
 
-const NewItemForm = ({ boxId, className }: NewItemFormProps) => {
+const NewItemForm = ({ boxId, className, onSuccess }: NewItemFormProps) => {
   const initialState: CreateItemState = {
     success: false,
     message: '',
@@ -49,10 +49,11 @@ const NewItemForm = ({ boxId, className }: NewItemFormProps) => {
       toast.success(state.message)
       setImage(undefined)
       nameInputRef.current?.focus()
+      onSuccess?.()
     } else {
       toast.error(state.message)
     }
-  }, [state, state.success, state.message])
+  }, [state, state.success, state.message, onSuccess])
 
   return (
     <form action={formAction} className={cn('flex flex-col gap-3', className)}>
