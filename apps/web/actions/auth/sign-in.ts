@@ -2,7 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { createSession } from '@/lib/session'
-import { verifyCredentials } from '@/lib/user'
+import { lockoutMessage, verifyCredentials } from '@/lib/user'
 import { SignInData, SignInSchema } from '@what-box/shared'
 import { z } from 'zod'
 type SignInValues = Pick<SignInData, 'email'>
@@ -24,13 +24,16 @@ export async function signInAction(
     // Validate with Zod
     const data = SignInSchema.parse(raw)
 
-    const user = await verifyCredentials(data.email, data.password)
-    if (!user) {
+    const result = await verifyCredentials(data.email, data.password)
+    if (result.status === 'locked') {
+      throw new Error(lockoutMessage(result.lockedUntil))
+    }
+    if (result.status === 'invalid') {
       throw new Error('Invalid email or password')
     }
 
     // Create session
-    await createSession(user.id)
+    await createSession(result.user.id)
 
     return {
       success: true,

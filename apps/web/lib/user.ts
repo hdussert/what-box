@@ -1,11 +1,14 @@
 import { db } from '@/db'
-import { users } from '@/db/schema'
+import { User, users } from '@/db/schema'
 import { hashPassword, verifyPassword } from '@/lib/password'
 import { getSession } from '@/lib/session'
 import { eq } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import 'server-only'
+
+const MAX_FAILED_LOGIN_ATTEMPTS = 5
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000
 
 // Create a new user
 export async function createUser(email: string, password: string) {
@@ -28,7 +31,6 @@ export async function updatePassword(userId: string, password: string) {
   const hashedPassword = await hashPassword(password)
   const date = new Date()
 
-  console.table({ pwd: hashedPassword, date: date, uid: userId })
   const [user] = await db
     .update(users)
     .set({ password: hashedPassword, tokenInvalidBefore: date })
@@ -49,18 +51,60 @@ export const getUserByEmail = cache(async (email: string) => {
   })
 })
 
+export type CredentialsResult =
+  | { status: 'ok'; user: User }
+  | { status: 'invalid' }
+  | { status: 'locked'; lockedUntil: Date }
+
+/** Shared copy for a 'locked' result, used by both the web action and the mobile API route. */
+export function lockoutMessage(lockedUntil: Date) {
+  const minutes = Math.max(1, Math.ceil((lockedUntil.getTime() - Date.now()) / 60_000))
+  return `Too many failed attempts. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`
+}
+
 /**
- * Verify email/password credentials. Returns the user on success, or null
- * if the email is unknown or the password doesn't match.
+ * Verify email/password credentials, enforcing a lockout after repeated
+ * failures: MAX_FAILED_LOGIN_ATTEMPTS wrong passwords in a row locks the
+ * account for LOCKOUT_DURATION_MS. A correct password resets the counter.
  */
-export async function verifyCredentials(email: string, password: string) {
+export async function verifyCredentials(
+  email: string,
+  password: string,
+): Promise<CredentialsResult> {
   const user = await getUserByEmail(email)
-  if (!user) return null
+  if (!user) return { status: 'invalid' }
+
+  if (user.lockedUntil && user.lockedUntil > new Date()) {
+    return { status: 'locked', lockedUntil: user.lockedUntil }
+  }
 
   const isPasswordValid = await verifyPassword(password, user.password)
-  if (!isPasswordValid) return null
+  if (!isPasswordValid) {
+    await recordFailedLogin(user)
+    return { status: 'invalid' }
+  }
 
-  return user
+  if (user.failedLoginAttempts > 0) {
+    await db
+      .update(users)
+      .set({ failedLoginAttempts: 0, lockedUntil: null })
+      .where(eq(users.id, user.id))
+  }
+
+  return { status: 'ok', user }
+}
+
+async function recordFailedLogin(user: User) {
+  const failedLoginAttempts = user.failedLoginAttempts + 1
+  const lockedUntil =
+    failedLoginAttempts >= MAX_FAILED_LOGIN_ATTEMPTS
+      ? new Date(Date.now() + LOCKOUT_DURATION_MS)
+      : null
+
+  await db
+    .update(users)
+    .set({ failedLoginAttempts, lockedUntil })
+    .where(eq(users.id, user.id))
 }
 
 export const getUserById = cache(async (id: string) => {

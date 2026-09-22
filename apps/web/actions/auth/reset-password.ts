@@ -1,7 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
-import { createSession, verifyAccessToken } from '@/lib/session'
+import { createSession, verifyResetToken } from '@/lib/session'
 import { updatePassword } from '@/lib/user'
 import { z } from 'zod'
 
@@ -40,7 +40,7 @@ export async function resetPasswordAction(
   try {
     const { password } = ResetPasswordSchema.parse(raw)
 
-    const { valid, user, error } = await verifyAccessToken(token)
+    const { valid, user, error } = await verifyResetToken(token)
     if (!valid || !user) {
       throw new Error(error)
     }

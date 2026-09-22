@@ -2,15 +2,21 @@
 
 import { ActionResponse } from '@/actions/types'
 import { ForgotPasswordEmailTemplate } from '@/components/auth/ForgotPasswordEmailTemplate'
+import { db } from '@/db'
+import { users } from '@/db/schema'
 import { env } from '@/env'
 import { resend } from '@/lib/email/resend'
-import { generateJWT } from '@/lib/session'
+import { generateResetToken } from '@/lib/session'
 import { getUserByEmail } from '@/lib/user'
+import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 
 const ForgotPasswordSchema = z.object({
   email: z.email('Invalid email format').min(1, 'Email is required'),
 })
+
+// Prevents spamming an inbox with reset links / farming reset tokens.
+const RESET_REQUEST_COOLDOWN_MS = 5 * 60 * 1000
 
 export type ForgotPasswordData = z.infer<typeof ForgotPasswordSchema>
 type ForgotPasswordValues = Pick<ForgotPasswordData, 'email'>
@@ -34,9 +40,20 @@ export async function forgotPasswordAction(
 
     // Find user by email
     const user = await getUserByEmail(data.email)
-    console.log(user)
-    if (user) {
-      const token = await generateJWT({ userId: user.id })
+    const cooldownActive =
+      user?.lastPasswordResetRequestAt &&
+      Date.now() - user.lastPasswordResetRequestAt.getTime() <
+        RESET_REQUEST_COOLDOWN_MS
+
+    // Same generic response whether the account doesn't exist or the
+    // cooldown is active - neither is revealed to the caller.
+    if (user && !cooldownActive) {
+      await db
+        .update(users)
+        .set({ lastPasswordResetRequestAt: new Date() })
+        .where(eq(users.id, user.id))
+
+      const token = await generateResetToken(user.id)
 
       // TODO : env variable for domain name
       const domain =

@@ -1,5 +1,5 @@
-import { generateJWT } from '@/lib/session'
-import { verifyCredentials } from '@/lib/user'
+import { generateSessionToken } from '@/lib/session'
+import { lockoutMessage, verifyCredentials } from '@/lib/user'
 import { SignInSchema } from '@what-box/shared'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -20,11 +20,17 @@ export async function POST(request: Request) {
     )
   }
 
-  const user = await verifyCredentials(parsed.data.email, parsed.data.password)
-  if (!user) {
+  const result = await verifyCredentials(parsed.data.email, parsed.data.password)
+  if (result.status === 'locked') {
+    return NextResponse.json({ error: lockoutMessage(result.lockedUntil) }, { status: 429 })
+  }
+  if (result.status === 'invalid') {
     return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
   }
 
-  const token = await generateJWT({ userId: user.id })
-  return NextResponse.json({ token, user: { id: user.id, email: user.email } })
+  const token = await generateSessionToken(result.user.id)
+  return NextResponse.json({
+    token,
+    user: { id: result.user.id, email: result.user.email },
+  })
 }

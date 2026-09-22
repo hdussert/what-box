@@ -7,19 +7,21 @@ import 'server-only'
 // JWT types
 interface JWTPayload {
   userId: string
+  type: 'session' | 'reset'
   [key: string]: string | number | boolean | null | undefined // This is ugly af
 }
 
 const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET)
 const JWT_EXPIRATION = '7d' // 7 days expiration time
+const RESET_TOKEN_EXPIRATION = '1h' // Password-reset links are short-lived, unlike sessions
 const REFRESH_THRESHOLD_SECONDS = 24 * 60 * 60 // 24 hours refresh threshold in seconds
 const SESSION_COOKIE_NAME = 'auth_token'
 
-export async function generateJWT(payload: JWTPayload) {
+async function generateJWT(payload: JWTPayload, expiration: string) {
   return await new jose.SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime(JWT_EXPIRATION)
+    .setExpirationTime(expiration)
     .sign(JWT_SECRET)
 }
 
@@ -32,20 +34,24 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   }
 }
 
-export async function verifyAccessToken(token: string) {
+// Session tokens (login) and reset tokens (forgot-password links) are both
+// JWTs signed with the same secret, so a `type` claim is the only thing
+// stopping a reset link from working as a full session credential - this is
+// checked before anything else, not just relied on as a hint.
+async function verifyToken(token: string, expectedType: JWTPayload['type']) {
   const payload = await verifyJWT(token)
-  if (!payload)
-    return {
-      valid: false,
-      error: 'Invalid token structure',
-    }
+  if (!payload) {
+    return { valid: false as const, error: 'Invalid token structure' }
+  }
 
-  const user = await getUserById(payload.userId) // payload.sub is usually the user ID
-  if (!user)
-    return {
-      valid: false,
-      error: 'User not found',
-    }
+  if (payload.type !== expectedType) {
+    return { valid: false as const, error: 'Invalid token type' }
+  }
+
+  const user = await getUserById(payload.userId)
+  if (!user) {
+    return { valid: false as const, error: 'User not found' }
+  }
 
   const tokenIssuedAt = payload.iat as number // seconds
   const tokenInvalidBefore = Math.floor(
@@ -53,10 +59,22 @@ export async function verifyAccessToken(token: string) {
   )
 
   if (tokenIssuedAt < tokenInvalidBefore) {
-    return { valid: false, error: 'Token has been revoked by a security event' }
+    return {
+      valid: false as const,
+      error: 'Token has been revoked by a security event',
+    }
   }
 
-  return { valid: true, user }
+  return { valid: true as const, user }
+}
+
+export async function verifyAccessToken(token: string) {
+  return verifyToken(token, 'session')
+}
+
+/** Verifies a password-reset link's token. Rejects a session token used here. */
+export async function verifyResetToken(token: string) {
+  return verifyToken(token, 'reset')
 }
 
 export async function shouldRefreshToken(token: string): Promise<boolean> {
@@ -77,9 +95,19 @@ export async function shouldRefreshToken(token: string): Promise<boolean> {
   }
 }
 
+/** JWT for a login session (web cookie or mobile Bearer token) - 7-day expiry. */
+export async function generateSessionToken(userId: string) {
+  return generateJWT({ userId, type: 'session' }, JWT_EXPIRATION)
+}
+
+/** JWT for a password-reset link - 1-hour expiry, rejected by `verifyAccessToken`. */
+export async function generateResetToken(userId: string) {
+  return generateJWT({ userId, type: 'reset' }, RESET_TOKEN_EXPIRATION)
+}
+
 export async function createSession(userId: string) {
   try {
-    const token = await generateJWT({ userId })
+    const token = await generateSessionToken(userId)
 
     const cookieStore = await cookies()
     cookieStore.set({
