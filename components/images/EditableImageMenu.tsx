@@ -49,7 +49,7 @@ const EditableImageMenu = ({
             type="button"
             variant="secondary"
             size="icon-sm"
-            className="absolute top-0 right-0 rounded-tl-none rounded-br-none"
+            className="absolute top-0 right-0 rounded-tl-none rounded-br-none fade-in animate-in"
             disabled={disabled}
           >
             <EllipsisVertical />
