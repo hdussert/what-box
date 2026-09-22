@@ -21,7 +21,7 @@ Every task follows these steps. `/start` and `/finish` run them.
 1. **Start**: branch from an up-to-date `main` (`feat/…`, `fix/…`, `refactor/…`, `docs/…`), push it and open a draft PR right away.
 2. **Plan**: for non-trivial tasks (several files, a new feature, a schema change, anything ambiguous), propose a plan and wait for approval. Trivial fixes skip this step.
 3. **Implement**: small conventional commits. Stay on the task: log side issues (see below) instead of fixing them.
-4. **Verify**: `yarn lint` and `yarn tsc --noEmit`. Errors under `.next/types/` come from stale generated files, not your change; only errors in source files count. For UI changes, run the app and check the change in the browser.
+4. **Verify**: `yarn tsc --noEmit`, and `yarn lint` unless the gotcha above says it's broken. Errors under `.next/types/` come from stale generated files, not your change; only errors in source files count. For UI changes, run the app and check the change in the browser.
 5. **Self-review**: run `/code-review` on the diff and fix the findings that hold up.
 6. **Finish**: update the PR title and description, mark the PR ready and report back. Never merge; the user reviews and merges.
 
