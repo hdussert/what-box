@@ -1,7 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
-import { IMAGE_MIME_TYPES } from '@/lib/image/const'
+import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
 import { createItem } from '@/lib/item/mutations'
 import { revalidatePath } from 'next/cache'
@@ -10,7 +10,7 @@ import { z } from 'zod'
 const CreateItemSchema = z.object({
   boxId: z.string().trim().min(1, 'Box is required'),
   name: z.string().trim().min(1, 'Name is required'),
-  image: z.file().max(4_500_000).mime(IMAGE_MIME_TYPES).optional(),
+  image: z.file().max(MAX_IMAGE_SIZE).mime(IMAGE_MIME_TYPES).optional(),
 
   quantity: z
     .number()
