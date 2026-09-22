@@ -16,4 +16,4 @@ jobs:
           cache: yarn
       - run: yarn install --frozen-lockfile
       - run: yarn tsc --noEmit
-      # TODO: add `yarn lint` once it works with TypeScript 7 (see BACKLOG.md)
+      - run: yarn lint
