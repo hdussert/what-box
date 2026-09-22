@@ -34,9 +34,19 @@ Other features:
 | Validation | [Zod](https://zod.dev) for forms and server actions, `@t3-oss/env-nextjs` for env vars           |
 | Hosting    | [Vercel](https://vercel.com)                                                                     |
 
+## Repo layout
+
+This is a yarn workspaces monorepo. Today it holds a single app:
+
+```
+apps/web/      The Next.js app described below
+```
+
+`apps/mobile/` and `packages/shared/` are planned additions for a future Expo mobile app.
+
 ## Architecture
 
-The code is organized by layer, then by feature (`box`, `item`, `image`, `auth`):
+Inside `apps/web/`, the code is organized by layer, then by feature (`box`, `item`, `image`, `auth`):
 
 ```
 app/           Routing only. Route groups: (marketing) landing page,
@@ -83,11 +93,14 @@ users ──< boxes ──< items
 yarn install
 ```
 
+Run from the repo root — this installs for every workspace (`apps/web`, and any future `apps/*`/`packages/*`) at once.
+
 ### 2. Environment variables
 
-Link the folder to the Vercel project once (`vercel link`), then pull the development variables:
+App-specific scripts (`env:pull`, `db:*`) run from inside `apps/web`. Link the folder to the Vercel project once (`vercel link`), then pull the development variables:
 
 ```bash
+cd apps/web
 yarn env:pull
 ```
 
@@ -107,13 +120,15 @@ This writes `.env.development.local` (git-ignored). Variables are validated on s
 
 There is no local database to install. `DATABASE_URL` points to a hosted Neon Postgres database: the app talks to it over HTTPS through `@neondatabase/serverless`, and Drizzle Kit connects to it with the same URL to run migrations.
 
-Apply the migrations:
+Apply the migrations (from `apps/web`):
 
 ```bash
 yarn db:migrate
 ```
 
 ### 4. Run the development server
+
+From the repo root:
 
 ```bash
 yarn dev
@@ -123,7 +138,7 @@ The app is available at [http://localhost:3000](http://localhost:3000).
 
 ## Database
 
-Schema changes are applied through **migrations**, not `db:push`.
+Schema changes are applied through **migrations**, not `db:push`. The commands below run from `apps/web`.
 
 ### 1) Change the schema
 
@@ -149,18 +164,26 @@ If nothing is applied, check that `drizzle/` contains migration folders and that
 
 ## Scripts
 
-| Script                                 | What it does                             |
-| -------------------------------------- | ---------------------------------------- |
-| `yarn dev`                             | Start the dev server (Turbopack)         |
-| `yarn build` / `yarn start`            | Production build / serve the build       |
-| `yarn lint`                            | Run ESLint                               |
-| `yarn tsc --noEmit`                    | Type-check                               |
-| `yarn env:pull` / `yarn env:pull:prod` | Pull env vars from Vercel (dev / prod)   |
-| `yarn db:generate`                     | Generate a migration from schema changes |
-| `yarn db:migrate`                      | Apply pending migrations                 |
-| `yarn db:studio`                       | Open Drizzle Studio to browse the data   |
+Run from the repo root, delegating to `apps/web`:
 
-There is no test runner yet. Before opening a PR, run `yarn lint` and `yarn tsc --noEmit`. Errors under `.next/types/` come from stale generated files and can be ignored.
+| Script              | What it does                     |
+| ------------------- | --------------------------------- |
+| `yarn dev`          | Start the dev server (Turbopack)  |
+| `yarn build`        | Production build                  |
+| `yarn lint`         | Run ESLint                        |
+| `yarn tsc --noEmit` | Type-check                        |
+
+Run from `apps/web` (not wired to the root yet):
+
+| Script                                  | What it does                             |
+| ---------------------------------------- | ----------------------------------------- |
+| `yarn start`                             | Serve a production build                  |
+| `yarn env:pull` / `yarn env:pull:prod`   | Pull env vars from Vercel (dev / prod)    |
+| `yarn db:generate`                       | Generate a migration from schema changes  |
+| `yarn db:migrate`                        | Apply pending migrations                  |
+| `yarn db:studio`                         | Open Drizzle Studio to browse the data    |
+
+There is no test runner yet. Before opening a PR, run `yarn lint` and `yarn tsc --noEmit` from the repo root. Errors under `.next/types/` come from stale generated files and can be ignored.
 
 ## Contributing
 
