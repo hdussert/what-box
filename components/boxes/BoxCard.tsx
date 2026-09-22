@@ -55,7 +55,7 @@ const BoxCard = ({ box, onClick, isSelected, isSelecting }: BoxCardProps) => {
           <CardDescription className="leading-none whitespace-nowrap text-ellipsis overflow-hidden text-xs">
             {box.items.length
               ? `Items (${box.items.length}) : ${box.items
-                  .map((item, index) => item.name)
+                  .map((item) => item.name)
                   .join(', ')}`
               : 'Empty'}
           </CardDescription>

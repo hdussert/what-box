@@ -4,11 +4,7 @@ import ToolbarButton from '@/components/ToolbarButton'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-type GoBackButtonProps = {
-  className?: string
-}
-
-const GoBackButton = ({ className }: GoBackButtonProps) => {
+const GoBackButton = () => {
   const router = useRouter()
   const goBack = () => {
     router.back()

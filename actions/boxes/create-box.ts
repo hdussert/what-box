@@ -39,7 +39,8 @@ export async function createBoxAction(
   const values: CreateBoxValues = raw
 
   try {
-    const user = await getCurrentUser()
+    // Auth check only: throws when signed out
+    await getCurrentUser()
     const data = CreateBoxSchema.parse(raw)
 
     // Check for uniqueness of shortId for this user
