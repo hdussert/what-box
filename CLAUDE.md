@@ -27,7 +27,7 @@ Every task follows these steps. `/start` and `/finish` run them.
 
 ### Side issues
 
-When you notice something worth addressing that is unrelated to the current task (a bug, tech debt, a missing feature, a doc gap), don't fix it or stop to discuss it. Append a short entry to `BACKLOG.md` at the repo root (create it if missing): what it is, where (`file:line`), and why it matters. Mention it in one line at the end of your turn.
+When you notice something worth addressing that is unrelated to the current task (a bug, tech debt, a missing feature, a doc gap), don't fix it or stop to discuss it. Add a short entry to `BACKLOG.md` under the right priority, tagged with an effort, as the file's legend describes: what it is, where (`file:line`), why it matters, and the likely fix. Mention it in one line at the end of your turn.
 
 ## Design principles
 
