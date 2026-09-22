@@ -40,10 +40,16 @@ This is a yarn workspaces monorepo:
 
 ```
 apps/web/          The Next.js app described below
-packages/shared/   Zod schemas/types shared across apps (e.g. auth validation)
+apps/mobile/        Expo/React Native app - sign in + read-only boxes/items MVP
+packages/shared/    Zod schemas/types shared across apps (e.g. auth validation)
 ```
 
-`apps/mobile/` is a planned addition for a future Expo mobile app, which will depend on `packages/shared/` alongside `apps/web/`.
+`apps/mobile` talks to `apps/web`'s `/api/*` routes (not Server Actions - see
+`apps/web/lib/api/response.ts`), authenticating with a JWT stored via
+`expo-secure-store` instead of the web's session cookie. It doesn't share UI
+with the web app: native RN screens, styled with NativeWind (Tailwind
+classes), only `packages/shared`'s validation schemas are reused. See
+`apps/mobile/README.md` for running it locally.
 
 ## Architecture
 
