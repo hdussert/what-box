@@ -59,6 +59,10 @@ Global guidelines to aim for, not rules to apply blindly. When one conflicts wit
 - The app is dark-only (root layout hardcodes `dark`): no light-mode variants.
 - Mobile-first: base styles for mobile, `sm:`/`md:` for larger screens.
 
+## Side issues
+
+When you notice something worth addressing that is unrelated to the current task (a bug, tech debt, a missing feature, a doc gap), don't fix it or stop to discuss it. Append a short entry to `BACKLOG.md` at the repo root (create it if missing): what it is, where (`file:line`), and why it matters. Mention it in one line at the end of your turn.
+
 ## Git
 
 - Conventional commits (`feat:`, `fix:`, `refactor:`, ...).
