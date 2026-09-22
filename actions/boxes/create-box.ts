@@ -3,7 +3,7 @@
 import { ActionResponse } from '@/actions/types'
 import { createBox, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
-import { IMAGE_MIME_TYPES } from '@/lib/image/const'
+import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
 import { getCurrentUser } from '@/lib/user'
 import { revalidatePath } from 'next/cache'
@@ -11,7 +11,7 @@ import { z } from 'zod'
 
 const CreateBoxSchema = z.object({
   name: z.string().trim().min(1, 'Name is required'),
-  image: z.file().max(4_500_000).mime(IMAGE_MIME_TYPES).optional(),
+  image: z.file().max(MAX_IMAGE_SIZE).mime(IMAGE_MIME_TYPES).optional(),
 })
 
 type CreateBoxData = z.infer<typeof CreateBoxSchema>
