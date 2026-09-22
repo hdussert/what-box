@@ -36,6 +36,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# apps/mobile/.env has no secrets (EXPO_PUBLIC_* vars are inlined into the JS
+# bundle) and needs to be committed for the app to run out of the box -
+# personal overrides still go in .env.local, which stays ignored.
+!apps/mobile/.env
 
 # vercel
 .vercel

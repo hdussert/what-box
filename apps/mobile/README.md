@@ -14,10 +14,13 @@ yarn workspace web dev    # the API this app calls - keep it running
 yarn workspace mobile ios # or: android / web
 ```
 
-`.env` defaults `EXPO_PUBLIC_API_URL` to `http://localhost:3000`, which the
-iOS Simulator can reach directly. From a physical device or the Android
-emulator, override it with the dev machine's LAN IP instead (see the same
-constraint on `apps/web`'s `allowedDevOrigins` in `next.config.ts`).
+`.env` defaults `EXPO_PUBLIC_API_URL` to the dev machine's LAN IP, not
+`localhost` - the Android emulator's `localhost` points at the emulator
+itself, not the host, so it needs the real IP (a LAN IP also works fine from
+the iOS Simulator and a physical device on the same Wi-Fi, so one value
+covers every target). If your machine's IP isn't `192.168.1.64`, update both
+this `.env` and `apps/web`'s `allowedDevOrigins` in `next.config.ts` - the
+web dev server won't accept the request otherwise.
 
 ## How it talks to the backend
 
