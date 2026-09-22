@@ -4,8 +4,12 @@ import { ActionResponse } from '@/actions/types'
 import { ForgotPasswordEmailTemplate } from '@/components/auth/ForgotPasswordEmailTemplate'
 import { env } from '@/env'
 import { resend } from '@/lib/email/resend'
-import { generateJWT } from '@/lib/session'
-import { getUserByEmail } from '@/lib/user'
+import { generateResetToken } from '@/lib/session'
+import {
+  canRequestPasswordReset,
+  getUserByEmail,
+  recordPasswordResetRequest,
+} from '@/lib/user'
 import { z } from 'zod'
 
 const ForgotPasswordSchema = z.object({
@@ -34,9 +38,13 @@ export async function forgotPasswordAction(
 
     // Find user by email
     const user = await getUserByEmail(data.email)
-    console.log(user)
-    if (user) {
-      const token = await generateJWT({ userId: user.id })
+
+    // Same generic response whether the account doesn't exist or the
+    // cooldown is active - neither is revealed to the caller.
+    if (user && canRequestPasswordReset(user)) {
+      await recordPasswordResetRequest(user.id)
+
+      const token = await generateResetToken(user.id)
 
       // TODO : env variable for domain name
       const domain =

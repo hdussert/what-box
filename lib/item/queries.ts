@@ -39,9 +39,10 @@ export async function getItems(
     where: {
       userId: user.id,
       boxId,
-      name: {
-        ilike: `%${search}%`,
-      },
+      // Only filter by name when there's an actual search term - same fix
+      // as getBoxes() (lib/box/queries.ts): omitting this when `search` is
+      // falsy previously built the literal pattern `%undefined%`.
+      ...(search ? { name: { ilike: `%${search}%` } } : {}),
     },
     orderBy: (table, { desc, asc }) => toOrderBy(query.sort, table, desc, asc),
     limit: 20,

@@ -64,10 +64,17 @@ export async function getBoxes(
   const boxesResult = await db.query.boxes.findMany({
     where: {
       userId: user.id,
-      OR: [
-        { name: { ilike: `%${search}%` } },
-        { id: { in: boxIdsWithMatchingItem } },
-      ],
+      // Only filter by name/item match when there's an actual search term -
+      // omitting this when `search` is falsy previously built the pattern
+      // `%undefined%`, which matched nothing.
+      ...(search
+        ? {
+            OR: [
+              { name: { ilike: `%${search}%` } },
+              { id: { in: boxIdsWithMatchingItem } },
+            ],
+          }
+        : {}),
     },
     orderBy: (table, { desc, asc }) => toOrderBy(query.sort, table, desc, asc),
     limit: 20,
