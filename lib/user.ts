@@ -3,6 +3,7 @@ import { User, users } from '@/db/schema'
 import { hashPassword, verifyPassword } from '@/lib/password'
 import { getSession } from '@/lib/session'
 import { eq } from 'drizzle-orm'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import 'server-only'
@@ -139,11 +140,17 @@ export const getUserById = cache(async (id: string) => {
 
 /**
  * Get the currently authenticated user based on the session.
- * If no user is authenticated, redirects to the sign-in page.
+ * If no user is authenticated, redirects to the sign-in page, with the
+ * requested path (set by `proxy.ts`) as `next` so sign-in can return there.
  */
 export const getCurrentUser = async () => {
   const user = await getSession()
-  if (!user) redirect('/')
+  if (!user) {
+    const pathname = (await headers()).get('x-pathname')
+    redirect(
+      pathname ? `/sign-in?next=${encodeURIComponent(pathname)}` : '/sign-in',
+    )
+  }
 
   return user
 }
