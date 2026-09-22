@@ -1,5 +1,6 @@
 import { db } from '@/db'
 import { Item, items } from '@/db/schema'
+import { getBoxById } from '@/lib/box/queries'
 import { StoredImage } from '@/lib/image/types'
 import { CreateItemData, UpdateItemData } from '@/lib/item/types'
 import { getCurrentUser } from '@/lib/user'
@@ -47,6 +48,15 @@ export async function updateItemImage(
 
 export async function createItem(data: CreateItemData): Promise<Item> {
   const user = await getCurrentUser()
+
+  // boxId comes straight from the caller - without this, anyone could plant
+  // an item inside another user's box (the boxes -> items relation has no
+  // userId filter, so it'd show up when that user views their box).
+  const box = await getBoxById(data.boxId)
+  if (!box) {
+    throw new Error('Box not found')
+  }
+
   const [newItem] = await db
     .insert(items)
     .values({ ...data, userId: user.id })

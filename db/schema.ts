@@ -33,6 +33,14 @@ export const users = snakeCase.table('users', {
   email: text().notNull().unique(),
   password: text().notNull(),
   tokenInvalidBefore: timestamp().notNull().defaultNow(),
+
+  // Sign-in lockout: failedLoginAttempts resets to 0 on a successful sign-in;
+  // at 5 it sets lockedUntil, which sign-in checks before verifying the
+  // password at all.
+  failedLoginAttempts: integer().notNull().default(0),
+  lockedUntil: timestamp(),
+  // Cooldown between forgot-password requests for the same account.
+  lastPasswordResetRequestAt: timestamp(),
 })
 
 export const boxes = snakeCase.table('boxes', {
