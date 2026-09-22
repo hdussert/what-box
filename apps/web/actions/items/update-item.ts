@@ -2,14 +2,15 @@
 
 import { ActionResponse } from '@/actions/types'
 import { updateItem } from '@/lib/item'
+import { UpdateItemSchema as UpdateItemBaseSchema } from '@what-box/shared'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const UpdateItemSchema = z.object({
-  id: z.string().trim().min(1, 'Item is required'),
+// boxId isn't part of updateItem()'s own contract (lib/item/types.ts) - the
+// web action only needs it locally, for revalidatePath and its own form
+// values, so it stays out of the shared base schema.
+const UpdateItemSchema = UpdateItemBaseSchema.extend({
   boxId: z.string().trim().min(1, 'BoxId is required'),
-  name: z.string().trim().min(1, 'Name is required'),
-  quantity: z.number().int().min(1, 'Quantity must be 0 or more'),
 })
 
 type UpdateItemData = z.infer<typeof UpdateItemSchema>
@@ -39,12 +40,14 @@ export async function updateItemAction(
   try {
     const data = UpdateItemSchema.parse(raw)
 
-    // Create item
     const item = await updateItem({
       id: data.id,
       name: data.name,
       quantity: data.quantity,
     })
+    if (!item) {
+      throw new Error('Failed to update the item')
+    }
 
     revalidatePath(`/boxes/${data.boxId}`)
 

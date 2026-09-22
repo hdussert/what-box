@@ -4,19 +4,14 @@ import { ActionResponse } from '@/actions/types'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
 import { createItem } from '@/lib/item/mutations'
+import { CreateItemSchema as CreateItemBaseSchema } from '@what-box/shared'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const CreateItemSchema = z.object({
-  boxId: z.string().trim().min(1, 'Box is required'),
-  name: z.string().trim().min(1, 'Name is required'),
+// Same image-attached-in-one-submission vs. create-then-upload split as
+// create-box.ts - see the comment there.
+const CreateItemSchema = CreateItemBaseSchema.extend({
   image: z.file().max(MAX_IMAGE_SIZE).mime(IMAGE_MIME_TYPES).optional(),
-
-  quantity: z
-    .number()
-    .int()
-    .min(1, 'Quantity must be 0 or more')
-    .max(2147483647, 'Quantity must be 2147483647 or less'),
 })
 
 type CreateItemData = z.infer<typeof CreateItemSchema>
@@ -47,12 +42,14 @@ export async function createItemAction(
   try {
     const data = CreateItemSchema.parse(raw)
 
-    // Create item
     const item = await createItem({
       boxId: data.boxId,
       name: data.name,
       quantity: data.quantity,
     })
+    if (!item) {
+      throw new Error('Box not found')
+    }
 
     // Upload image
     if (data.image) {
