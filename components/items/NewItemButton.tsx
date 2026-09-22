@@ -2,6 +2,7 @@
 
 import ToolbarButton from '@/components/ToolbarButton'
 import NewItemForm from '@/components/items/NewItemForm'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import { Field, FieldLabel } from '@/components/ui/field'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
@@ -26,8 +28,28 @@ type NewItemButtonProps = {
 
 export function NewItemButton({ boxId }: NewItemButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [keepOpen, setKeepOpen] = useState(false)
 
   const isMobile = useIsMobile()
+
+  const handleSuccess = () => {
+    if (!keepOpen) {
+      setIsOpen(false)
+    }
+  }
+
+  const keepOpenCheckbox = (
+    <Field orientation="horizontal" className="w-fit gap-2">
+      <Checkbox
+        id="keep-open"
+        checked={keepOpen}
+        onCheckedChange={(checked) => setKeepOpen(checked === true)}
+      />
+      <FieldLabel htmlFor="keep-open" className="text-sm font-normal">
+        Keep open
+      </FieldLabel>
+    </Field>
+  )
 
   if (isMobile) {
     return (
@@ -38,10 +60,11 @@ export function NewItemButton({ boxId }: NewItemButtonProps) {
           </ToolbarButton>
         </DrawerTrigger>
         <DrawerContent className="px-3 mb-6">
-          <DrawerHeader>
+          <DrawerHeader className="flex-row items-center justify-between">
             <DrawerTitle>New item</DrawerTitle>
+            {keepOpenCheckbox}
           </DrawerHeader>
-          <NewItemForm boxId={boxId} onSuccess={() => setIsOpen(false)} />
+          <NewItemForm boxId={boxId} onSuccess={handleSuccess} />
         </DrawerContent>
       </Drawer>
     )
@@ -54,10 +77,11 @@ export function NewItemButton({ boxId }: NewItemButtonProps) {
         </ToolbarButton>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
+        <DialogHeader className="flex-row items-center justify-between pr-6">
           <DialogTitle>New item</DialogTitle>
+          {keepOpenCheckbox}
         </DialogHeader>
-        <NewItemForm boxId={boxId} onSuccess={() => setIsOpen(false)} />
+        <NewItemForm boxId={boxId} onSuccess={handleSuccess} />
       </DialogContent>
     </Dialog>
   )
