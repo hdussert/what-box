@@ -43,7 +43,11 @@ export const env = createEnv({
 
     RESEND_API_KEY: process.env.RESEND_API_KEY,
 
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_APP_URL:
+      process.env.NEXT_PUBLIC_APP_URL ??
+      // Preview deploys: Vercel's per-branch URL (a system env var, exposed at build time)
+      (process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL &&
+        `https://${process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL}`),
   },
 
   /**

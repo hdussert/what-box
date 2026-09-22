@@ -46,13 +46,7 @@ export async function forgotPasswordAction(
 
       const token = await generateResetToken(user.id)
 
-      // TODO : env variable for domain name
-      const domain =
-        env.NODE_ENV === 'production'
-          ? 'https://whatbox.vercel.app/'
-          : 'http://localhost:3001'
-
-      const resetPasswordLink = `${domain}/reset-password?token=${token}`
+      const resetPasswordLink = `${env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`
 
       // TODO: handle errors (not sure if it throws properly)
       resend.emails.send({
