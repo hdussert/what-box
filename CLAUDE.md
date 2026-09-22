@@ -64,6 +64,7 @@ Global guidelines to aim for, not rules to apply blindly. When one conflicts wit
 - Conventional commits (`feat:`, `fix:`, `refactor:`, ...).
 - Work on branches and open PRs into `main`.
 - When starting a new task, create a new branch from `main` and open a draft PR immediately. When the work is done, mark the PR ready for review.
+- Keep PR titles and descriptions concise: cut filler and repetition, but keep every piece of information a reviewer needs (what changed, why, caveats, how to verify).
 
 ## Next.js
 
