@@ -15,7 +15,10 @@ export async function deleteImageAction(
   data: DeleteImageData,
 ): Promise<ActionResponse> {
   try {
-    await deleteImage(DeleteImageSchema.parse(data))
+    const deleted = await deleteImage(DeleteImageSchema.parse(data))
+    if (!deleted) {
+      return { success: false, message: 'No image found' }
+    }
 
     return {
       success: true,

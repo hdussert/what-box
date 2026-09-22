@@ -23,15 +23,15 @@ export async function saveImage(data: UploadImageData): Promise<void> {
   }
 }
 
-/** Remove the box's (or the item's) image and delete its file */
+/** Remove the box's (or the item's) image and delete its file. Returns false if there was no image to remove. */
 export async function deleteImage({
   boxId,
   itemId,
-}: ImageOwner): Promise<void> {
+}: ImageOwner): Promise<boolean> {
   const owner = itemId ? await getItemById(itemId) : await getBoxById(boxId)
   const pathname = owner?.imagePathname
   if (!pathname) {
-    throw new Error('No image found')
+    return false
   }
 
   if (itemId) {
@@ -46,4 +46,6 @@ export async function deleteImage({
   } catch (error) {
     console.error('Failed to delete image file', { pathname, error })
   }
+
+  return true
 }
