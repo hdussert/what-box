@@ -6,11 +6,15 @@ import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
 import { getCurrentUser } from '@/lib/user'
+import { CreateBoxSchema as CreateBoxBaseSchema } from '@what-box/shared'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const CreateBoxSchema = z.object({
-  name: z.string().trim().min(1, 'Name is required'),
+// The web form can attach an image in the same submission; the mobile API
+// (packages/shared's CreateBoxSchema) creates the box first and attaches an
+// image via a separate multipart endpoint - so this field stays local
+// instead of going in the shared base schema.
+const CreateBoxSchema = CreateBoxBaseSchema.extend({
   image: z.file().max(MAX_IMAGE_SIZE).mime(IMAGE_MIME_TYPES).optional(),
 })
 

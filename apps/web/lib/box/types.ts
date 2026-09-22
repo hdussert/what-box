@@ -15,7 +15,7 @@ export type BoxesQuery = {
 export type BoxWithRelations = Box & { items: Item[] }
 export type BoxesPaginated = Paginated<BoxWithRelations>
 
-export type UpdateBoxData = {
-  id: string
-  name: string
-}
+// The canonical shape lives in @what-box/shared (its UpdateBoxSchema) -
+// re-exported here so lib/box/mutations.ts doesn't need to reach outside
+// the domain for its own function signature.
+export type { UpdateBoxData } from '@what-box/shared'

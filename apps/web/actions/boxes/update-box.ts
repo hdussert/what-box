@@ -2,15 +2,11 @@
 
 import { ActionResponse } from '@/actions/types'
 import { updateBox } from '@/lib/box'
+import { UpdateBoxData, UpdateBoxSchema } from '@what-box/shared'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const UpdateBoxSchema = z.object({
-  id: z.string().trim().min(1, 'Box is required'),
-  name: z.string().trim().min(1, 'Name is required'),
-})
-
-type UpdateBoxValues = z.infer<typeof UpdateBoxSchema>
+type UpdateBoxValues = UpdateBoxData
 
 type UpdateBoxResult = {
   id: string
@@ -35,6 +31,9 @@ export async function updateBoxAction(
     const data = UpdateBoxSchema.parse(raw)
 
     const box = await updateBox(data)
+    if (!box) {
+      throw new Error('Failed to update the box')
+    }
 
     revalidatePath(`/boxes/${box.id}`)
     revalidatePath('/dashboard')
