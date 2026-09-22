@@ -1,7 +1,14 @@
+import { ForgotPasswordEmailTemplate } from '@/components/auth/ForgotPasswordEmailTemplate'
 import { db } from '@/db'
 import { User, users } from '@/db/schema'
+import { env } from '@/env'
+import { resend } from '@/lib/email/resend'
 import { hashPassword, verifyPassword } from '@/lib/password'
-import { getSession } from '@/lib/session'
+import {
+  generateResetToken,
+  getSession,
+  verifyResetToken,
+} from '@/lib/session'
 import { eq } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
@@ -9,6 +16,8 @@ import 'server-only'
 
 const MAX_FAILED_LOGIN_ATTEMPTS = 5
 const LOCKOUT_DURATION_MS = 15 * 60 * 1000
+// Prevents spamming an inbox with reset links / farming reset tokens.
+const RESET_REQUEST_COOLDOWN_MS = 5 * 60 * 1000
 
 // Create a new user
 export async function createUser(email: string, password: string) {
@@ -105,6 +114,63 @@ async function recordFailedLogin(user: User) {
     .update(users)
     .set({ failedLoginAttempts, lockedUntil })
     .where(eq(users.id, user.id))
+}
+
+/**
+ * Sends a password-reset email if the account exists and isn't in its
+ * cooldown window. Always resolves - silently no-ops for an unknown email
+ * or an active cooldown, so the caller can return the same generic response
+ * either way (shared by the web action and the mobile API route).
+ */
+export async function requestPasswordReset(email: string): Promise<void> {
+  const user = await getUserByEmail(email)
+  if (!user) return
+
+  const cooldownActive =
+    user.lastPasswordResetRequestAt &&
+    Date.now() - user.lastPasswordResetRequestAt.getTime() <
+      RESET_REQUEST_COOLDOWN_MS
+  if (cooldownActive) return
+
+  await db
+    .update(users)
+    .set({ lastPasswordResetRequestAt: new Date() })
+    .where(eq(users.id, user.id))
+
+  const token = await generateResetToken(user.id)
+
+  // TODO : env variable for domain name
+  const domain =
+    env.NODE_ENV === 'production'
+      ? 'https://whatbox.vercel.app/'
+      : 'http://localhost:3001'
+  const resetPasswordLink = `${domain}/reset-password?token=${token}`
+
+  // TODO: handle errors (not sure if it throws properly)
+  resend.emails.send({
+    from: 'WhatBox <whatbox@hdussert.com>',
+    to: [user.email],
+    subject: 'Password reset',
+    react: ForgotPasswordEmailTemplate({ email: user.email, link: resetPasswordLink }),
+  })
+}
+
+export type ResetPasswordResult =
+  | { status: 'ok'; user: User }
+  | { status: 'invalid'; error: string }
+
+/** Verifies a reset token and updates the password if valid. Caller is responsible for the session. */
+export async function resetPassword(
+  token: string,
+  password: string,
+): Promise<ResetPasswordResult> {
+  const { valid, user, error } = await verifyResetToken(token)
+  if (!valid || !user) {
+    return { status: 'invalid', error: error ?? 'Invalid or expired token' }
+  }
+
+  await updatePassword(user.id, password)
+  return { status: 'ok', user }
 }
 
 export const getUserById = cache(async (id: string) => {

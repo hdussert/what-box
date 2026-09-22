@@ -1,22 +1,11 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
-import { createSession, verifyResetToken } from '@/lib/session'
-import { updatePassword } from '@/lib/user'
+import { createSession } from '@/lib/session'
+import { resetPassword } from '@/lib/user'
+import { ResetPasswordData, ResetPasswordSchema } from '@what-box/shared'
 import { z } from 'zod'
 
-// Define Zod schema for signup validation
-const ResetPasswordSchema = z
-  .object({
-    password: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
-
-export type ResetPasswordData = z.infer<typeof ResetPasswordSchema>
 export type ResetPasswordValues = ResetPasswordData
 export type ResetPasswordState = ActionResponse & {
   values: ResetPasswordValues
@@ -40,15 +29,13 @@ export async function resetPasswordAction(
   try {
     const { password } = ResetPasswordSchema.parse(raw)
 
-    const { valid, user, error } = await verifyResetToken(token)
-    if (!valid || !user) {
-      throw new Error(error)
+    const result = await resetPassword(token, password)
+    if (result.status === 'invalid') {
+      throw new Error(result.error)
     }
 
-    await updatePassword(user.id, password)
-
     // Create session for the newly registered user
-    await createSession(user.id)
+    await createSession(result.user.id)
 
     return {
       success: true,
