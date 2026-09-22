@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Package manager is **yarn** (v1, `yarn.lock` is committed). Don't use npm, or it'll create a `package-lock.json`.
 - Every `db:*` script has a `:prod` variant that runs against the **production** database.
 - There is no test runner.
-- TypeScript runs side by side: `tsc` is TS 7 (installed as `@typescript/native`), and the `typescript` package is aliased to the TS 6 API (`@typescript/typescript6`), because typescript-eslint doesn't support TS 7 yet. Don't "fix" the alias.
+- TypeScript is pinned to 6: typescript-eslint doesn't support TS 7 yet. Don't upgrade it, and don't use a TS 6/7 side-by-side alias either: Next 16 then decides TypeScript is missing and auto-installs TS 7 over it (see `BACKLOG.md`).
 
 ## Invariants
 

@@ -27,5 +27,5 @@ _Nothing right now._
 ## 🟢 Low
 
 - `S` **19 source files aren't prettier-formatted**, mostly shadcn `components/ui/*`, plus `hooks/useIsMobile.ts`, `lib/user.ts` and `lib/utils.ts`. The prettier hook will reformat each one the first time it's edited, which adds noise to that diff. Format them all in one commit.
-- `S` **Drop the TypeScript 6 alias** once typescript-eslint supports TS 7 (tracking: typescript-eslint#10940). In `package.json`, set `"typescript"` back to `^7` and remove `@typescript/native`, then remove the gotcha from `CLAUDE.md`.
+- `S` **Move back to TypeScript 7** once typescript-eslint supports it (tracking: typescript-eslint#10940). Set `"typescript"` to `^7` in `package.json`, check that `yarn lint` and `next dev` both work, then remove the gotcha from `CLAUDE.md`.
 - `S` **Parallel sessions with worktrees** (an idea, not a problem). Once reviewing PRs feels routine, run several tasks at once in separate worktrees (`claude --worktree`).
