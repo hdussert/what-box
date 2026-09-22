@@ -13,9 +13,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Authorization lives in the data layer, not in route guards (there is no middleware). Every `lib/*` query or mutation must call `getCurrentUser()` and scope its `where` by `userId`.
 - Deleting a box or item cascades in the DB but not in Vercel Blob. Remove image files through `lib/image`.
 
-## Before finishing a task
+## Workflow
 
-Run `yarn lint` and `yarn tsc --noEmit`. Errors under `.next/types/` come from stale generated files, not your change; only errors in source files count.
+Every task follows these steps. `/start` and `/finish` run them.
+
+1. **Start**: branch from an up-to-date `main` (`feat/…`, `fix/…`, `refactor/…`, `docs/…`), push it and open a draft PR right away.
+2. **Plan**: for non-trivial tasks (several files, a new feature, a schema change, anything ambiguous), propose a plan and wait for approval. Trivial fixes skip this step.
+3. **Implement**: small conventional commits. Stay on the task: log side issues (see below) instead of fixing them.
+4. **Verify**: `yarn lint` and `yarn tsc --noEmit`. Errors under `.next/types/` come from stale generated files, not your change; only errors in source files count. For UI changes, run the app and check the change in the browser.
+5. **Self-review**: run `/code-review` on the diff and fix the findings that hold up.
+6. **Finish**: update the PR title and description, mark the PR ready and report back. Never merge; the user reviews and merges.
+
+### Side issues
+
+When you notice something worth addressing that is unrelated to the current task (a bug, tech debt, a missing feature, a doc gap), don't fix it or stop to discuss it. Append a short entry to `BACKLOG.md` at the repo root (create it if missing): what it is, where (`file:line`), and why it matters. Mention it in one line at the end of your turn.
 
 ## Design principles
 
@@ -59,15 +70,10 @@ Global guidelines to aim for, not rules to apply blindly. When one conflicts wit
 - The app is dark-only (root layout hardcodes `dark`): no light-mode variants.
 - Mobile-first: base styles for mobile, `sm:`/`md:` for larger screens.
 
-## Side issues
-
-When you notice something worth addressing that is unrelated to the current task (a bug, tech debt, a missing feature, a doc gap), don't fix it or stop to discuss it. Append a short entry to `BACKLOG.md` at the repo root (create it if missing): what it is, where (`file:line`), and why it matters. Mention it in one line at the end of your turn.
-
 ## Git
 
 - Conventional commits (`feat:`, `fix:`, `refactor:`, ...).
-- Work on branches and open PRs into `main`.
-- When starting a new task, create a new branch from `main` and open a draft PR immediately. When the work is done, mark the PR ready for review.
+- Never commit to or push `main` directly, and never force-push.
 - Keep PR titles and descriptions concise: cut filler and repetition, but keep every piece of information a reviewer needs (what changed, why, caveats, how to verify).
 
 ## Next.js
