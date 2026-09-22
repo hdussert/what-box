@@ -2,15 +2,29 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+WhatBox is a Next.js app to inventory what's stored in boxes (Postgres/Drizzle, Vercel Blob images, custom JWT auth). See the README's **Architecture** section for the folder layout and how reads and writes flow.
+
+## Commands
+
+- `yarn dev`: start the dev server.
+- `yarn lint`, `yarn tsc --noEmit`: the checks to run before finishing.
+- `yarn prettier --write <files>`: format edited files (there's no script; config is no semicolons, single quotes).
+- `yarn env:pull`: fetch dev env vars into `.env.development.local`.
+
 ## Gotchas
 
 - Package manager is **yarn**. `package-lock.json` is stale; ignore it.
-- Every `db:*` script has a `:prod` variant that runs against the **production** database.
 - There is no test runner.
+
+## Database
+
+- Schema lives in `db/schema.ts` (relations in `db/relations.ts`). To change it: edit the schema, run `yarn db:generate`, then `yarn db:migrate`, and commit the new folder in `drizzle/`. Don't use `db:push`: it skips migrations.
+- `db:*:prod` scripts run against the **production** database (`.env.production.local` is present locally). Never run one unless the user explicitly asks.
 
 ## Invariants
 
 - Authorization lives in the data layer, not in route guards (there is no middleware). Every `lib/*` query or mutation must call `getCurrentUser()` and scope its `where` by `userId`.
+- `lib/*` queries, mutations and storage modules import `'server-only'`. Import a domain through its barrel where one exists (`@/lib/box`, `@/lib/item`).
 - Deleting a box or item cascades in the DB but not in Vercel Blob. Remove image files through `lib/image`.
 
 ## Before finishing a task
@@ -49,7 +63,7 @@ Global guidelines to aim for, not rules to apply blindly. When one conflicts wit
 ### Actions and forms
 
 - Every mutation is a `'use server'` action, validated with a zod schema and consumed through `useActionState`.
-- Actions return errors (`ActionResponse` with `errors`/`message` and echoed `values`) instead of throwing.
+- Actions return errors instead of throwing. Each exports its state type as `ActionResponse & { values, result? }` and echoes the submitted `values` on failure (reference: `actions/items/update-item.ts`).
 - Actions call `lib/<domain>` and never touch `db` directly.
 - Call `revalidatePath` after every mutation for the pages it affects.
 
