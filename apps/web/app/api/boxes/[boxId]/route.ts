@@ -16,7 +16,6 @@ export async function GET(request: Request, { params }: RouteParams) {
     if (!box) {
       return NextResponse.json({ error: 'Box not found' }, { status: 404 })
     }
-
     return box
   })
 }

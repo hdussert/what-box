@@ -1,4 +1,4 @@
-import { Image } from 'expo-image'
+import { Image } from '@/components/ui/Image'
 import { Text, View } from 'react-native'
 
 type ItemRowProps = {
@@ -11,7 +11,11 @@ export function ItemRow({ name, quantity, imageUrl }: ItemRowProps) {
   return (
     <View className="flex-row items-center gap-3 rounded-xl bg-neutral-900 p-3">
       {imageUrl ? (
-        <Image source={{ uri: imageUrl }} className="h-12 w-12 rounded-lg bg-neutral-800" />
+        <Image
+          source={{ uri: imageUrl }}
+          className="h-12 w-12 rounded-lg bg-neutral-800"
+          contentFit="cover"
+        />
       ) : (
         <View className="h-12 w-12 rounded-lg bg-neutral-800" />
       )}

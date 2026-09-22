@@ -1,6 +1,6 @@
 import { ItemRow } from '@/components/ItemRow'
+import { Image } from '@/components/ui/Image'
 import { useBox } from '@/hooks/useBox'
-import { Image } from 'expo-image'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import { ActivityIndicator, FlatList, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -32,6 +32,7 @@ export default function BoxDetailScreen() {
                 <Image
                   source={{ uri: box.imageUrl }}
                   className="h-32 w-32 rounded-xl bg-neutral-800"
+                  contentFit="cover"
                 />
               )}
               <Text className="text-2xl font-semibold text-neutral-50">{box.name}</Text>
