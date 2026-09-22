@@ -59,7 +59,6 @@ const ItemCard = ({ item, isSelected, isFocused }: ItemCardProps) => {
           itemId={item.id}
           boxId={item.boxId}
           imageUrl={item.imageUrl}
-          isEditing={isEditing}
           isInputDisabled={!isFocused}
           className={cn('relative size-20 transition-all', {
             'size-40': isFocused,

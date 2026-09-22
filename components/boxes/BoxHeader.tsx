@@ -16,7 +16,6 @@ const BoxHeader = ({ box }: BoxHeaderProps) => {
         <EditableImage
           boxId={box.id}
           imageUrl={box.imageUrl}
-          isEditing
           className="aspect-square flex-1"
         />
         <div className="flex flex-col text-center justify-center flex-2 gap-2 min-w-0">
