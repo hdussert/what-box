@@ -1,7 +1,7 @@
 import { env } from '@/env'
 import { getUserById } from '@/lib/user'
 import * as jose from 'jose'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import 'server-only'
 
 // JWT types
@@ -99,9 +99,22 @@ export async function createSession(userId: string) {
   }
 }
 
-export async function getSession() {
+// Web reads the session from the `auth_token` cookie. Mobile has no cookie jar,
+// so it authenticates with an `Authorization: Bearer <token>` header instead -
+// same JWT, same verification, just a different place to find it.
+async function getSessionToken(): Promise<string | null> {
+  const headerStore = await headers()
+  const authHeader = headerStore.get('authorization')
+  if (authHeader?.startsWith('Bearer ')) {
+    return authHeader.slice('Bearer '.length)
+  }
+
   const cookieStore = await cookies()
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value
+  return cookieStore.get(SESSION_COOKIE_NAME)?.value ?? null
+}
+
+export async function getSession() {
+  const token = await getSessionToken()
   if (!token) return null
 
   // TODO: Check errors, display toasts (like "Session expired")

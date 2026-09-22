@@ -1,16 +1,9 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
-import { verifyPassword } from '@/lib/password'
 import { createSession } from '@/lib/session'
-import { getUserByEmail } from '@/lib/user'
+import { SignInSchema, verifyCredentials } from '@/lib/user'
 import { z } from 'zod'
-
-// Define Zod schema for signin validation
-const SignInSchema = z.object({
-  email: z.email('Invalid email format').min(1, 'Email is required'),
-  password: z.string().min(1, 'Password is required'),
-})
 
 export type SignInData = z.infer<typeof SignInSchema>
 type SignInValues = Pick<SignInData, 'email'>
@@ -32,15 +25,8 @@ export async function signInAction(
     // Validate with Zod
     const data = SignInSchema.parse(raw)
 
-    // Find user by email
-    const user = await getUserByEmail(data.email)
+    const user = await verifyCredentials(data.email, data.password)
     if (!user) {
-      throw new Error('Invalid email or password')
-    }
-
-    // Verify password
-    const isPasswordValid = await verifyPassword(data.password, user.password)
-    if (!isPasswordValid) {
       throw new Error('Invalid email or password')
     }
 

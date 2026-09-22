@@ -1,11 +1,17 @@
 import { db } from '@/db'
 import { users } from '@/db/schema'
-import { hashPassword } from '@/lib/password'
+import { hashPassword, verifyPassword } from '@/lib/password'
 import { getSession } from '@/lib/session'
 import { eq } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import 'server-only'
+import { z } from 'zod'
+
+export const SignInSchema = z.object({
+  email: z.email('Invalid email format').min(1, 'Email is required'),
+  password: z.string().min(1, 'Password is required'),
+})
 
 // Create a new user
 export async function createUser(email: string, password: string) {
@@ -48,6 +54,20 @@ export const getUserByEmail = cache(async (email: string) => {
     where: { email },
   })
 })
+
+/**
+ * Verify email/password credentials. Returns the user on success, or null
+ * if the email is unknown or the password doesn't match.
+ */
+export async function verifyCredentials(email: string, password: string) {
+  const user = await getUserByEmail(email)
+  if (!user) return null
+
+  const isPasswordValid = await verifyPassword(password, user.password)
+  if (!isPasswordValid) return null
+
+  return user
+}
 
 export const getUserById = cache(async (id: string) => {
   return db.query.users.findFirst({
