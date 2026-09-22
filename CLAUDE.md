@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Package manager is **yarn**. `package-lock.json` is stale; ignore it.
 - Every `db:*` script has a `:prod` variant that runs against the **production** database.
 - There is no test runner.
+- `yarn lint` currently crashes (typescript-eslint doesn't support TypeScript 7; see `BACKLOG.md`). Skip it until that's fixed.
 
 ## Invariants
 
