@@ -2,10 +2,9 @@
 
 import { addImageAction } from '@/actions/images/add-image'
 import { deleteImageAction } from '@/actions/images/delete-image'
+import EditableImageMenu from '@/components/images/EditableImageMenu'
 import ImageInput from '@/components/images/ImageInput'
 import ImagePreview from '@/components/images/ImagePreview'
-import { Button } from '@/components/ui/button'
-import { Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useTransition } from 'react'
 import { toast } from 'sonner'
@@ -14,14 +13,12 @@ type EditableImageProps = {
   itemId?: string
   boxId: string
   imageUrl?: string | null
-  isEditing?: boolean
   className?: string
   isInputDisabled?: boolean
 }
 
 const EditableImage = ({
   imageUrl,
-  isEditing,
   isInputDisabled,
   itemId,
   boxId,
@@ -31,16 +28,12 @@ const EditableImage = ({
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  const handleChange = () => {
+  useEffect(() => {
     if (!newImage) {
       return
     }
     startTransition(async () => {
-      const result = await addImageAction({
-        image: newImage,
-        itemId: itemId,
-        boxId: boxId,
-      })
+      const result = await addImageAction({ image: newImage, itemId, boxId })
       if (result.success) {
         toast.success('Image uploaded !')
         router.refresh()
@@ -48,7 +41,7 @@ const EditableImage = ({
         toast.error('Could not upload the image.')
       }
     })
-  }
+  }, [newImage])
 
   const deleteImage = () => {
     if (!imageUrl) {
@@ -66,24 +59,30 @@ const EditableImage = ({
     })
   }
 
-  useEffect(() => {
-    handleChange()
-  }, [newImage])
+  const replaceImage = (image: File) => {
+    startTransition(async () => {
+      const deleteResult = await deleteImageAction({ boxId, itemId })
+      if (!deleteResult.success) {
+        toast.error('Could not replace the image.')
+        return
+      }
+      const addResult = await addImageAction({ image, itemId, boxId })
+      if (addResult.success) {
+        toast.success('Image replaced !')
+        router.refresh()
+      } else {
+        toast.error('Could not replace the image.')
+      }
+    })
+  }
 
   return imageUrl ? (
     <ImagePreview src={imageUrl} alt="Image" className={className}>
-      {isEditing ? (
-        <Button
-          type="button"
-          variant="secondary"
-          size="icon-sm"
-          className="absolute top-2 right-2"
-          disabled={isPending}
-          onClick={deleteImage}
-        >
-          <Trash />
-        </Button>
-      ) : null}
+      <EditableImageMenu
+        disabled={isPending}
+        onReplace={replaceImage}
+        onDelete={deleteImage}
+      />
     </ImagePreview>
   ) : (
     <ImageInput

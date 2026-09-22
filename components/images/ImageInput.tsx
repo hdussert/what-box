@@ -2,7 +2,11 @@ import ImageInputClearButton from '@/components/images/ImageInputClearButton'
 import ImageInputPreview from '@/components/images/ImageInputPreview'
 import { FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { IMAGE_MIME_TYPES } from '@/lib/image/const'
+import {
+  IMAGE_MIME_TYPES,
+  MAX_IMAGE_SIZE,
+  MAX_IMAGE_SIZE_READABLE,
+} from '@/lib/image/const'
 import { cn } from '@/lib/utils'
 import { ImagePlus, LoaderCircle } from 'lucide-react'
 import { InputHTMLAttributes, useRef, useState } from 'react'
@@ -17,9 +21,6 @@ type ImageInputProps = {
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'ref' | 'onChange' | 'value'
 >
-
-const MAX_IMAGE_SIZE = 4.9 * 1000 * 1000
-const MAX_IMAGE_SIZE_READABLE = '4.9MB'
 
 const ImageInput = ({
   className,
@@ -82,7 +83,7 @@ const ImageInput = ({
         ref={inputRef}
         onChange={handleChange}
         disabled={disabled}
-        className="sr-only"
+        className="sr-only hidden"
         type="file"
         accept={IMAGE_MIME_TYPES.join(',')}
       />
