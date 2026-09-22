@@ -14,15 +14,20 @@ export type DialogBaseProps = {
   setIsOpen: (isOpen: boolean) => void
 }
 
-type DialogComponent<P = {}> = ComponentType<P & DialogBaseProps>
+type DialogComponent<P extends object = object> = ComponentType<
+  P & DialogBaseProps
+>
 
+// A render function instead of { component, props }, so each dialog's props stay typed
 type DialogState = {
-  component: DialogComponent<any>
-  props: any
+  render: (baseProps: DialogBaseProps) => ReactNode
 }
 
 type DialogContextValue = {
-  openDialog: <P>(component: DialogComponent<P>, props: P) => void
+  openDialog: <P extends object>(
+    component: DialogComponent<P>,
+    props: P,
+  ) => void
   closeDialog: () => void
 }
 
@@ -33,8 +38,10 @@ export function DialogProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
 
   const openDialog = useCallback(
-    <P,>(component: DialogComponent<P>, props: P) => {
-      setDialog({ component, props })
+    <P extends object>(Component: DialogComponent<P>, props: P) => {
+      setDialog({
+        render: (baseProps) => <Component {...props} {...baseProps} />,
+      })
       setIsOpen(true)
     },
     [],
@@ -48,13 +55,7 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     <DialogContext.Provider value={{ openDialog, closeDialog }}>
       {children}
 
-      {dialog && (
-        <dialog.component
-          {...dialog.props}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        />
-      )}
+      {dialog?.render({ isOpen, setIsOpen })}
     </DialogContext.Provider>
   )
 }

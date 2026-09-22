@@ -35,7 +35,7 @@ const ImageInput = ({
   const [error, setError] = useState<string>()
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const openInput = (event: React.MouseEvent<HTMLElement>) => {
+  const openInput = () => {
     inputRef.current?.click()
   }
   const clearInput = () => {

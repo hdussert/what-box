@@ -24,6 +24,7 @@ export async function uploadImageFile({
 }
 
 export async function deleteImageFiles(pathnames: string | string[]) {
-  const user = await getCurrentUser()
+  // Auth check only: throws when signed out
+  await getCurrentUser()
   return del(pathnames)
 }
