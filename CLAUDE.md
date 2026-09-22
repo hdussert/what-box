@@ -33,6 +33,7 @@ Global guidelines to aim for, not rules to apply blindly. When one conflicts wit
 - Booleans start with a verb: `isOpen`, `hasImage`, `canDelete`.
 - Always wrap early returns in braces: `if (...) { return }`, never `if (...) return`. Older code doesn't follow this; apply it to new and edited code.
 - Use XState state machines for complex logic (`xstate` and `@xstate/react` are installed).
+- Comments are JSDoc on exported functions/types, or inline only where the code's behavior or a subtlety isn't obvious from reading it (a non-obvious edge case, a workaround, a "why" a reader couldn't infer). Don't narrate what self-explanatory code already says.
 
 ### Components
 
