@@ -6,12 +6,6 @@ import { eq } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import 'server-only'
-import { z } from 'zod'
-
-export const SignInSchema = z.object({
-  email: z.email('Invalid email format').min(1, 'Email is required'),
-  password: z.string().min(1, 'Password is required'),
-})
 
 // Create a new user
 export async function createUser(email: string, password: string) {

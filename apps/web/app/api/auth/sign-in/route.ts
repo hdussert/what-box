@@ -1,5 +1,6 @@
 import { generateJWT } from '@/lib/session'
-import { SignInSchema, verifyCredentials } from '@/lib/user'
+import { verifyCredentials } from '@/lib/user'
+import { SignInSchema } from '@what-box/shared'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 

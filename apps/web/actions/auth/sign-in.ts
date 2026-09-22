@@ -2,10 +2,9 @@
 
 import { ActionResponse } from '@/actions/types'
 import { createSession } from '@/lib/session'
-import { SignInSchema, verifyCredentials } from '@/lib/user'
+import { verifyCredentials } from '@/lib/user'
+import { SignInData, SignInSchema } from '@what-box/shared'
 import { z } from 'zod'
-
-export type SignInData = z.infer<typeof SignInSchema>
 type SignInValues = Pick<SignInData, 'email'>
 export type SignInState = ActionResponse & {
   values: SignInValues

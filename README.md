@@ -36,13 +36,14 @@ Other features:
 
 ## Repo layout
 
-This is a yarn workspaces monorepo. Today it holds a single app:
+This is a yarn workspaces monorepo:
 
 ```
-apps/web/      The Next.js app described below
+apps/web/          The Next.js app described below
+packages/shared/   Zod schemas/types shared across apps (e.g. auth validation)
 ```
 
-`apps/mobile/` and `packages/shared/` are planned additions for a future Expo mobile app.
+`apps/mobile/` is a planned addition for a future Expo mobile app, which will depend on `packages/shared/` alongside `apps/web/`.
 
 ## Architecture
 
