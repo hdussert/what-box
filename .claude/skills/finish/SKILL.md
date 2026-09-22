@@ -15,7 +15,7 @@ Stop and report at the first step that fails instead of papering over it. The us
 ## 2. Verify
 
 - `yarn tsc --noEmit`. Only errors in source files count; `.next/types/` errors come from stale generated files.
-- `yarn lint`, unless `CLAUDE.md` still says it's broken.
+- `yarn lint`. Warnings don't block, but don't add new ones.
 - If the change touches UI, run the app and check the change in the browser (the `run` skill or Chrome tools). If you can't, say so in the report instead of claiming it works.
 
 Fix anything that fails, commit, and re-run.

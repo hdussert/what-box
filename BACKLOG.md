@@ -9,9 +9,15 @@ Entries are grouped by **priority** and tagged with **effort**. Within a group, 
 
 ## 🔴 High
 
-- `S` **`yarn lint` crashes.** `typescript-eslint` doesn't support TypeScript 7 (`package.json` pins `typescript@^7`), so no file gets linted, locally or in CI. Fix: pin TypeScript 6 (simplest, if nothing needs 7), or run `typescript-eslint` against the TS 6 API side by side (see the link in the error). Then add `yarn lint` to `.github/workflows/ci.yml` and remove the gotcha from `CLAUDE.md`. Expect some existing lint errors to fix once it runs again.
+_Nothing right now._
 
 ## 🟡 Medium
+
+- `M` **9 React hook lint warnings to refactor.** `eslint.config.mjs` downgrades `react-hooks/set-state-in-effect` and `react-hooks/purity` to warnings so CI could start linting. Each warning needs a component change and a browser check:
+  - `setState` inside `useEffect`: `NewBoxForm.tsx:48`, `NewItemForm.tsx:50` (reset the image on success; do it in the submit flow instead), `ImageInputPreview.tsx:18` (derive the preview URL with `useMemo`, clean up in an effect), `ItemCard.tsx:22`, `ItemsList.tsx:19` (derive instead of syncing state), `hooks/useIsMobile.ts:14` (use `useSyncExternalStore`).
+  - `Math.random` during render: `components/ui/sidebar.tsx:612` (generated shadcn skeleton).
+  - Missing hook dependencies: `NewBoxForm.tsx:54` (`onSuccess`), `EditableImage.tsx:44` (`boxId`, `itemId`, `router`).
+  - Then restore both rules to errors (delete the override).
 
 - `S` **CI isn't required to merge.** The GitHub ruleset on `main` requires a PR, but a PR with a failing `check` job can still be merged. Fix (needs you, in GitHub → Settings → Rules → "main"): enable "Require status checks to pass" and add `check`.
 - `S` **Vercel preview deploys always fail** (PRs #28, #29, #31): `Invalid environment variables` while loading `next.config.ts`, because the Preview environment is missing variables that `env.ts` requires. Production deploys from `main` succeed. Fix (needs you, in the Vercel dashboard): add the variables to the Preview environment, ideally pointing at a non-production database. This gives every PR a live preview URL to test.
@@ -21,4 +27,5 @@ Entries are grouped by **priority** and tagged with **effort**. Within a group, 
 ## 🟢 Low
 
 - `S` **19 source files aren't prettier-formatted**, mostly shadcn `components/ui/*`, plus `hooks/useIsMobile.ts`, `lib/user.ts` and `lib/utils.ts`. The prettier hook will reformat each one the first time it's edited, which adds noise to that diff. Format them all in one commit.
+- `S` **Drop the TypeScript 6 alias** once typescript-eslint supports TS 7 (tracking: typescript-eslint#10940). In `package.json`, set `"typescript"` back to `^7` and remove `@typescript/native`, then remove the gotcha from `CLAUDE.md`.
 - `S` **Parallel sessions with worktrees** (an idea, not a problem). Once reviewing PRs feels routine, run several tasks at once in separate worktrees (`claude --worktree`).
