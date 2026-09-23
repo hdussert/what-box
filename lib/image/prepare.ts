@@ -1,7 +1,7 @@
 import { IMAGE_FORMATS } from '@/lib/image/const'
 import { PreparedImage } from '@/lib/image/types'
-import sharp, { type OutputInfo } from 'sharp'
 import 'server-only'
+import sharp, { type OutputInfo } from 'sharp'
 
 /**
  * Decodes an uploaded image and re-encodes it without metadata (EXIF, XMP,

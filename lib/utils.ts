@@ -1,5 +1,5 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -11,12 +11,12 @@ export function cn(...inputs: ClassValue[]) {
  * another site. Parsing with `URL` catches what a prefix check misses, like
  * `//evil.com`, `/\evil.com` or `/\t/evil.com` (browsers strip tabs).
  */
-export function safeRedirectPath(path: unknown, fallback = "/dashboard") {
-  if (typeof path !== "string" || !path.startsWith("/")) {
+export function safeRedirectPath(path: unknown, fallback = '/dashboard') {
+  if (typeof path !== 'string' || !path.startsWith('/')) {
     return fallback
   }
 
-  const base = "http://localhost"
+  const base = 'http://localhost'
   // URL throws on unparsable input like `//[`: treat it as unsafe too.
   const url = URL.canParse(path, base) ? new URL(path, base) : null
   if (url?.origin !== base) {
