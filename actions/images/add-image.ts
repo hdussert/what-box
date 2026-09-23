@@ -20,7 +20,8 @@ export async function addImageAction(
 ): Promise<ActionResponse> {
   try {
     const { image, boxId, itemId = null } = AddImageSchema.parse(data)
-    await saveImage({ boxId, itemId, image: await prepareImage(image) })
+    const preparedImage = await prepareImage(image)
+    await saveImage({ boxId, itemId, image: preparedImage })
 
     return {
       success: true,
