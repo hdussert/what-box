@@ -1,41 +1,17 @@
 import { env } from '@/env'
+import { SESSION_COOKIE_NAME } from '@/lib/const'
+import { generateJWT, JWT_SECRET, JWTPayload, verifyJWT } from '@/lib/jwt'
 import { getUserById } from '@/lib/user'
 import * as jose from 'jose'
 import { cookies } from 'next/headers'
 import 'server-only'
 
-// JWT types
-interface JWTPayload {
-  userId: string
-  type: 'session' | 'reset'
-  [key: string]: string | number | boolean | null | undefined // This is ugly af
-}
-
-const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET)
 const JWT_EXPIRATION = '7d' // 7 days expiration time
 // Outlives the JWT on purpose: a cookie still holding an expired token tells
 // "session expired" apart from "never signed in" (see hasSessionCookie).
 const SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days, in seconds
 const RESET_TOKEN_EXPIRATION = '1h' // Password-reset links are short-lived, unlike sessions
 const REFRESH_THRESHOLD_SECONDS = 24 * 60 * 60 // 24 hours refresh threshold in seconds
-const SESSION_COOKIE_NAME = 'auth_token'
-
-async function generateJWT(payload: JWTPayload, expiration: string) {
-  return await new jose.SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime(expiration)
-    .sign(JWT_SECRET)
-}
-
-export async function verifyJWT(token: string): Promise<JWTPayload | null> {
-  try {
-    const { payload } = await jose.jwtVerify(token, JWT_SECRET)
-    return payload as JWTPayload
-  } catch {
-    return null
-  }
-}
 
 // Session tokens (login) and reset tokens (forgot-password links) are both
 // JWTs signed with the same secret, so a `type` claim is the only thing
