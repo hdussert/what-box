@@ -1,12 +1,8 @@
 import { Button } from '@/components/ui/button'
-import { getSession } from '@/lib/session'
 import { Package } from 'lucide-react'
 import Link from 'next/link'
 
-const Navbar = async () => {
-  // The legal pages share this navbar and are linked from the signed-in app
-  const user = await getSession()
-
+const Navbar = () => {
   return (
     <nav className="w-full flex border-b-2 px-4 py-2 sticky top-0 bg-background ">
       <Link href="/" className="font-bold text-lg flex items-center gap-2">
@@ -14,20 +10,12 @@ const Navbar = async () => {
         WhatBox
       </Link>
       <div className="ml-auto flex gap-4">
-        {user ? (
-          <Button asChild>
-            <Link href="/dashboard">Dashboard</Link>
-          </Button>
-        ) : (
-          <>
-            <Button asChild variant="outline">
-              <Link href="/sign-in">Sign In</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/sign-up">Sign Up</Link>
-            </Button>
-          </>
-        )}
+        <Button asChild variant="outline">
+          <Link href="/sign-in">Sign In</Link>
+        </Button>
+        <Button asChild>
+          <Link href="/sign-up">Sign Up</Link>
+        </Button>
       </div>
     </nav>
   )
