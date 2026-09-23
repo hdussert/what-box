@@ -4,6 +4,7 @@ import { deleteBoxes } from '@/lib/box'
 import { getImagePathnamesByBoxIds } from '@/lib/image/queries'
 import { deleteImageFiles } from '@/lib/image/storage'
 import { revalidatePath } from 'next/cache'
+import { unstable_rethrow } from 'next/navigation'
 
 export async function deleteBoxesAction(boxIds: string[]) {
   if (boxIds.length === 0) {
@@ -32,6 +33,8 @@ export async function deleteBoxesAction(boxIds: string[]) {
       deleted: boxIds.length,
     }
   } catch (error) {
+    // Let getCurrentUser()'s sign-in redirect through
+    unstable_rethrow(error)
     console.error('Error deleting boxes and associated data:', error)
     return {
       success: false,

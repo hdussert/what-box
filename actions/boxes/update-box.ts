@@ -3,6 +3,7 @@
 import { ActionResponse } from '@/actions/types'
 import { updateBox } from '@/lib/box'
 import { revalidatePath } from 'next/cache'
+import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
 
 const UpdateBoxSchema = z.object({
@@ -46,6 +47,8 @@ export async function updateBoxAction(
       result: { id: box.id },
     }
   } catch (error) {
+    // Let getCurrentUser()'s sign-in redirect through
+    unstable_rethrow(error)
     if (error instanceof z.ZodError) {
       return {
         success: false,

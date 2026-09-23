@@ -3,6 +3,7 @@
 import { ActionResponse } from '@/actions/types'
 import { updateItem } from '@/lib/item'
 import { revalidatePath } from 'next/cache'
+import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
 
 const UpdateItemSchema = z.object({
@@ -62,6 +63,8 @@ export async function updateItemAction(
       },
     }
   } catch (error) {
+    // Let getCurrentUser()'s sign-in redirect through
+    unstable_rethrow(error)
     if (error instanceof z.ZodError) {
       return {
         success: false,

@@ -2,6 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { deleteImage } from '@/lib/image/mutations'
+import { unstable_rethrow } from 'next/navigation'
 import z from 'zod'
 
 const DeleteImageSchema = z.object({
@@ -22,6 +23,8 @@ export async function deleteImageAction(
       message: 'Image deleted successfully',
     }
   } catch (error) {
+    // Let getCurrentUser()'s sign-in redirect through
+    unstable_rethrow(error)
     return {
       success: false,
       message:

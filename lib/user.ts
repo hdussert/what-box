@@ -1,7 +1,7 @@
 import { db } from '@/db'
 import { User, users } from '@/db/schema'
 import { hashPassword, verifyPassword } from '@/lib/password'
-import { getSession } from '@/lib/session'
+import { getSession, hasSessionCookie } from '@/lib/session'
 import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -140,16 +140,23 @@ export const getUserById = cache(async (id: string) => {
 
 /**
  * Get the currently authenticated user based on the session.
- * If no user is authenticated, redirects to the sign-in page, with the
- * requested path (set by `proxy.ts`) as `next` so sign-in can return there.
+ * If no user is authenticated, redirects to the sign-in page with:
+ * - `next`: the requested path (set by `proxy.ts`), so sign-in can return there
+ * - `expired=1`: when a session cookie exists but is no longer valid
  */
 export const getCurrentUser = async () => {
   const user = await getSession()
   if (!user) {
+    const params = new URLSearchParams()
     const pathname = (await headers()).get('x-pathname')
-    redirect(
-      pathname ? `/sign-in?next=${encodeURIComponent(pathname)}` : '/sign-in',
-    )
+    if (pathname) {
+      params.set('next', pathname)
+    }
+    if (await hasSessionCookie()) {
+      params.set('expired', '1')
+    }
+    const query = params.toString()
+    redirect(query ? `/sign-in?${query}` : '/sign-in')
   }
 
   return user

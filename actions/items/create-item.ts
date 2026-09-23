@@ -5,6 +5,7 @@ import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
 import { createItem } from '@/lib/item/mutations'
 import { revalidatePath } from 'next/cache'
+import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
 
 const CreateItemSchema = z.object({
@@ -78,6 +79,8 @@ export async function createItemAction(
       },
     }
   } catch (error) {
+    // Let getCurrentUser()'s sign-in redirect through
+    unstable_rethrow(error)
     if (error instanceof z.ZodError) {
       return {
         success: false,

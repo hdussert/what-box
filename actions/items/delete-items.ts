@@ -4,6 +4,7 @@ import { getImagePathnamesByItemIds } from '@/lib/image/queries'
 import { deleteImageFiles } from '@/lib/image/storage'
 import { deleteItems } from '@/lib/item'
 import { revalidatePath } from 'next/cache'
+import { unstable_rethrow } from 'next/navigation'
 
 export async function deleteItemsAction(itemIds: string[]) {
   if (itemIds.length === 0) {
@@ -33,6 +34,8 @@ export async function deleteItemsAction(itemIds: string[]) {
       deleted: itemIds.length,
     }
   } catch (error) {
+    // Let getCurrentUser()'s sign-in redirect through
+    unstable_rethrow(error)
     console.error('Error deleting items and associated data:', error)
     return {
       success: false,
