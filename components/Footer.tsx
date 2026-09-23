@@ -1,5 +1,5 @@
 import { CONTACT_EMAIL } from '@/components/legal/const'
-import { Package } from 'lucide-react'
+import Logo from '@/components/Logo'
 import Link from 'next/link'
 
 const LINKS = [
@@ -12,13 +12,7 @@ const Footer = () => {
     <footer className="border-t text-sm text-muted-foreground">
       <div className="mx-auto max-w-5xl px-4 pt-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
-          <Link
-            href="/"
-            className="flex items-center gap-2 font-bold text-foreground"
-          >
-            <Package size={24} />
-            WhatBox
-          </Link>
+          <Logo className="text-base text-foreground" iconSize={24} />
           <p>Find your items in an instant.</p>
         </div>
 
