@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Invariants
 
-- Authorization lives in the data layer, not in route guards (there is no middleware). Every `lib/*` query or mutation must call `getCurrentUser()` and scope its `where` by `userId`.
+- Authorization lives in the data layer, not in route guards. `proxy.ts` only forwards the request path and optimistically redirects `/` to `/dashboard` when a session cookie exists; it never authorizes. Every `lib/*` query or mutation must call `getCurrentUser()` and scope its `where` by `userId`.
 - Deleting a box or item cascades in the DB but not in Vercel Blob. Remove image files through `lib/image`.
 
 ## Workflow
