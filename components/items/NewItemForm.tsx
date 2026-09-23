@@ -67,6 +67,7 @@ const NewItemForm = ({ boxId, className, onSuccess }: NewItemFormProps) => {
           setImage={setImage}
           className="flex-382"
           disabled={isPending}
+          isLoading={isPending}
         />
         <FieldGroup className="flex-618">
           <Field>
