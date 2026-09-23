@@ -30,4 +30,4 @@ Body: the list of changes (one line each, with PR links), the migrations section
 
 ## 4. Report
 
-The PR link, the summary, and this reminder: **merge it with a merge commit, never a squash**. Squashing `dev` into `main` makes their histories diverge, and every later release would conflict. If a fix goes straight to `main`, merge `main` back into `dev` afterwards.
+The PR link, the summary, and this reminder: **merge it with a merge commit, never a squash**. Squashing `dev` into `main` makes their histories diverge, and every later release would conflict. After a hotfix went straight to `main`, bring it back with a `main` → `dev` PR, merged with a merge commit too.

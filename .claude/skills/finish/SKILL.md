@@ -11,6 +11,7 @@ Stop and report at the first step that fails instead of papering over it. The us
 
 - `git status`, `git branch --show-current`. You must be on a task branch, not `main` or `dev`.
 - Commit any leftover work with conventional commits.
+- Pick the base branch: `main` for a `hotfix/…` branch, `dev` for everything else. `<base>` below means that branch.
 - `gh pr view`: if the branch already has a PR (e.g. `/finish` runs again after changes), update it in step 4 instead of opening a new one.
 
 ## 2. Verify
@@ -23,11 +24,11 @@ Fix anything that fails, commit, and re-run.
 
 ## 3. Self-review
 
-Run `/code-review` on the branch diff (`dev...HEAD`). Fix the findings that hold up, commit, and re-verify if code changed. Findings unrelated to this task go to `BACKLOG.md`, not into this PR.
+Run `/code-review` on the branch diff (`<base>...HEAD`). Fix the findings that hold up, commit, and re-verify if code changed. Findings unrelated to this task go to `BACKLOG.md`, not into this PR.
 
 ## 4. Open the PR
 
-Write the title and description from the final diff (`git diff dev...HEAD`), not the original plan. Keep it concise but complete:
+Write the title and description from the final diff (`git diff <base>...HEAD`), not the original plan. Keep it concise but complete:
 
 - **What** changed and **why** (a few bullets)
 - **Caveats**: anything skipped, known limitations, follow-ups logged to `BACKLOG.md`
@@ -37,11 +38,11 @@ End the body with the attribution line from the system prompt, if there is one.
 
 ```bash
 git push -u origin HEAD
-gh pr create --base dev --title "<type>: <summary>" --body "<description>"
+gh pr create --base <base> --title "<type>: <summary>" --body "<description>"
 ```
 
 If the PR already existed, `git push` then `gh pr edit --title ... --body ...` instead.
 
 ## 5. Report
 
-A few lines: the PR link, what was verified and how, and anything the user should look at. Don't merge. The user reviews and merges (squash) into `dev`, tests it on staging, and ships it with `/release`.
+A few lines: the PR link, what was verified and how, and anything the user should look at. Don't merge. The user reviews and merges (squash) into `dev`, tests it on staging, and ships it with `/release`. For a hotfix, remind them to open a `main` → `dev` PR afterwards and merge it with a merge commit.

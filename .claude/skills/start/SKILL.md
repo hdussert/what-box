@@ -16,6 +16,8 @@ If the task is empty or unclear, ask what it is before touching git.
 2. `git switch dev && git pull`
 3. `git switch -c <type>/<short-kebab-name>`, where `<type>` is `feat`, `fix`, `refactor`, `docs` or `chore` (the conventional-commit type the work will use).
 
+Exception: an urgent fix for production that can't wait for the next release is a hotfix. Branch `hotfix/<short-kebab-name>` from an up-to-date `main` instead (`git switch main && git pull`).
+
 Don't open a PR yet: `/finish` opens it into `dev` once the work is verified. Pushing the branch before then is fine (it backs the work up); Vercel doesn't build feature branches.
 
 ## 2. Plan or go

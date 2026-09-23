@@ -25,7 +25,7 @@ Every task follows these steps. `/start` and `/finish` run them; `/release` ship
 3. **Implement**: small conventional commits. Stay on the task: log side issues (see below) instead of fixing them.
 4. **Verify**: `yarn lint` and `yarn tsc --noEmit --pretty false` (the default colored output hides errors from `grep`). Errors under `.next/` come from stale generated files, not your change; only errors in source files count. For UI changes, run the app and check the change in the browser.
 5. **Self-review**: run `/code-review` on the diff and fix the findings that hold up.
-6. **Finish**: push, open the PR into `dev` with its title and description, and report back. Never merge; the user reviews and merges.
+6. **Finish**: push, open the PR into `dev` (`main` for a `hotfix/…` branch) with its title and description, and report back. Never merge; the user reviews and merges.
 
 ### Side issues
 
@@ -77,7 +77,7 @@ Global guidelines to aim for, not rules to apply blindly. When one conflicts wit
 
 - Conventional commits (`feat:`, `fix:`, `refactor:`, ...).
 - Never commit to or push `main` or `dev` directly, and never force-push.
-- Branches: `main` is production, `dev` is staging (the default branch). Feature PRs target `dev` and are **squash**-merged. A release is a `dev` → `main` PR (`/release`), merged with a **merge commit**, never a squash, or the two histories diverge and every later release conflicts. A hotfix branches from `main`, merges into `main`, then `main` is merged back into `dev`.
+- Branches: `main` is production, `dev` is staging (the default branch). Feature PRs target `dev` and are **squash**-merged. A release is a `dev` → `main` PR (`/release`), merged with a **merge commit**, never a squash, or the two histories diverge and every later release conflicts. A hotfix (urgent production fix) is a `hotfix/…` branch from `main` with its PR into `main`; afterwards a `main` → `dev` PR brings it back, also merged with a **merge commit**.
 - Keep PR titles and descriptions concise: cut filler and repetition, but keep every piece of information a reviewer needs (what changed, why, caveats, how to verify).
 
 ## Next.js
