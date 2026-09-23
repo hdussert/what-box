@@ -9,7 +9,7 @@ Entries are grouped by **priority** and tagged with **effort**. Within a group, 
 
 ## 🔴 High
 
-- `S` **Photos keep their GPS location.** `uploadImageFile` (`lib/image/storage.ts:20`) stores the file as uploaded, EXIF metadata included, and the blob is public: a phone photo usually carries the GPS coordinates of where it was taken (often the user's home), readable by anyone with the link. Fix: re-encode on upload with `sharp` (`.rotate()` to apply the orientation, then output without metadata) before `put`. Existing photos keep their EXIF until re-uploaded or migrated.
+_Nothing right now._
 
 ## 🟡 Medium
 
