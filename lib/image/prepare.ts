@@ -1,6 +1,6 @@
 import { IMAGE_FORMATS } from '@/lib/image/const'
 import { PreparedImage } from '@/lib/image/types'
-import sharp from 'sharp'
+import sharp, { type OutputInfo } from 'sharp'
 import 'server-only'
 
 /**
@@ -15,7 +15,7 @@ import 'server-only'
 export async function prepareImage(file: File): Promise<PreparedImage> {
   const input = Buffer.from(await file.arrayBuffer())
 
-  let output: { data: Buffer; info: sharp.OutputInfo }
+  let output: { data: Buffer; info: OutputInfo }
   try {
     output = await sharp(input, { animated: true })
       .rotate()
