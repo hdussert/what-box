@@ -53,7 +53,7 @@ const Side = () => {
           <LogOut />
           Sign out
         </SidebarMenuButton>
-        <div className="px-2 pt-1 text-xs text-muted-foreground whitespace-nowrap group-data-[collapsible=icon]:hidden">
+        <div className="px-2 pt-1 text-center text-xs text-muted-foreground whitespace-nowrap group-data-[collapsible=icon]:hidden">
           <Link href="/legal" className="hover:text-foreground">
             Legal notice
           </Link>
