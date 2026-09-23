@@ -10,7 +10,7 @@ const LINKS = [
 const Footer = () => {
   return (
     <footer className="border-t text-sm text-muted-foreground">
-      <div className="mx-auto max-w-5xl px-4 py-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div className="mx-auto max-w-5xl px-4 pt-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
           <Link
             href="/"
@@ -34,11 +34,9 @@ const Footer = () => {
         </nav>
       </div>
 
-      <div className="border-t">
-        <p className="mx-auto max-w-5xl px-4 py-4 text-xs">
-          © {new Date().getFullYear()} WhatBox. All rights reserved.
-        </p>
-      </div>
+      <p className="mx-auto max-w-5xl px-4 pt-6 pb-8 text-xs">
+        © {new Date().getFullYear()} WhatBox. All rights reserved.
+      </p>
     </footer>
   )
 }
