@@ -1,7 +1,8 @@
 'use client'
-import GoBackButton from '@/components/GoBackButton'
+import ToolbarButton from '@/components/ToolbarButton'
 import { DeleteBoxesButton } from '@/components/boxes/DeleteBoxesButton'
 import PrintLabelsButton from '@/components/boxes/labels/PrintLabelsButton'
+import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 type BoxHeaderToolbarProps = {
@@ -11,7 +12,9 @@ const BoxHeaderToolbar = ({ boxId }: BoxHeaderToolbarProps) => {
   const router = useRouter()
   return (
     <div className="flex items-center justify-between">
-      <GoBackButton />
+      <ToolbarButton onClick={() => router.replace('/dashboard')} size="icon">
+        <ArrowLeft size={48} />
+      </ToolbarButton>
       <div>
         <PrintLabelsButton boxIds={[boxId]} />
         <DeleteBoxesButton
