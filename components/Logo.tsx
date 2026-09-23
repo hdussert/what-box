@@ -8,10 +8,10 @@ type LogoProps = {
 }
 
 /** The WhatBox logo, linking home (`/` sends signed-in users to their dashboard). */
-const Logo = ({ className, iconSize = 32 }: LogoProps) => (
+const Logo = ({ className, iconSize = 40 }: LogoProps) => (
   <Link
     href="/"
-    className={cn('flex items-center gap-2 font-bold text-lg', className)}
+    className={cn('flex items-center gap-2 font-bold text-2xl', className)}
   >
     <Package size={iconSize} />
     WhatBox
