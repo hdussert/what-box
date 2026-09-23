@@ -6,6 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - Package manager is **yarn** (v1, `yarn.lock` is committed). Don't use npm, or it'll create a `package-lock.json`.
 - Every `db:*` script has a `:prod` variant that runs against the **production** database.
+- Production deploys apply pending migrations automatically (`scripts/vercel-build.sh`), so a merged migration goes live on the next deploy: don't run `db:migrate:prod` by hand. Migrations run before the new code is live, so keep them backward compatible (add first, drop in a later deploy), and review destructive ones (`DROP`, `SET NOT NULL`) with care. Previews share the dev database and never migrate.
 - There is no test runner.
 - TypeScript is pinned to 6: typescript-eslint doesn't support TS 7 yet. Don't upgrade it, and don't use a TS 6/7 side-by-side alias either: Next 16 then decides TypeScript is missing and auto-installs TS 7 over it (see `BACKLOG.md`).
 
