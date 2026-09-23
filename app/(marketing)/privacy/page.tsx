@@ -88,6 +88,16 @@ export default function PrivacyPolicyPage() {
       </section>
 
       <section className="flex flex-col gap-2">
+        <Typography.H2>Photos</Typography.H2>
+        <Typography.P>
+          Photos are stored with our hosting provider behind long, random links
+          that can&apos;t be guessed. The links are not protected by your
+          sign-in, though: anyone who has a photo&apos;s link can view it. Avoid
+          uploading photos that show sensitive information.
+        </Typography.P>
+      </section>
+
+      <section className="flex flex-col gap-2">
         <Typography.H2>Service providers</Typography.H2>
         <Typography.P>
           Your data is processed by the following providers, only as needed to
