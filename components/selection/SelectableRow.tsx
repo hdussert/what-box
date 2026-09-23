@@ -2,18 +2,22 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
 import { PropsWithChildren } from 'react'
 
-type ItemRowProps = PropsWithChildren<{
+type SelectableRowProps = PropsWithChildren<{
   onClick: () => void
   isSelected: boolean
   isSelecting: boolean
 }>
 
-const ItemRow = ({
+/**
+ * A list row with a selection checkbox that slides in while selecting.
+ * The row owns the click: callers decide whether it selects or navigates.
+ */
+const SelectableRow = ({
   onClick,
   isSelected,
   isSelecting,
   children,
-}: ItemRowProps) => {
+}: SelectableRowProps) => {
   return (
     <div className="flex items-center gap-3" onClick={onClick}>
       <Checkbox
@@ -29,4 +33,4 @@ const ItemRow = ({
   )
 }
 
-export default ItemRow
+export default SelectableRow

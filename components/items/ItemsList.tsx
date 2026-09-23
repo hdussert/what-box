@@ -1,7 +1,7 @@
 'use client'
 
 import ItemCard from '@/components/items/ItemCard'
-import ItemRow from '@/components/items/ItemRow'
+import SelectableRow from '@/components/selection/SelectableRow'
 import { useSelection } from '@/components/selection/SelectionProvider'
 import { Item } from '@/db/schema'
 import { useEffect, useState } from 'react'
@@ -35,7 +35,7 @@ const ItemsList = ({ items }: ItemsListProps) => {
   return (
     <div className="flex gap-2 flex-col py-2">
       {items.map((item, index) => (
-        <ItemRow
+        <SelectableRow
           key={index}
           isSelecting={isSelecting}
           isSelected={isSelected(item.id)}
@@ -46,7 +46,7 @@ const ItemsList = ({ items }: ItemsListProps) => {
             isSelected={isSelected(item.id)}
             isFocused={itemFocused === item.id}
           />
-        </ItemRow>
+        </SelectableRow>
       ))}
     </div>
   )
