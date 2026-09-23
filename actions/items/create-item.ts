@@ -3,6 +3,7 @@
 import { ActionResponse } from '@/actions/types'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
+import { prepareImage } from '@/lib/image/prepare'
 import { createItem } from '@/lib/item/mutations'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
@@ -47,6 +48,8 @@ export async function createItemAction(
 
   try {
     const data = CreateItemSchema.parse(raw)
+    // Before creating the item, so a bad image doesn't leave one behind
+    const image = data.image ? await prepareImage(data.image) : null
 
     // Create item
     const item = await createItem({
@@ -56,12 +59,8 @@ export async function createItemAction(
     })
 
     // Upload image
-    if (data.image) {
-      await saveImage({
-        boxId: data.boxId,
-        itemId: item.id,
-        image: data.image,
-      })
+    if (image) {
+      await saveImage({ boxId: data.boxId, itemId: item.id, image })
     }
 
     revalidatePath(`/boxes/${data.boxId}`)
