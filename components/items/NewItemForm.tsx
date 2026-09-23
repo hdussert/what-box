@@ -32,28 +32,36 @@ const NewItemForm = ({ boxId, className, onSuccess }: NewItemFormProps) => {
     },
   }
   const [image, setImage] = useState<File>()
+  const nameInputRef = useRef<HTMLInputElement>(null)
+  const shouldFocusNameRef = useRef(false)
   const [state, formAction, isPending] = useActionState<
     CreateItemState,
     FormData
   >(
-    (prevState, formData) => createItemAction(prevState, formData, image),
+    // Handles the result here, once per submit, rather than in an effect
+    async (prevState, formData) => {
+      const result = await createItemAction(prevState, formData, image)
+      if (result.success) {
+        toast.success(result.message)
+        setImage(undefined)
+        shouldFocusNameRef.current = true
+        onSuccess?.()
+      } else {
+        toast.error(result.message)
+      }
+      return result
+    },
     initialState,
   )
 
-  const nameInputRef = useRef<HTMLInputElement>(null)
-
+  // The name input is disabled while pending, so it can only take focus
+  // once the submit is over: ready for the next item
   useEffect(() => {
-    if (!state.message) return
-
-    if (state.success) {
-      toast.success(state.message)
-      setImage(undefined)
+    if (!isPending && shouldFocusNameRef.current) {
+      shouldFocusNameRef.current = false
       nameInputRef.current?.focus()
-      onSuccess?.()
-    } else {
-      toast.error(state.message)
     }
-  }, [state, state.success, state.message, onSuccess])
+  }, [isPending])
 
   return (
     <form action={formAction} className={cn('flex flex-col gap-3', className)}>
