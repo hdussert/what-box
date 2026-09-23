@@ -1,9 +1,17 @@
 import SignInForm from '@/components/auth/SignInForm'
 import { Card, CardContent } from '@/components/ui/card'
 import Typography from '@/components/ui/typography'
+import { safeRedirectPath } from '@/lib/utils'
 import Link from 'next/link'
 
-export default function SignInPage() {
+type SignInPageProps = {
+  searchParams: Promise<{ next?: string | string[] }>
+}
+
+export default async function SignInPage({ searchParams }: SignInPageProps) {
+  const { next } = await searchParams
+  const redirectTo = safeRedirectPath(next)
+
   return (
     <>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -12,7 +20,7 @@ export default function SignInPage() {
 
       <Card className="sm:mx-auto sm:w-full sm:max-w-md mt-8">
         <CardContent>
-          <SignInForm />
+          <SignInForm redirectTo={redirectTo} />
           <p className="mt-4 text-sm text-center">
             Don&apos;t have an account?&nbsp;
             <Link href="/sign-up" className="font-medium">

@@ -18,7 +18,12 @@ const initialState: SignInState = {
   },
 }
 
-const SignInForm = () => {
+type SignInFormProps = {
+  /** Where to go after signing in; must already be a safe, same-site path. */
+  redirectTo: string
+}
+
+const SignInForm = ({ redirectTo }: SignInFormProps) => {
   const router = useRouter()
 
   // Use useActionState hook for the form submission action
@@ -32,7 +37,7 @@ const SignInForm = () => {
 
     if (state.success) {
       toast.success(state.message)
-      router.push('/dashboard')
+      router.push(redirectTo)
       router.refresh()
     } else {
       toast.error(state.message)

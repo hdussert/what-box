@@ -13,6 +13,7 @@ _Nothing right now._
 
 ## 🟡 Medium
 
+- `S` **Server actions swallow the signed-out redirect.** `actions/boxes/create-box.ts:43` calls `getCurrentUser()` inside `try`, and the `catch` turns Next's redirect error into `{ success: false, message: 'NEXT_REDIRECT' }`, so a signed-out user sees that as an error toast instead of being sent to sign-in. Other actions likely share the pattern. Fix: call `unstable_rethrow(error)` first in each `catch`, or move `getCurrentUser()` above the `try`.
 - `M` **9 React hook lint warnings to refactor.** `eslint.config.mjs` downgrades `react-hooks/set-state-in-effect` and `react-hooks/purity` to warnings so CI could start linting. Each warning needs a component change and a browser check:
   - `setState` inside `useEffect`: `NewBoxForm.tsx:48`, `NewItemForm.tsx:50` (reset the image on success; do it in the submit flow instead), `ImageInputPreview.tsx:18` (derive the preview URL with `useMemo`, clean up in an effect), `ItemCard.tsx:22`, `ItemsList.tsx:19` (derive instead of syncing state), `hooks/useIsMobile.ts:14` (use `useSyncExternalStore`).
   - `Math.random` during render: `components/ui/sidebar.tsx:612` (generated shadcn skeleton).
