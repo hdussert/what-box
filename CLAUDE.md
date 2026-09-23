@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - Package manager is **yarn** (v1, `yarn.lock` is committed). Don't use npm, or it'll create a `package-lock.json`.
 - Every `db:*` script has a `:prod` variant that runs against the **production** database.
-- Production deploys apply pending migrations automatically (`scripts/vercel-build.sh`), so a merged migration goes live on the next deploy: don't run `db:migrate:prod` by hand. Migrations run before the new code is live, so keep them backward compatible (add first, drop in a later deploy), and review destructive ones (`DROP`, `SET NOT NULL`) with care. Previews share the dev database and never migrate.
+- Vercel only deploys `main` (production) and `dev` (staging preview); feature branches are skipped (`ignoreCommand` in `vercel.json` runs `scripts/vercel-ignore-build.sh`) and CI builds them instead. For a one-off preview of a feature branch, run `vercel deploy` from it.
+- Both deployments apply pending migrations automatically (`scripts/vercel-build.sh`): `dev` to the dev database, `main` to production. Don't run `db:migrate:prod` by hand; run `yarn db:migrate` locally only to test a migration on a feature branch. Migrations run before the new code is live, so keep them backward compatible (add first, drop in a later release), and review destructive ones (`DROP`, `SET NOT NULL`) with care.
 - There is no test runner.
 - TypeScript is pinned to 6: typescript-eslint doesn't support TS 7 yet. Don't upgrade it, and don't use a TS 6/7 side-by-side alias either: Next 16 then decides TypeScript is missing and auto-installs TS 7 over it (see `BACKLOG.md`).
 
@@ -17,14 +18,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Workflow
 
-Every task follows these steps. `/start` and `/finish` run them.
+Every task follows these steps. `/start` and `/finish` run them; `/release` ships `dev` to production (see Git).
 
-1. **Start**: branch from an up-to-date `main` (`feat/…`, `fix/…`, `refactor/…`, `docs/…`), push it and open a draft PR right away.
+1. **Start**: branch from an up-to-date `dev` (`feat/…`, `fix/…`, `refactor/…`, `docs/…`). Don't open the PR yet.
 2. **Plan**: for non-trivial tasks (several files, a new feature, a schema change, anything ambiguous), propose a plan and wait for approval. Trivial fixes skip this step.
 3. **Implement**: small conventional commits. Stay on the task: log side issues (see below) instead of fixing them.
-4. **Verify**: `yarn lint` and `yarn tsc --noEmit`. Errors under `.next/types/` come from stale generated files, not your change; only errors in source files count. For UI changes, run the app and check the change in the browser.
+4. **Verify**: `yarn lint` and `yarn tsc --noEmit --pretty false` (the default colored output hides errors from `grep`). Errors under `.next/` come from stale generated files, not your change; only errors in source files count. For UI changes, run the app and check the change in the browser.
 5. **Self-review**: run `/code-review` on the diff and fix the findings that hold up.
-6. **Finish**: update the PR title and description, mark the PR ready and report back. Never merge; the user reviews and merges.
+6. **Finish**: push, open the PR into `dev` (`main` for a `hotfix/…` branch) with its title and description, and report back. Never merge; the user reviews and merges.
 
 ### Side issues
 
@@ -75,7 +76,8 @@ Global guidelines to aim for, not rules to apply blindly. When one conflicts wit
 ## Git
 
 - Conventional commits (`feat:`, `fix:`, `refactor:`, ...).
-- Never commit to or push `main` directly, and never force-push.
+- Never commit to or push `main` or `dev` directly, and never force-push.
+- Branches: `main` is production, `dev` is staging (the default branch). Feature PRs target `dev` and are **squash**-merged. A release is a `dev` → `main` PR (`/release`), merged with a **merge commit**, never a squash, or the two histories diverge and every later release conflicts. A hotfix (urgent production fix) is a `hotfix/…` branch from `main` with its PR into `main`; afterwards a `main` → `dev` PR brings it back, also merged with a **merge commit**.
 - Keep PR titles and descriptions concise: cut filler and repetition, but keep every piece of information a reviewer needs (what changed, why, caveats, how to verify).
 
 ## Next.js
