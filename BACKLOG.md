@@ -27,6 +27,7 @@ _Nothing right now._
 
 ## 🟢 Low
 
+- `S` **Creating a box or item with a photo isn't atomic.** `create-box.ts` / `create-item.ts` create the row, then upload the photo. If the Blob upload or the image update fails, the action reports an error but the row stays, so a retry creates a duplicate. (Bad image files are rejected before the row since #48; this is about upload/DB failures.) Likely fix: delete the row when `saveImage` throws.
 - `S` **19 source files aren't prettier-formatted**, mostly shadcn `components/ui/*`, plus `hooks/useIsMobile.ts`, `lib/user.ts` and `lib/utils.ts`. The prettier hook will reformat each one the first time it's edited, which adds noise to that diff. Format them all in one commit.
 - `S` **Move back to TypeScript 7** once typescript-eslint supports it (tracking: typescript-eslint#10940). Set `"typescript"` to `^7` in `package.json`, check that `yarn lint` and `next dev` both work, then remove the gotcha from `CLAUDE.md`.
 - `S` **Parallel sessions with worktrees** (an idea, not a problem). Once reviewing PRs feels routine, run several tasks at once in separate worktrees (`claude --worktree`).
