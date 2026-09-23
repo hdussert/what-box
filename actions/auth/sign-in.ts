@@ -64,5 +64,6 @@ export async function signInAction(
   // Outside the try so the catch can't swallow it. Redirecting from the action
   // sends the next page in the same response: no idle form in between.
   // The hidden input is user-controlled, so it's checked again here.
-  redirect(safeRedirectPath(formData.get('redirectTo')))
+  // 'replace': Back must not return to the sign-in form
+  redirect(safeRedirectPath(formData.get('redirectTo')), 'replace')
 }
