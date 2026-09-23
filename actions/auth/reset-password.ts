@@ -3,6 +3,7 @@
 import { ActionResponse } from '@/actions/types'
 import { createSession, verifyResetToken } from '@/lib/session'
 import { updatePassword } from '@/lib/user'
+import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 // Define Zod schema for signup validation
@@ -49,12 +50,6 @@ export async function resetPasswordAction(
 
     // Create session for the newly registered user
     await createSession(user.id)
-
-    return {
-      success: true,
-      message: 'Password updated',
-      values,
-    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
@@ -73,4 +68,7 @@ export async function resetPasswordAction(
       values,
     }
   }
+
+  // Outside the try so the catch can't swallow it
+  redirect('/dashboard')
 }

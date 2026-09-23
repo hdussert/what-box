@@ -3,6 +3,7 @@
 import { ActionResponse } from '@/actions/types'
 import { createSession } from '@/lib/session'
 import { createUser, getUserByEmail } from '@/lib/user'
+import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 // Define Zod schema for signup validation
@@ -50,12 +51,6 @@ export async function signUpAction(
 
     // Create session for the newly registered user
     await createSession(user.id)
-
-    return {
-      success: true,
-      message: 'Account created successfully',
-      values,
-    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
@@ -74,4 +69,7 @@ export async function signUpAction(
       values,
     }
   }
+
+  // Outside the try so the catch can't swallow it
+  redirect('/dashboard')
 }
