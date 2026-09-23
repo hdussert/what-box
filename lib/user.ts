@@ -19,7 +19,10 @@ export async function createUser(email: string, password: string) {
 
   const [user] = await db
     .insert(users)
-    .values({ email, password: hashedPassword })
+    // Set from the app clock, not the column's DB default: the session token's
+    // `iat` comes from this clock too, and a DB clock even a few ms ahead
+    // made a brand-new token look revoked (see verifyToken in lib/session.ts).
+    .values({ email, password: hashedPassword, tokenInvalidBefore: new Date() })
     .returning({
       id: users.id,
       email: users.email,
@@ -61,7 +64,10 @@ export type CredentialsResult =
 
 /** Shared copy for a 'locked' result. */
 export function lockoutMessage(lockedUntil: Date) {
-  const minutes = Math.max(1, Math.ceil((lockedUntil.getTime() - Date.now()) / 60_000))
+  const minutes = Math.max(
+    1,
+    Math.ceil((lockedUntil.getTime() - Date.now()) / 60_000),
+  )
   return `Too many failed attempts. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`
 }
 
