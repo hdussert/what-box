@@ -8,6 +8,13 @@ export type ImageOwner = {
   itemId?: string | null
 }
 
+/** An upload that went through `prepareImage`: decoded, checked and stripped of metadata. */
+export type PreparedImage = {
+  name: string
+  data: Buffer
+  contentType: string
+}
+
 export type UploadImageData = ImageOwner & {
-  image: File
+  image: PreparedImage
 }

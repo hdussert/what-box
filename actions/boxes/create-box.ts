@@ -5,6 +5,7 @@ import { createBox, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
+import { prepareImage } from '@/lib/image/prepare'
 import { getCurrentUser } from '@/lib/user'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
@@ -43,6 +44,8 @@ export async function createBoxAction(
     // Auth check only: throws when signed out
     await getCurrentUser()
     const data = CreateBoxSchema.parse(raw)
+    // Before creating the box, so a bad image doesn't leave one behind
+    const image = data.image ? await prepareImage(data.image) : null
 
     // Check for uniqueness of shortId for this user
     let shortId = generateShortId()
@@ -57,8 +60,8 @@ export async function createBoxAction(
     const box = await createBox(data.name, shortId)
 
     // Upload files
-    if (data.image) {
-      await saveImage({ boxId: box.id, image: data.image })
+    if (image) {
+      await saveImage({ boxId: box.id, image })
     }
 
     revalidatePath('/dashboard')
