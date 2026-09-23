@@ -1,15 +1,17 @@
 import Footer from '@/components/Footer'
-import Navbar from '@/components/marketing/Navbar'
+import Logo from '@/components/Logo'
 import { PropsWithChildren } from 'react'
 
-const MarketingLayout = ({ children }: PropsWithChildren) => {
+const LegalLayout = ({ children }: PropsWithChildren) => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <header className="px-4 py-2">
+        <Logo className="w-fit" />
+      </header>
       <div className="flex-1">{children}</div>
       <Footer />
     </div>
   )
 }
 
-export default MarketingLayout
+export default LegalLayout
