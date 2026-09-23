@@ -1,58 +1,42 @@
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
+const ITEM_CARD_COUNT = 6
+
+// Mirrors ItemsSection (toolbar, item cards) so the page doesn't shift when
+// the data arrives. Keep in sync when those components change.
 export default function ItemsLoading() {
-  // Or a custom loading skeleton component
   return (
-    <div className="space-y-2">
-      <Card className="py-2">
-        <CardContent className="px-2">
-          <div className="flex gap-2 flex-col md:flex-row">
-            <Skeleton className="h-7 md:h-9 md:flex-2" />
-            <Skeleton className="h-7 md:h-9 md:flex-1" />
-            <Skeleton className="h-7 md:h-9 md:flex-2" />
-            <Skeleton className="h-8 md:h-9 md:w-25" />
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="py-2">
-        <CardContent className="px-2">
-          <div className="flex mb-2 gap-3">
-            <Skeleton className="h-9 flex-1" />
-            <div className="flex gap-2">
-              <Skeleton className="size-9" />
-            </div>
-          </div>
-          <div className="flex w-full flex-col gap-px pl-2">
-            <div className="flex gap-2 h-10 items-center">
-              <Skeleton className="size-4 border rounded" />
-              <Skeleton className="h-5 flex-1" />
-              <Skeleton className="h-5 flex-1" />
-              <Skeleton className="h-5 flex-1" />
-            </div>
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div className="flex gap-2 h-9 items-center" key={index}>
-                <Skeleton className="size-4 border rounded" />
-                <Skeleton className="h-5 flex-1" />
-                <Skeleton className="h-5 flex-1" />
-                <Skeleton className="h-5 flex-1" />
+    <div>
+      <div className="-mx-2 px-2 py-2 space-y-2 border-b">
+        <div className="flex gap-1">
+          <Skeleton className="h-9 flex-1" />
+          <Skeleton className="h-9 w-36" />
+        </div>
+        <div className="flex justify-between">
+          <Skeleton className="h-8 w-16" />
+          <Skeleton className="h-8 w-16" />
+        </div>
+      </div>
+
+      <div className="flex gap-2 flex-col py-2">
+        {Array.from({ length: ITEM_CARD_COUNT }).map((_, index) => (
+          <Card key={index} className="p-0 flex-row gap-2">
+            <Skeleton className="size-20" />
+            <div className="flex flex-1 p-2">
+              <div className="flex flex-col flex-1 my-auto gap-1">
+                <div className="h-9 py-1.5">
+                  <Skeleton className="h-6 w-2/5" />
+                </div>
+                <div className="h-6 py-0.5">
+                  <Skeleton className="h-5 w-8" />
+                </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-        <CardFooter className="px-4">
-          <div className="flex justify-between w-full items-center">
-            <Skeleton className="h-6 w-16" />
-            <div className="flex gap-2">
-              <Skeleton className="size-8" />
-              <Skeleton className="size-8" />
-              <Skeleton className="size-8" />
-              <Skeleton className="size-8" />
-              <Skeleton className="size-8" />
+              <Skeleton className="h-4 w-16" />
             </div>
-          </div>
-        </CardFooter>
-      </Card>
+          </Card>
+        ))}
+      </div>
     </div>
   )
 }
