@@ -5,17 +5,26 @@ import { safeRedirectPath } from '@/lib/utils'
 import Link from 'next/link'
 
 type SignInPageProps = {
-  searchParams: Promise<{ next?: string | string[] }>
+  searchParams: Promise<{
+    next?: string | string[]
+    expired?: string | string[]
+  }>
 }
 
 export default async function SignInPage({ searchParams }: SignInPageProps) {
-  const { next } = await searchParams
+  const { next, expired } = await searchParams
   const redirectTo = safeRedirectPath(next)
+  const isSessionExpired = expired === '1'
 
   return (
     <>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Typography.H1 className="mt-2 text-center">Sign in</Typography.H1>
+        {isSessionExpired && (
+          <Typography.P className="mt-2 text-center">
+            Your session has expired. Sign in again to continue.
+          </Typography.P>
+        )}
       </div>
 
       <Card className="sm:mx-auto sm:w-full sm:max-w-md mt-8">

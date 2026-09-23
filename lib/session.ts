@@ -13,6 +13,9 @@ interface JWTPayload {
 
 const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET)
 const JWT_EXPIRATION = '7d' // 7 days expiration time
+// Outlives the JWT on purpose: a cookie still holding an expired token tells
+// "session expired" apart from "never signed in" (see hasSessionCookie).
+const SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days, in seconds
 const RESET_TOKEN_EXPIRATION = '1h' // Password-reset links are short-lived, unlike sessions
 const REFRESH_THRESHOLD_SECONDS = 24 * 60 * 60 // 24 hours refresh threshold in seconds
 const SESSION_COOKIE_NAME = 'auth_token'
@@ -115,7 +118,7 @@ export async function createSession(userId: string) {
       value: token,
       httpOnly: true,
       secure: env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+      maxAge: SESSION_COOKIE_MAX_AGE,
       path: '/',
       sameSite: 'lax',
     })
@@ -137,6 +140,16 @@ export async function getSession() {
   if (!valid || !user) return null
 
   return user
+}
+
+/**
+ * Whether the browser sent a session cookie, valid or not. When
+ * `getSession()` returns null, this tells an expired or revoked session
+ * (true) apart from a visitor who never signed in or signed out (false).
+ */
+export async function hasSessionCookie() {
+  const cookieStore = await cookies()
+  return cookieStore.has(SESSION_COOKIE_NAME)
 }
 
 // Delete session by clearing the JWT cookie
