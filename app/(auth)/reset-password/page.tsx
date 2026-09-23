@@ -1,8 +1,15 @@
 import ResetPasswordForm from '@/components/auth/ResetPasswordForm'
 import { Card, CardContent } from '@/components/ui/card'
 import Typography from '@/components/ui/typography'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
+
+// Only useful with the token from a reset email
+export const metadata: Metadata = {
+  title: 'Reset password',
+  robots: { index: false, follow: false },
+}
 
 export default function ResetPasswordPage() {
   return (

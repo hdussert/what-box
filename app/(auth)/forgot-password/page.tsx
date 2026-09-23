@@ -1,7 +1,14 @@
 import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm'
 import { Card, CardContent } from '@/components/ui/card'
 import Typography from '@/components/ui/typography'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Forgot password',
+  description: 'Get a link to reset your WhatBox password.',
+  robots: { index: false },
+}
 
 export default function ForgotPasswordPage() {
   return (

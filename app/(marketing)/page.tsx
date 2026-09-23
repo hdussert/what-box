@@ -1,6 +1,11 @@
 import Hero from '@/components/marketing/Hero'
 import HowItWorks from '@/components/marketing/HowItWorks'
 import Pitch from '@/components/marketing/Pitch'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+}
 
 const LandingPage = () => {
   // Signed-in visitors never get here: proxy.ts redirects them to /dashboard

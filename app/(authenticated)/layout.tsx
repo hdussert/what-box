@@ -5,7 +5,13 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
+import type { Metadata } from 'next'
 import { PropsWithChildren } from 'react'
+
+// Private pages: signed-in content, never indexed
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 const AppLayout = ({ children }: PropsWithChildren) => {
   return (

@@ -2,7 +2,14 @@ import SignInForm from '@/components/auth/SignInForm'
 import { Card, CardContent } from '@/components/ui/card'
 import Typography from '@/components/ui/typography'
 import { safeRedirectPath } from '@/lib/utils'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Sign in',
+  description: 'Sign in to WhatBox to find what is in your boxes.',
+  alternates: { canonical: '/sign-in' },
+}
 
 type SignInPageProps = {
   searchParams: Promise<{
