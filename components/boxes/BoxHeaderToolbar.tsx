@@ -11,7 +11,7 @@ const BoxHeaderToolbar = ({ boxId }: BoxHeaderToolbarProps) => {
   const router = useRouter()
   return (
     <div className="flex items-center justify-between">
-      <GoBackButton />
+      <GoBackButton fallbackHref="/dashboard" />
       <div>
         <PrintLabelsButton boxIds={[boxId]} />
         <DeleteBoxesButton
