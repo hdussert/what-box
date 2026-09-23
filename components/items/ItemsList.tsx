@@ -4,7 +4,7 @@ import ItemCard from '@/components/items/ItemCard'
 import SelectableRow from '@/components/selection/SelectableRow'
 import { useSelection } from '@/components/selection/SelectionProvider'
 import { Item } from '@/db/schema'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 type ItemsListProps = {
   items: Item[]
@@ -14,11 +14,11 @@ const ItemsList = ({ items }: ItemsListProps) => {
   const { isSelecting, isSelected, toggleSelect } = useSelection()
   const [itemFocused, setItemFocused] = useState<string>()
 
-  useEffect(() => {
-    if (isSelecting) {
-      setItemFocused(undefined)
-    }
-  }, [isSelecting])
+  // Entering selection mode closes the open item. Adjusted during render
+  // instead of in an effect; it only runs while an item is still open.
+  if (isSelecting && itemFocused) {
+    setItemFocused(undefined)
+  }
 
   const toggleFocused = (itemId: string) => {
     if (itemId === itemFocused) {

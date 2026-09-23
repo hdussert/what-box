@@ -6,7 +6,7 @@ import ToolbarButton from '@/components/ToolbarButton'
 import { Card, CardDescription } from '@/components/ui/card'
 import { Item } from '@/db/schema'
 import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 type ItemCardProps = {
   item: Item
@@ -17,11 +17,15 @@ type ItemCardProps = {
 const ItemCard = ({ item, isSelected, isFocused }: ItemCardProps) => {
   const [isEditing, setIsEditing] = useState(false)
 
-  useEffect(() => {
+  // Leave edit mode when the card loses focus. Adjusted during render when
+  // the prop changes, instead of in an effect.
+  const [wasFocused, setWasFocused] = useState(isFocused)
+  if (isFocused !== wasFocused) {
+    setWasFocused(isFocused)
     if (!isFocused) {
       setIsEditing(false)
     }
-  }, [isFocused])
+  }
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
