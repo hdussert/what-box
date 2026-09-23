@@ -1,7 +1,15 @@
 import SignUpForm from '@/components/auth/SignUpForm'
 import { Card, CardContent } from '@/components/ui/card'
 import Typography from '@/components/ui/typography'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Sign up',
+  description:
+    'Create a free WhatBox account: list what is in your boxes, add photos and print QR labels.',
+  alternates: { canonical: '/sign-up' },
+}
 
 export default function SignUpPage() {
   return (

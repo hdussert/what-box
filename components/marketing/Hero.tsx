@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { SITE_TAGLINE } from '@/lib/const'
 import { Package } from 'lucide-react'
 import Link from 'next/link'
 
@@ -9,7 +10,7 @@ const Hero = () => {
       <div className="text-center md:text-left">
         <h1 className="text-5xl font-bold">WhatBox</h1>
         <p className="mt-4 text-lg text-default-500">
-          Find your items in an instant.
+          {SITE_TAGLINE}
         </p>
         <div className="flex gap-2 mt-4 w-full justify-center md:justify-end">
           <Button variant="link">

@@ -1,3 +1,5 @@
+import { env } from '@/env'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from '@/lib/const'
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import { PropsWithChildren } from 'react'
@@ -16,8 +18,20 @@ const jetBrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'WhatBox',
-  description: 'Inventory management made simple',
+  // Makes canonical and Open Graph URLs absolute, on every deployment
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
+  title: {
+    default: `${SITE_NAME} · ${SITE_TAGLINE}`,
+    template: `%s · ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'en_US',
+  },
+  twitter: { card: 'summary_large_image' },
 }
 
 const RootLayout = ({ children }: PropsWithChildren) => {

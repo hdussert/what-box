@@ -3,7 +3,10 @@ import Typography from '@/components/ui/typography'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy policy - WhatBox',
+  title: 'Privacy policy',
+  description:
+    'How WhatBox handles your personal data, cookies and your rights under the GDPR.',
+  alternates: { canonical: '/privacy' },
 }
 
 const SUBPROCESSORS = [

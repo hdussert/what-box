@@ -1,5 +1,6 @@
 import { CONTACT_EMAIL } from '@/components/legal/const'
 import Logo from '@/components/Logo'
+import { SITE_TAGLINE } from '@/lib/const'
 import Link from 'next/link'
 
 const LINKS = [
@@ -13,7 +14,7 @@ const Footer = () => {
       <div className="mx-auto max-w-5xl px-4 pt-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
           <Logo className="text-base text-foreground" iconSize={24} />
-          <p>Find your items in an instant.</p>
+          <p>{SITE_TAGLINE}</p>
         </div>
 
         <nav aria-label="Footer" className="flex flex-col gap-2 sm:items-end">

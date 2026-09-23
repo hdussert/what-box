@@ -4,7 +4,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Legal notice - WhatBox',
+  title: 'Legal notice',
+  description: 'Legal notice for WhatBox: publisher, host and contact.',
+  alternates: { canonical: '/legal' },
 }
 
 // Required by French law (LCEN, art. 6). The publisher is a private
