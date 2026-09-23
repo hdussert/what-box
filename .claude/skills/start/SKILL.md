@@ -1,6 +1,6 @@
 ---
 name: start
-description: Start a new what-box task (steps 1–2 of the CLAUDE.md workflow). Creates a branch from an up-to-date main, opens a draft PR, then plans if the task is non-trivial. Use when the user begins a new task, feature, fix or refactor, or types /start.
+description: Start a new what-box task (steps 1–2 of the CLAUDE.md workflow). Creates a branch from an up-to-date dev, then plans if the task is non-trivial. The PR is opened later by /finish. Use when the user begins a new task, feature, fix or refactor, or types /start.
 argument-hint: <task description>
 ---
 
@@ -13,22 +13,12 @@ If the task is empty or unclear, ask what it is before touching git.
 ## 1. Branch
 
 1. Run `git status`. If there are uncommitted changes, stop and ask the user what to do with them. Don't stash or discard them yourself.
-2. `git switch main && git pull`
+2. `git switch dev && git pull`
 3. `git switch -c <type>/<short-kebab-name>`, where `<type>` is `feat`, `fix`, `refactor`, `docs` or `chore` (the conventional-commit type the work will use).
 
-## 2. Draft PR
+Don't open a PR yet: `/finish` opens it into `dev` once the work is verified. Pushing the branch before then is fine (it backs the work up); Vercel doesn't build feature branches.
 
-A PR needs at least one commit, so start with an empty one:
-
-```bash
-git commit --allow-empty -m "<type>: <summary>"
-git push -u origin HEAD
-gh pr create --draft --base main --title "<type>: <summary>" --body "<one or two lines: the goal>"
-```
-
-End the body with the attribution line from the system prompt, if there is one. Share the PR link.
-
-## 3. Plan or go
+## 2. Plan or go
 
 Decide whether the task is non-trivial: several files, a new feature, a schema change, or anything with more than one reasonable approach.
 
