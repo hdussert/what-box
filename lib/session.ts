@@ -1,5 +1,4 @@
 import { env } from '@/env'
-import { SESSION_COOKIE_NAME } from '@/lib/const'
 import { getUserById } from '@/lib/user'
 import * as jose from 'jose'
 import { cookies } from 'next/headers'
@@ -19,6 +18,7 @@ const JWT_EXPIRATION = '7d' // 7 days expiration time
 const SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days, in seconds
 const RESET_TOKEN_EXPIRATION = '1h' // Password-reset links are short-lived, unlike sessions
 const REFRESH_THRESHOLD_SECONDS = 24 * 60 * 60 // 24 hours refresh threshold in seconds
+const SESSION_COOKIE_NAME = 'auth_token'
 
 async function generateJWT(payload: JWTPayload, expiration: string) {
   return await new jose.SignJWT(payload)
