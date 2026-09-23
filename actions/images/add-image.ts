@@ -3,6 +3,7 @@
 import { ActionResponse } from '@/actions/types'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
+import { unstable_rethrow } from 'next/navigation'
 import z from 'zod'
 
 const AddImageSchema = z.object({
@@ -25,6 +26,8 @@ export async function addImageAction(
       message: 'Image uploaded successfully',
     }
   } catch (error) {
+    // Let getCurrentUser()'s sign-in redirect through
+    unstable_rethrow(error)
     return {
       success: false,
       message: (error as Error).message || 'Failed to upload the image',
