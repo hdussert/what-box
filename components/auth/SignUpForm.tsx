@@ -4,7 +4,6 @@ import { signUpAction, SignUpState } from '@/actions/auth/sign-up'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useRouter } from 'next/navigation'
 import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
 
@@ -18,8 +17,6 @@ const initialState: SignUpState = {
 }
 
 export default function SignUpForm() {
-  const router = useRouter()
-
   // Use useActionState hook for the form submission action
   const [state, formAction, isPending] = useActionState<SignUpState, FormData>(
     signUpAction,
@@ -27,17 +24,10 @@ export default function SignUpForm() {
   )
 
   useEffect(() => {
-    if (!state.message) return
-
-    if (state.success) {
-      toast.success(state.message)
-      router.push('/dashboard')
-      router.refresh()
-    } else {
+    if (state.message) {
       toast.error(state.message)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.success, state.message])
+  }, [state])
 
   return (
     <form action={formAction} className="space-y-6">
@@ -91,7 +81,7 @@ export default function SignUpForm() {
       </Field>
 
       <Button type="submit" className="w-full mt-2" disabled={isPending}>
-        Sign up
+        {isPending ? 'Creating account…' : 'Sign up'}
       </Button>
     </form>
   )

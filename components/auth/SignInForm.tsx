@@ -4,8 +4,6 @@ import { SignInState, signInAction } from '@/actions/auth/sign-in'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useRouter } from 'next/navigation'
-
 import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
 
@@ -24,8 +22,6 @@ type SignInFormProps = {
 }
 
 const SignInForm = ({ redirectTo }: SignInFormProps) => {
-  const router = useRouter()
-
   // Use useActionState hook for the form submission action
   const [state, formAction, isPending] = useActionState<SignInState, FormData>(
     signInAction,
@@ -33,20 +29,14 @@ const SignInForm = ({ redirectTo }: SignInFormProps) => {
   )
 
   useEffect(() => {
-    if (!state.message) return
-
-    if (state.success) {
-      toast.success(state.message)
-      router.push(redirectTo)
-      router.refresh()
-    } else {
+    if (state.message) {
       toast.error(state.message)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.success, state.message])
+  }, [state])
 
   return (
     <form action={formAction} className="space-y-6">
+      <input type="hidden" name="redirectTo" value={redirectTo} />
       {state?.message && !state.success && (
         <FieldError>{state.message}</FieldError>
       )}
@@ -82,7 +72,7 @@ const SignInForm = ({ redirectTo }: SignInFormProps) => {
         </FieldError>
       </Field>
       <Button type="submit" className="w-full" disabled={isPending}>
-        Sign in
+        {isPending ? 'Signing in…' : 'Sign in'}
       </Button>
     </form>
   )

@@ -3,6 +3,8 @@
 import { ActionResponse } from '@/actions/types'
 import { createSession } from '@/lib/session'
 import { lockoutMessage, verifyCredentials } from '@/lib/user'
+import { safeRedirectPath } from '@/lib/utils'
+import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 // Define Zod schema for signin validation
@@ -41,12 +43,6 @@ export async function signInAction(
 
     // Create session
     await createSession(result.user.id)
-
-    return {
-      success: true,
-      message: 'Signed in successfully',
-      values,
-    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
@@ -64,4 +60,9 @@ export async function signInAction(
       values,
     }
   }
+
+  // Outside the try so the catch can't swallow it. Redirecting from the action
+  // sends the next page in the same response: no idle form in between.
+  // The hidden input is user-controlled, so it's checked again here.
+  redirect(safeRedirectPath(formData.get('redirectTo')))
 }

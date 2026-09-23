@@ -7,7 +7,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useActionState, useEffect } from 'react'
 import { toast } from 'sonner'
 
@@ -22,7 +22,6 @@ const initialState: ResetPasswordState = {
 }
 
 export default function ResetPasswordForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
 
@@ -36,17 +35,10 @@ export default function ResetPasswordForm() {
   )
 
   useEffect(() => {
-    if (!state.message) return
-
-    if (state.success) {
-      toast.success(state.message)
-      router.push('/dashboard')
-      router.refresh()
-    } else {
+    if (state.message) {
       toast.error(state.message)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.success, state.message])
+  }, [state])
 
   return (
     <form action={formAction} className="space-y-6">
@@ -85,7 +77,7 @@ export default function ResetPasswordForm() {
       </Field>
 
       <Button type="submit" className="w-full mt-2" disabled={isPending}>
-        Confirm
+        {isPending ? 'Updating…' : 'Confirm'}
       </Button>
     </form>
   )
