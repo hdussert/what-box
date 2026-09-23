@@ -17,6 +17,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar'
 import { Boxes, LogOut, PackagePlus } from 'lucide-react'
+import Link from 'next/link'
 
 type SideItemList = Array<SidebarNavItemProps & { key: string }>
 
@@ -52,6 +53,15 @@ const Side = () => {
           <LogOut />
           Sign out
         </SidebarMenuButton>
+        <div className="px-2 pt-1 text-xs text-muted-foreground whitespace-nowrap group-data-[collapsible=icon]:hidden">
+          <Link href="/legal" className="hover:text-foreground">
+            Legal notice
+          </Link>
+          {' · '}
+          <Link href="/privacy" className="hover:text-foreground">
+            Privacy
+          </Link>
+        </div>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

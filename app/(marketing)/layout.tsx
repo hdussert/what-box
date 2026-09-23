@@ -1,11 +1,13 @@
+import Footer from '@/components/Footer'
 import Navbar from '@/components/marketing/Navbar'
 import { PropsWithChildren } from 'react'
 
 const MarketingLayout = ({ children }: PropsWithChildren) => {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      {children}
+      <div className="flex-1">{children}</div>
+      <Footer />
     </div>
   )
 }
