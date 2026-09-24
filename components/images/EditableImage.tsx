@@ -6,8 +6,8 @@ import EditableImageMenu from '@/components/images/EditableImageMenu'
 import ImageInput from '@/components/images/ImageInput'
 import ImageInputPreview from '@/components/images/ImageInputPreview'
 import ImagePreview from '@/components/images/ImagePreview'
+import ImageSpinner from '@/components/images/ImageSpinner'
 import { cn } from '@/lib/utils'
-import { LoaderCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
@@ -91,9 +91,7 @@ const EditableImage = ({
   if (imageUrl && isPending && newImage) {
     return (
       <ImageInputPreview image={newImage} className={cn('relative', className)}>
-        <div className="absolute inset-0 bg-secondary/80 flex items-center justify-center">
-          <LoaderCircle size={48} className="animate-spin" />
-        </div>
+        <ImageSpinner />
       </ImageInputPreview>
     )
   }

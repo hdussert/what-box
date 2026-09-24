@@ -1,7 +1,7 @@
 'use client'
 
+import ImageSpinner from '@/components/images/ImageSpinner'
 import { cn } from '@/lib/utils'
-import { LoaderCircle } from 'lucide-react'
 import Image, { ImageProps } from 'next/image'
 import { useState } from 'react'
 
@@ -22,11 +22,7 @@ const ImagePreview = ({ children, className, ...props }: ImagePreviewProps) => {
         alt={props.alt}
         onLoad={() => setIsLoading(false)}
       />
-      {isLoading ? (
-        <div className="absolute inset-0 bg-accent flex items-center justify-center opacity-100">
-          <LoaderCircle size={48} className="animate-spin " />
-        </div>
-      ) : null}
+      {isLoading ? <ImageSpinner className="bg-accent" /> : null}
       {children}
     </div>
   )
