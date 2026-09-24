@@ -4,7 +4,7 @@ import { ActionResponse } from '@/actions/types'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
 import { prepareImage } from '@/lib/image/prepare'
-import { createItem } from '@/lib/item/mutations'
+import { createItem, deleteItems } from '@/lib/item/mutations'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
@@ -58,9 +58,20 @@ export async function createItemAction(
       quantity: data.quantity,
     })
 
-    // Upload image
     if (image) {
-      await saveImage({ boxId: data.boxId, itemId: item.id, image })
+      try {
+        await saveImage({ boxId: data.boxId, itemId: item.id, image })
+      } catch (error) {
+        // Don't keep an item without the photo the user asked for: a retry
+        // would create a duplicate
+        await deleteItems([item.id]).catch((cleanupError) =>
+          console.error('Failed to delete the item', {
+            id: item.id,
+            cleanupError,
+          }),
+        )
+        throw error
+      }
     }
 
     revalidatePath(`/boxes/${data.boxId}`)

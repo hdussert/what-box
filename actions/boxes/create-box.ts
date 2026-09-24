@@ -1,7 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
-import { createBox, getBoxByShortId } from '@/lib/box'
+import { createBox, deleteBoxes, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
@@ -59,9 +59,20 @@ export async function createBoxAction(
     // Create box
     const box = await createBox(data.name, shortId)
 
-    // Upload files
     if (image) {
-      await saveImage({ boxId: box.id, image })
+      try {
+        await saveImage({ boxId: box.id, image })
+      } catch (error) {
+        // Don't keep a box without the photo the user asked for: a retry
+        // would create a duplicate
+        await deleteBoxes([box.id]).catch((cleanupError) =>
+          console.error('Failed to delete the box', {
+            id: box.id,
+            cleanupError,
+          }),
+        )
+        throw error
+      }
     }
 
     revalidatePath('/dashboard')
