@@ -1,16 +1,29 @@
 import { db } from '@/db'
 import { Box, boxes } from '@/db/schema'
-import { UpdateBoxData } from '@/lib/box/types'
+import { CreateBoxData, UpdateBoxData } from '@/lib/box/types'
 import { StoredImage } from '@/lib/image/types'
 import { getCurrentUser } from '@/lib/user'
 import { and, eq, inArray } from 'drizzle-orm'
 import 'server-only'
 
-export async function createBox(name: string, shortId: string): Promise<Box> {
+/** Create a box, with its image if it has one. See `createWithImage` in lib/image. */
+export async function createBox({
+  id,
+  name,
+  shortId,
+  image,
+}: CreateBoxData): Promise<Box> {
   const user = await getCurrentUser()
   const [newBox] = await db
     .insert(boxes)
-    .values({ userId: user.id, name, shortId })
+    .values({
+      id,
+      userId: user.id,
+      name,
+      shortId,
+      imageUrl: image?.url ?? null,
+      imagePathname: image?.pathname ?? null,
+    })
     .returning()
 
   if (!newBox) throw new Error('Failed to create box')

@@ -1,10 +1,45 @@
 import { getBoxById, updateBoxImage } from '@/lib/box'
 import { deleteImageFiles, uploadImageFile } from '@/lib/image/storage'
-import { ImageOwner, UploadImageData } from '@/lib/image/types'
+import {
+  ImageOwner,
+  PreparedImage,
+  StoredImage,
+  UploadImageData,
+} from '@/lib/image/types'
 import { getItemById, updateItemImage } from '@/lib/item'
 import 'server-only'
 
-/** Upload an image and set it as the box's (or the item's) image */
+/**
+ * Create a box or item together with its image: upload the image first (under
+ * the owner's pre-generated id), then run `create` with the stored file, so
+ * the row is inserted complete in one go. If `create` fails, the upload is
+ * deleted. Without an image, just runs `create(null)`.
+ */
+export async function createWithImage<T>(
+  owner: ImageOwner,
+  image: PreparedImage | null,
+  create: (image: StoredImage | null) => Promise<T>,
+): Promise<T> {
+  if (!image) {
+    return create(null)
+  }
+
+  const blob = await uploadImageFile({ ...owner, image })
+  const storedImage = { url: blob.url, pathname: blob.pathname }
+  try {
+    return await create(storedImage)
+  } catch (error) {
+    await deleteImageFiles(blob.pathname).catch((cleanupError) =>
+      console.error('Failed to delete the uploaded image', {
+        pathname: blob.pathname,
+        cleanupError,
+      }),
+    )
+    throw error
+  }
+}
+
+/** Upload an image and set it as an existing box's (or item's) image */
 export async function saveImage(data: UploadImageData): Promise<void> {
   const { boxId, itemId } = data
   const blob = await uploadImageFile(data)
