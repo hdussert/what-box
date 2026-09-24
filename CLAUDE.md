@@ -11,7 +11,7 @@
 5. **Self-review**: `/code-review` the diff and fix the findings that hold up.
 6. **Finish**: update the PR's title and description and mark it ready. Never merge: the user reviews and merges.
 
-**Side issues**: don't fix or stop to discuss unrelated problems you notice (bugs, tech debt, doc gaps). Log them in `BACKLOG.md` (priority and effort per its legend: what, where, why, likely fix) and mention them in one line.
+**Side issues**: don't fix or stop to discuss unrelated problems you notice (bugs, tech debt, doc gaps). Log them in `BACKLOG.md`, which is local and git-ignored: edit it directly, never commit it (priority and effort per its legend: what, where, why, likely fix) and mention them in one line.
 
 ## Git
 
@@ -78,7 +78,7 @@ Styling:
 - **yarn** v1 only: npm would create a `package-lock.json`.
 - Every `db:*` script has a `:prod` variant that hits the **production** database.
 - There is no test runner.
-- TypeScript is pinned to 6 (typescript-eslint doesn't support 7). Don't upgrade it or add a 6/7 alias: Next 16 would then auto-install TS 7 (see `BACKLOG.md`).
+- TypeScript is pinned to 6 (typescript-eslint doesn't support 7). Don't upgrade it or add a 6/7 alias: Next 16 would then auto-install TS 7. Move to 7 once typescript-eslint supports it ([typescript-eslint#10940](https://github.com/typescript-eslint/typescript-eslint/issues/10940)).
 
 ## Next.js
 
