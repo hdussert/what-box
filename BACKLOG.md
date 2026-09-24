@@ -40,6 +40,5 @@ Workflow and communication:
 
 - `S` **Answer each option explicitly.** When a question offers several options and one goes unanswered, Claude has to guess (e.g. "reopen or stay closed" after selection mode, which led to a rework). A one-word answer per open question saves a round trip.
 - `S` **Say what you tested before `/finish`.** Claude can't click through the app, so tell it which browser checks you did (or "not yet"); the PR then says so accurately.
-- `S` **Auto-delete merged branches** (you, in GitHub → Settings → General → "Automatically delete head branches"). Merged branches piled up (23 deleted at once), and draft PRs now create a branch per task.
 - `S` **Close dropped tasks' draft PRs.** `/start` opens a draft PR before the plan is approved, so a rejected plan or abandoned task leaves a draft PR and branch to close.
 - `S` **Parallel sessions with worktrees.** Once reviewing PRs feels routine, run several tasks at once in separate worktrees (`claude --worktree`).
