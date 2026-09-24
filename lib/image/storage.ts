@@ -19,7 +19,6 @@ export async function uploadImageFile({
 
   return put(imagePath, image.data, {
     access: 'public',
-    addRandomSuffix: true,
     contentType: image.contentType,
   })
 }
