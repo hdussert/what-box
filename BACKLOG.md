@@ -19,7 +19,6 @@ _Nothing right now._
 
 ## 🟢 Low
 
-- `S` **Creating a box or item with a photo isn't atomic.** `create-box.ts` / `create-item.ts` create the row, then upload the photo. If the Blob upload or the image update fails, the action reports an error but the row stays, so a retry creates a duplicate. (Bad image files are rejected before the row since #48; this is about upload/DB failures.) Likely fix: delete the row when `saveImage` throws.
 - `S` **Move back to TypeScript 7** once typescript-eslint supports it (tracking: typescript-eslint#10940). Set `"typescript"` to `^7` in `package.json`, check that `yarn lint` and `next dev` both work, then remove the gotcha from `CLAUDE.md`.
 - `S` **Parallel sessions with worktrees** (an idea, not a problem). Once reviewing PRs feels routine, run several tasks at once in separate worktrees (`claude --worktree`).
 - `L` **Translate the site (French first).** Everything is hard-coded English and `<html lang="en">` is fixed (`app/layout.tsx:25`). Needs a decision on routing (`/fr/...` prefix vs. cookie/`Accept-Language`) and a library (e.g. `next-intl`, check it supports Next 16's `proxy.ts`), then extracting strings from components, emails (`components/auth/ForgotPasswordEmailTemplate.tsx`) and the legal pages. French legal pages would also suit French users (loi Toubon). Pairs with SEO: `hreflang` alternates per language.
