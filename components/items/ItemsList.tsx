@@ -1,9 +1,11 @@
 'use client'
 
 import ItemCard from '@/components/items/ItemCard'
+import { useList } from '@/components/list/ListProvider'
 import SelectableRow from '@/components/selection/SelectableRow'
 import { useSelection } from '@/components/selection/SelectionProvider'
 import { Item } from '@/db/schema'
+import { cn } from '@/lib/utils'
 import { useState } from 'react'
 
 type ItemsListProps = {
@@ -12,6 +14,7 @@ type ItemsListProps = {
 
 const ItemsList = ({ items }: ItemsListProps) => {
   const { isSelecting, isSelected, toggleSelect } = useSelection()
+  const { isPending } = useList()
   const [itemFocused, setItemFocused] = useState<string>()
   const [isEditing, setIsEditing] = useState(false)
 
@@ -32,7 +35,12 @@ const ItemsList = ({ items }: ItemsListProps) => {
   }
 
   return (
-    <div className="flex gap-2 flex-col py-2">
+    <div
+      className={cn(
+        'flex gap-2 flex-col py-2 transition-opacity',
+        isPending && 'opacity-60',
+      )}
+    >
       {items.map((item, index) => (
         <SelectableRow
           key={index}
