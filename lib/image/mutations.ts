@@ -39,9 +39,19 @@ export async function createWithImage<T>(
   }
 }
 
-/** Upload an image and set it as an existing box's (or item's) image */
+/**
+ * Set an existing box's (or item's) image, replacing any previous one. The
+ * previous file is deleted only once the new one is saved, so a failed upload
+ * never leaves the owner without its image.
+ */
 export async function saveImage(data: UploadImageData): Promise<void> {
   const { boxId, itemId } = data
+  const owner = itemId ? await getItemById(itemId) : await getBoxById(boxId)
+  if (!owner) {
+    throw new Error(itemId ? 'Item not found' : 'Box not found')
+  }
+  const previousPathname = owner.imagePathname
+
   const blob = await uploadImageFile(data)
   const image = { url: blob.url, pathname: blob.pathname }
 
@@ -55,6 +65,16 @@ export async function saveImage(data: UploadImageData): Promise<void> {
     // Clean up if DB fails
     await deleteImageFiles(blob.pathname)
     throw error
+  }
+
+  // The new image is saved: an old file left behind only wastes storage
+  if (previousPathname) {
+    await deleteImageFiles(previousPathname).catch((cleanupError) =>
+      console.error('Failed to delete the replaced image', {
+        pathname: previousPathname,
+        cleanupError,
+      }),
+    )
   }
 }
 
