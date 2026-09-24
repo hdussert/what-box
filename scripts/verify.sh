@@ -3,6 +3,15 @@
 # Stops at the first failing step.
 set -e
 
+# env.ts validates these whenever next.config.ts loads (typegen and build);
+# nothing here uses them. Placeholders make every step behave the same with
+# or without .env files (CI has none), and override them locally.
+export JWT_SECRET=verify-placeholder-secret-at-least-32-characters
+export DATABASE_URL=postgresql://verify:verify@localhost:5432/verify
+export BLOB_READ_WRITE_TOKEN=verify-placeholder
+export RESEND_API_KEY=verify-placeholder
+export NEXT_PUBLIC_APP_URL=http://localhost:3000
+
 echo "▸ Type check"
 # Refresh Next's generated route types first, so stale ones in .next/ can't fail tsc
 next typegen >/dev/null
@@ -12,13 +21,6 @@ echo "▸ Lint"
 eslint
 
 echo "▸ Build"
-# env.ts validates these at build time; the build itself never uses them.
-# Placeholders make the build the same everywhere (they override .env files).
-JWT_SECRET=check-placeholder-secret-at-least-32-characters \
-DATABASE_URL=postgresql://check:check@localhost:5432/check \
-BLOB_READ_WRITE_TOKEN=check-placeholder \
-RESEND_API_KEY=check-placeholder \
-NEXT_PUBLIC_APP_URL=http://localhost:3000 \
 next build --turbo
 
 echo "✓ All checks passed"
