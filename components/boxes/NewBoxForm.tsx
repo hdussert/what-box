@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useState } from 'react'
 import { toast } from 'sonner'
 
 type NewBoxFormProps = {
@@ -35,23 +35,20 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
     CreateBoxState,
     FormData
   >(
-    (prevState, formData) => createBoxAction(prevState, formData, image),
+    // Handles the result here, once per submit, rather than in an effect
+    async (prevState, formData) => {
+      const result = await createBoxAction(prevState, formData, image)
+      if (result.success) {
+        toast.success(result.message)
+        setImage(undefined)
+        onSuccess(result.result!.id)
+      } else {
+        toast.error(result.message)
+      }
+      return result
+    },
     initialState,
   )
-
-  useEffect(() => {
-    if (!state.message) return
-
-    // Box created
-    if (state.success) {
-      toast.success(state.message)
-      setImage(undefined)
-
-      onSuccess(state.result!.id)
-    } else {
-      toast.error(state.message)
-    }
-  }, [state, state.success, state.message])
 
   return (
     <form action={formAction} className={cn('flex flex-col gap-3', className)}>
@@ -60,7 +57,7 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
           label="Image"
           description="(Optional)"
           image={image}
-          setImage={setImage}
+          onImageChange={setImage}
           isLoading={isPending}
           className="flex-1"
         />

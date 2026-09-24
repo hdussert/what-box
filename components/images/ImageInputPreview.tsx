@@ -15,6 +15,7 @@ const ImageInputPreview = ({
   const [previewUrl, setPreviewUrl] = useState<string>()
   useEffect(() => {
     const url = URL.createObjectURL(image)
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the object URL only exists once created here
     setPreviewUrl(url)
 
     return () => {

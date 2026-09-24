@@ -6,7 +6,7 @@ import EditableImageMenu from '@/components/images/EditableImageMenu'
 import ImageInput from '@/components/images/ImageInput'
 import ImagePreview from '@/components/images/ImagePreview'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
 type EditableImageProps = {
@@ -28,20 +28,24 @@ const EditableImage = ({
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  useEffect(() => {
-    if (!newImage) {
+  // Uploads as soon as a file is picked
+  const uploadImage = (image?: File) => {
+    setNewImage(image)
+    if (!image) {
       return
     }
     startTransition(async () => {
-      const result = await addImageAction({ image: newImage, itemId, boxId })
+      const result = await addImageAction({ image, itemId, boxId })
       if (result.success) {
         toast.success('Image uploaded !')
         router.refresh()
       } else {
+        // Drop the preview so it doesn't look saved
+        setNewImage(undefined)
         toast.error('Could not upload the image.')
       }
     })
-  }, [newImage])
+  }
 
   const deleteImage = () => {
     if (!imageUrl) {
@@ -89,7 +93,7 @@ const EditableImage = ({
   ) : (
     <ImageInput
       image={newImage}
-      setImage={setNewImage}
+      onImageChange={uploadImage}
       className={className}
       disabled={isInputDisabled || isPending}
       isLoading={isPending}

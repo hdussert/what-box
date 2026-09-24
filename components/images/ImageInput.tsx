@@ -15,7 +15,8 @@ type ImageInputProps = {
   label?: string
   description?: string
   image?: File
-  setImage: (file?: File) => void
+  /** Called when the user picks a valid file, or clears it (undefined). */
+  onImageChange: (file?: File) => void
   isLoading?: boolean
 } & Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -27,7 +28,7 @@ const ImageInput = ({
   label,
   description,
   image,
-  setImage,
+  onImageChange,
   disabled,
   isLoading,
   ...props
@@ -42,7 +43,7 @@ const ImageInput = ({
     if (inputRef.current) {
       inputRef.current.value = ''
     }
-    setImage(undefined)
+    onImageChange(undefined)
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +51,7 @@ const ImageInput = ({
 
     setError(undefined)
     if (!file) {
-      setImage(undefined)
+      onImageChange(undefined)
       return
     }
 
@@ -59,7 +60,7 @@ const ImageInput = ({
       return
     }
 
-    setImage(file)
+    onImageChange(file)
   }
 
   return image ? (
