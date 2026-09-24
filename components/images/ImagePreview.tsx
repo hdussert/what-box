@@ -1,6 +1,6 @@
 'use client'
 
-import ImageSpinner from '@/components/images/ImageSpinner'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import Image, { ImageProps } from 'next/image'
 import { useState } from 'react'
@@ -22,7 +22,7 @@ const ImagePreview = ({ children, className, ...props }: ImagePreviewProps) => {
         alt={props.alt}
         onLoad={() => setIsLoading(false)}
       />
-      {isLoading ? <ImageSpinner className="bg-accent" /> : null}
+      {isLoading ? <Skeleton className="absolute inset-0" /> : null}
       {children}
     </div>
   )
