@@ -28,7 +28,6 @@ _Nothing right now._
 
 Skills:
 
-- `S` **A `yarn check` script.** Every Verify step runs the same three commands (`tsc --noEmit --pretty false`, `lint`, `build` with placeholder env), typed by hand each time. One script used by `/finish` and CI would keep them identical and shorter to run.
 - `S` **A `/staging` skill.** After a merge into `dev`, wait for the Vercel deploy and read its log (migrations applied, build ready). Done by hand several times already (e.g. the first staging deploy's migration failure).
 - `M` **Let Claude check the UI in a browser.** Most UI PRs end with "not tested in a browser". A browser tool for Claude (Playwright or the Chrome integration) against `yarn dev` would let `/finish` verify UI changes itself. Needs a test account for sign-in.
 
