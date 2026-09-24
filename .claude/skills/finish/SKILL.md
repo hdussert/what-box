@@ -16,8 +16,7 @@ Stop and report at the first step that fails instead of papering over it. The us
 
 ## 2. Verify
 
-- `yarn tsc --noEmit --pretty false`: read the `file(line,col): error TS…` lines. Only errors in source files count; `.next/` errors come from stale generated files. Don't grep the default (colored) output: the color codes hide the errors.
-- `yarn lint`. Warnings don't block, but don't add new ones.
+- `yarn verify`: type check, lint and build, stopping at the first failure (same as CI). Lint warnings don't fail it, but don't add new ones.
 - If the change touches UI, run the app and check the change in the browser (the `run` skill or Chrome tools). If you can't, say so in the report instead of claiming it works.
 
 Fix anything that fails, commit, and re-run.

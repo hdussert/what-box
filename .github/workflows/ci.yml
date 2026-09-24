@@ -15,14 +15,6 @@ jobs:
           node-version: 22
           cache: yarn
       - run: yarn install --frozen-lockfile
-      - run: yarn tsc --noEmit
-      - run: yarn lint
-      # Feature branches don't deploy on Vercel, so CI is their build check.
-      # env.ts validates these at build time; the build never uses them.
-      - run: yarn build
-        env:
-          JWT_SECRET: ci-placeholder-secret-at-least-32-characters
-          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
-          BLOB_READ_WRITE_TOKEN: ci-placeholder
-          RESEND_API_KEY: ci-placeholder
-          NEXT_PUBLIC_APP_URL: http://localhost:3000
+      # Type check, lint and build (scripts/verify.sh). Feature branches don't
+      # deploy on Vercel, so this is also their build check.
+      - run: yarn verify
