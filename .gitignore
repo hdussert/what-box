@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local notes, not shared (e.g. .claude/practices.local.md)
+.claude/*.local.md
