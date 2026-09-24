@@ -46,7 +46,11 @@ export async function updateItemImage(
   return updatedItem
 }
 
-export async function createItem(data: CreateItemData): Promise<Item> {
+/** Create an item, with its image if it has one. See `createWithImage` in lib/image. */
+export async function createItem({
+  image,
+  ...data
+}: CreateItemData): Promise<Item> {
   const user = await getCurrentUser()
 
   // boxId comes straight from the caller - without this, anyone could plant
@@ -59,7 +63,12 @@ export async function createItem(data: CreateItemData): Promise<Item> {
 
   const [newItem] = await db
     .insert(items)
-    .values({ ...data, userId: user.id })
+    .values({
+      ...data,
+      userId: user.id,
+      imageUrl: image?.url ?? null,
+      imagePathname: image?.pathname ?? null,
+    })
     .returning()
 
   if (!newItem) {

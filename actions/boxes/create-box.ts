@@ -1,12 +1,13 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
-import { createBox, deleteBoxes, getBoxByShortId } from '@/lib/box'
+import { createBox, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
-import { saveImage } from '@/lib/image/mutations'
+import { createWithImage } from '@/lib/image/mutations'
 import { prepareImage } from '@/lib/image/prepare'
 import { getCurrentUser } from '@/lib/user'
+import { randomUUID } from 'crypto'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
@@ -56,24 +57,10 @@ export async function createBoxAction(
       shortId = generateShortId()
     }
 
-    // Create box
-    const box = await createBox(data.name, shortId)
-
-    if (image) {
-      try {
-        await saveImage({ boxId: box.id, image })
-      } catch (error) {
-        // Don't keep a box without the photo the user asked for: a retry
-        // would create a duplicate
-        await deleteBoxes([box.id]).catch((cleanupError) =>
-          console.error('Failed to delete the box', {
-            id: box.id,
-            cleanupError,
-          }),
-        )
-        throw error
-      }
-    }
+    const id = randomUUID()
+    const box = await createWithImage({ boxId: id }, image, (storedImage) =>
+      createBox({ id, name: data.name, shortId, image: storedImage }),
+    )
 
     revalidatePath('/dashboard')
     return {

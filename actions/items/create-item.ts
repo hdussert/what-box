@@ -1,10 +1,12 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
+import { getBoxById } from '@/lib/box/queries'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
-import { saveImage } from '@/lib/image/mutations'
+import { createWithImage } from '@/lib/image/mutations'
 import { prepareImage } from '@/lib/image/prepare'
-import { createItem, deleteItems } from '@/lib/item/mutations'
+import { createItem } from '@/lib/item/mutations'
+import { randomUUID } from 'crypto'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
@@ -51,28 +53,26 @@ export async function createItemAction(
     // Before creating the item, so a bad image doesn't leave one behind
     const image = data.image ? await prepareImage(data.image) : null
 
-    // Create item
-    const item = await createItem({
-      boxId: data.boxId,
-      name: data.name,
-      quantity: data.quantity,
-    })
-
-    if (image) {
-      try {
-        await saveImage({ boxId: data.boxId, itemId: item.id, image })
-      } catch (error) {
-        // Don't keep an item without the photo the user asked for: a retry
-        // would create a duplicate
-        await deleteItems([item.id]).catch((cleanupError) =>
-          console.error('Failed to delete the item', {
-            id: item.id,
-            cleanupError,
-          }),
-        )
-        throw error
-      }
+    // Fail before uploading anything if the box isn't the user's
+    // (createItem checks again: that's the data-layer rule)
+    const box = await getBoxById(data.boxId)
+    if (!box) {
+      throw new Error('Box not found')
     }
+
+    const id = randomUUID()
+    const item = await createWithImage(
+      { boxId: data.boxId, itemId: id },
+      image,
+      (storedImage) =>
+        createItem({
+          id,
+          boxId: data.boxId,
+          name: data.name,
+          quantity: data.quantity,
+          image: storedImage,
+        }),
+    )
 
     revalidatePath(`/boxes/${data.boxId}`)
 
