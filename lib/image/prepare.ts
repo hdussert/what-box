@@ -5,16 +5,9 @@ import 'server-only'
 import sharp, { type OutputInfo } from 'sharp'
 
 /**
- * Decodes an uploaded image and re-encodes it without metadata (EXIF, XMP,
- * IPTC): phone photos carry the GPS location where they were taken, and
- * blobs are public. `rotate()` bakes the EXIF orientation into the pixels
- * first, or portrait photos would turn sideways once it's gone.
- *
- * Call it before creating anything that owns the image: it throws on files
- * that aren't really a JPEG, PNG or WebP, whatever their declared type.
- *
- * The file gets a random name: photo links are public, and the original
- * name can say more than intended (e.g. passport-scan.jpg).
+ * Decodes an upload and re-encodes it without metadata (phone photos carry
+ * their GPS location), applying the EXIF orientation first. Throws if the
+ * bytes aren't a JPEG, PNG or WebP. The file gets a random name.
  */
 export async function prepareImage(file: File): Promise<PreparedImage> {
   const input = Buffer.from(await file.arrayBuffer())

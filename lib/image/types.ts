@@ -10,7 +10,7 @@ export type ImageOwner = {
 
 /** An upload that went through `prepareImage`: decoded, checked and stripped of metadata. */
 export type PreparedImage = {
-  /** Random file name with the real format's extension, e.g. `3f2a….jpg` */
+  /** Random, with the real format's extension */
   name: string
   data: Buffer
   contentType: string
