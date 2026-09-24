@@ -4,12 +4,12 @@
 
 `/start`, `/finish` and `/release` run these steps; follow them for every task.
 
-1. **Start**: a `feat/`, `fix/`, `refactor/`, `docs/` or `chore/` branch from `dev` (`hotfix/` from `main`, see Git).
+1. **Start**: a `feat/`, `fix/`, `refactor/`, `docs/` or `chore/` branch from `dev` (`hotfix/` from `main`, see Git), with a draft PR opened right away.
 2. **Plan**: for non-trivial work (several files, a feature, a schema change, anything ambiguous), propose a plan and wait for approval.
 3. **Implement**: small conventional commits. Stay on the task.
 4. **Verify**: `yarn lint` and `yarn tsc --noEmit --pretty false` (the colored default hides errors from `grep`). Only source-file errors count, not `.next/`. For UI changes, check the app in the browser, or say you couldn't.
 5. **Self-review**: `/code-review` the diff and fix the findings that hold up.
-6. **Finish**: push and open the PR. Never merge: the user reviews and merges.
+6. **Finish**: update the PR's title and description and mark it ready. Never merge: the user reviews and merges.
 
 **Side issues**: don't fix or stop to discuss unrelated problems you notice (bugs, tech debt, doc gaps). Log them in `BACKLOG.md` (priority and effort per its legend: what, where, why, likely fix) and mention them in one line.
 
