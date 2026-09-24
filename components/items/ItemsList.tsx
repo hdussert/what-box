@@ -13,19 +13,14 @@ type ItemsListProps = {
 const ItemsList = ({ items }: ItemsListProps) => {
   const { isSelecting, isSelected, toggleSelect } = useSelection()
   const [itemFocused, setItemFocused] = useState<string>()
-
-  // Entering selection mode closes the open item. Adjusted during render
-  // instead of in an effect; it only runs while an item is still open.
-  if (isSelecting && itemFocused) {
-    setItemFocused(undefined)
-  }
+  const [isEditing, setIsEditing] = useState(false)
+  // No item is open while selecting
+  const openItemId = isSelecting ? undefined : itemFocused
 
   const toggleFocused = (itemId: string) => {
-    if (itemId === itemFocused) {
-      setItemFocused(undefined)
-      return
-    }
-    setItemFocused(itemId)
+    // Opening or closing an item ends any edit in progress
+    setIsEditing(false)
+    setItemFocused(itemId === itemFocused ? undefined : itemId)
   }
 
   const onClick = (item: Item) => {
@@ -44,7 +39,10 @@ const ItemsList = ({ items }: ItemsListProps) => {
           <ItemCard
             item={item}
             isSelected={isSelected(item.id)}
-            isFocused={itemFocused === item.id}
+            isFocused={openItemId === item.id}
+            isEditing={openItemId === item.id && isEditing}
+            onEdit={() => setIsEditing(true)}
+            onEditEnd={() => setIsEditing(false)}
           />
         </SelectableRow>
       ))}
