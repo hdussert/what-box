@@ -11,7 +11,7 @@
 5. **Self-review**: `/code-review` the diff and fix the findings that hold up.
 6. **Finish**: update the PR's title and description and mark it ready. Never merge: the user reviews and merges.
 
-**Side issues**: don't fix or stop to discuss unrelated problems you notice (bugs, tech debt, doc gaps). Log them in `BACKLOG.md` (priority and effort per its legend: what, where, why, likely fix) and mention them in one line.
+**Side issues**: don't fix or stop to discuss unrelated problems you notice (bugs, tech debt, doc gaps). Log them in `BACKLOG.md`, which is local and git-ignored: edit it directly, never commit it (priority and effort per its legend: what, where, why, likely fix) and mention them in one line.
 
 ## Git
 

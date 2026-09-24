@@ -45,4 +45,4 @@ Without an open PR, delete the branch yourself: `git branch -D <branch>`, plus `
 
 ## 4. Report
 
-One or two lines: the closed PR's link, that the branch is gone (remote and local), and that the PR can be reopened and its branch restored from GitHub if needed. If an idea was worth keeping, give its backlog entry text: it goes into the next task's PR, since this branch is gone and `dev` only takes PRs.
+One or two lines: the closed PR's link, that the branch is gone (remote and local), and that the PR can be reopened and its branch restored from GitHub if needed. If an idea was worth keeping, add it to `BACKLOG.md` directly (it's local, not committed) and say so.
