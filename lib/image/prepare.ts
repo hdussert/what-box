@@ -1,5 +1,6 @@
 import { IMAGE_FORMATS } from '@/lib/image/const'
 import { PreparedImage } from '@/lib/image/types'
+import { randomUUID } from 'crypto'
 import 'server-only'
 import sharp, { type OutputInfo } from 'sharp'
 
@@ -11,6 +12,9 @@ import sharp, { type OutputInfo } from 'sharp'
  *
  * Call it before creating anything that owns the image: it throws on files
  * that aren't really a JPEG, PNG or WebP, whatever their declared type.
+ *
+ * The file gets a random name: photo links are public, and the original
+ * name can say more than intended (e.g. passport-scan.jpg).
  */
 export async function prepareImage(file: File): Promise<PreparedImage> {
   const input = Buffer.from(await file.arrayBuffer())
@@ -31,5 +35,8 @@ export async function prepareImage(file: File): Promise<PreparedImage> {
   }
   const contentType = IMAGE_FORMATS[format as keyof typeof IMAGE_FORMATS]
 
-  return { name: file.name, data: output.data, contentType }
+  const extension = format === 'jpeg' ? 'jpg' : format
+  const name = `${randomUUID()}.${extension}`
+
+  return { name, data: output.data, contentType }
 }
