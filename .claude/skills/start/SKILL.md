@@ -1,6 +1,6 @@
 ---
 name: start
-description: Start a new what-box task (steps 1–2 of the CLAUDE.md workflow). Creates a branch from an up-to-date dev, then plans if the task is non-trivial. The PR is opened later by /finish. Use when the user begins a new task, feature, fix or refactor, or types /start.
+description: Start a new what-box task (steps 1–2 of the CLAUDE.md workflow). Creates a branch from an up-to-date dev, opens a draft PR, then plans if the task is non-trivial. Use when the user begins a new task, feature, fix or refactor, or types /start.
 argument-hint: <task description>
 ---
 
@@ -18,9 +18,19 @@ If the task is empty or unclear, ask what it is before touching git.
 
 Exception: an urgent fix for production that can't wait for the next release is a hotfix. Branch `hotfix/<short-kebab-name>` from an up-to-date `main` instead (`git switch main && git pull`).
 
-Don't open a PR yet: `/finish` opens it into `dev` once the work is verified. Pushing the branch before then is fine (it backs the work up); Vercel doesn't build feature branches.
+## 2. Draft PR
 
-## 2. Plan or go
+A PR needs a commit, so start with an empty one. The base is `dev` (`main` for a hotfix).
+
+```bash
+git commit --allow-empty -m "<type>: <summary>"
+git push -u origin HEAD
+gh pr create --draft --base <base> --title "<type>: <summary>" --body "<one or two lines: the goal>"
+```
+
+End the body with the attribution line from the system prompt, if there is one. Share the PR link. Vercel doesn't build feature branches, so this only runs CI.
+
+## 3. Plan or go
 
 Decide whether the task is non-trivial: several files, a new feature, a schema change, or anything with more than one reasonable approach.
 
