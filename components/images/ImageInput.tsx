@@ -1,5 +1,6 @@
 import ImageInputClearButton from '@/components/images/ImageInputClearButton'
 import ImageInputPreview from '@/components/images/ImageInputPreview'
+import ImageSpinner from '@/components/images/ImageSpinner'
 import { FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import {
@@ -8,14 +9,15 @@ import {
   MAX_IMAGE_SIZE_READABLE,
 } from '@/lib/image/const'
 import { cn } from '@/lib/utils'
-import { ImagePlus, LoaderCircle } from 'lucide-react'
+import { ImagePlus } from 'lucide-react'
 import { InputHTMLAttributes, useRef, useState } from 'react'
 
 type ImageInputProps = {
   label?: string
   description?: string
   image?: File
-  setImage: (file?: File) => void
+  /** Called when the user picks a valid file, or clears it (undefined). */
+  onImageChange: (file?: File) => void
   isLoading?: boolean
 } & Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -27,7 +29,7 @@ const ImageInput = ({
   label,
   description,
   image,
-  setImage,
+  onImageChange,
   disabled,
   isLoading,
   ...props
@@ -42,7 +44,7 @@ const ImageInput = ({
     if (inputRef.current) {
       inputRef.current.value = ''
     }
-    setImage(undefined)
+    onImageChange(undefined)
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +52,7 @@ const ImageInput = ({
 
     setError(undefined)
     if (!file) {
-      setImage(undefined)
+      onImageChange(undefined)
       return
     }
 
@@ -59,15 +61,13 @@ const ImageInput = ({
       return
     }
 
-    setImage(file)
+    onImageChange(file)
   }
 
   return image ? (
     <ImageInputPreview image={image} className={cn('relative', className)}>
       {isLoading ? (
-        <div className="absolute inset-0 bg-secondary/80 flex items-center justify-center">
-          <LoaderCircle size={48} className="animate-spin " />
-        </div>
+        <ImageSpinner />
       ) : (
         <ImageInputClearButton
           disabled={disabled}

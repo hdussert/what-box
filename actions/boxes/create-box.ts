@@ -4,9 +4,10 @@ import { ActionResponse } from '@/actions/types'
 import { createBox, getBoxByShortId } from '@/lib/box'
 import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
-import { saveImage } from '@/lib/image/mutations'
+import { createWithImage } from '@/lib/image/mutations'
 import { prepareImage } from '@/lib/image/prepare'
 import { getCurrentUser } from '@/lib/user'
+import { randomUUID } from 'crypto'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
@@ -56,13 +57,10 @@ export async function createBoxAction(
       shortId = generateShortId()
     }
 
-    // Create box
-    const box = await createBox(data.name, shortId)
-
-    // Upload files
-    if (image) {
-      await saveImage({ boxId: box.id, image })
-    }
+    const id = randomUUID()
+    const box = await createWithImage({ boxId: id }, image, (storedImage) =>
+      createBox({ id, name: data.name, shortId, image: storedImage }),
+    )
 
     revalidatePath('/dashboard')
     return {

@@ -9,9 +9,7 @@ const Hero = () => {
       <Package size={200} />
       <div className="text-center md:text-left">
         <h1 className="text-5xl font-bold">WhatBox</h1>
-        <p className="mt-4 text-lg text-default-500">
-          {SITE_TAGLINE}
-        </p>
+        <p className="mt-4 text-lg text-default-500">{SITE_TAGLINE}</p>
         <div className="flex gap-2 mt-4 w-full justify-center md:justify-end">
           <Button variant="link">
             <a href="#features">Learn more</a>

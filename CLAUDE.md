@@ -1,84 +1,84 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Gotchas
-
-- Package manager is **yarn** (v1, `yarn.lock` is committed). Don't use npm, or it'll create a `package-lock.json`.
-- Every `db:*` script has a `:prod` variant that runs against the **production** database.
-- Vercel only deploys `main` (production) and `dev` (staging preview); feature branches are skipped (`ignoreCommand` in `vercel.json` runs `scripts/vercel-ignore-build.sh`) and CI builds them instead. For a one-off preview of a feature branch, run `vercel deploy` from it.
-- Both deployments apply pending migrations automatically (`scripts/vercel-build.sh`): `dev` to the dev database, `main` to production. Don't run `db:migrate:prod` by hand; run `yarn db:migrate` locally only to test a migration on a feature branch. Migrations run before the new code is live, so keep them backward compatible (add first, drop in a later release), and review destructive ones (`DROP`, `SET NOT NULL`) with care.
-- There is no test runner.
-- TypeScript is pinned to 6: typescript-eslint doesn't support TS 7 yet. Don't upgrade it, and don't use a TS 6/7 side-by-side alias either: Next 16 then decides TypeScript is missing and auto-installs TS 7 over it (see `BACKLOG.md`).
-
-## Invariants
-
-- Authorization lives in the data layer, not in route guards. `proxy.ts` only forwards the request path and redirects `/` to `/dashboard` when the session token's signature and expiry check out (no DB, so no revocation check); it never authorizes. Every `lib/*` query or mutation must call `getCurrentUser()` and scope its `where` by `userId`.
-- Deleting a box or item cascades in the DB but not in Vercel Blob. Remove image files through `lib/image`.
-
 ## Workflow
 
-Every task follows these steps. `/start` and `/finish` run them; `/release` ships `dev` to production (see Git).
+`/start`, `/finish` and `/release` run these steps; follow them for every task. `/drop` abandons a task (closes its PR, deletes its branch).
 
-1. **Start**: branch from an up-to-date `dev` (`feat/…`, `fix/…`, `refactor/…`, `docs/…`). Don't open the PR yet.
-2. **Plan**: for non-trivial tasks (several files, a new feature, a schema change, anything ambiguous), propose a plan and wait for approval. Trivial fixes skip this step.
-3. **Implement**: small conventional commits. Stay on the task: log side issues (see below) instead of fixing them.
-4. **Verify**: `yarn lint` and `yarn tsc --noEmit --pretty false` (the default colored output hides errors from `grep`). Errors under `.next/` come from stale generated files, not your change; only errors in source files count. For UI changes, run the app and check the change in the browser.
-5. **Self-review**: run `/code-review` on the diff and fix the findings that hold up.
-6. **Finish**: push, open the PR into `dev` (`main` for a `hotfix/…` branch) with its title and description, and report back. Never merge; the user reviews and merges.
+1. **Start**: a `feat/`, `fix/`, `refactor/`, `docs/` or `chore/` branch from `dev` (`hotfix/` from `main`, see Git), with a draft PR opened right away.
+2. **Plan**: for non-trivial work (several files, a feature, a schema change, anything ambiguous), propose a plan and wait for approval.
+3. **Implement**: small conventional commits. Stay on the task.
+4. **Verify**: `yarn verify` (type check, lint and build, as in CI). For UI changes, check the app in the browser, or say you couldn't.
+5. **Self-review**: `/code-review` the diff and fix the findings that hold up.
+6. **Finish**: update the PR's title and description and mark it ready. Never merge: the user reviews and merges.
 
-### Side issues
-
-When you notice something worth addressing that is unrelated to the current task (a bug, tech debt, a missing feature, a doc gap), don't fix it or stop to discuss it. Add a short entry to `BACKLOG.md` under the right priority, tagged with an effort, as the file's legend describes: what it is, where (`file:line`), why it matters, and the likely fix. Mention it in one line at the end of your turn.
-
-## Design principles
-
-Global guidelines to aim for, not rules to apply blindly. When one conflicts with clarity or the task at hand, use judgment.
-
-- **KISS** (keep it stupid simple): pick the simplest solution that works. No speculative abstractions, options or generality for cases that don't exist yet.
-- **SRP** (single responsibility): each function, component and module does one thing and has one reason to change.
-- **DRY** (don't repeat yourself): don't duplicate knowledge or logic. Wait for the third occurrence before extracting, and don't merge code that only looks alike but changes for different reasons.
-- **YAGNI** (you aren't gonna need it): build what the task needs now, not what it might need later.
-- **Fail fast**: validate at boundaries and return errors early instead of letting bad state travel deeper.
-- **Least astonishment**: names, signatures and behavior should match what a reader would expect.
-
-## Coding conventions
-
-- Booleans start with a verb: `isOpen`, `hasImage`, `canDelete`.
-- Always wrap early returns in braces: `if (...) { return }`, never `if (...) return`. Older code doesn't follow this; apply it to new and edited code.
-- Use XState state machines for complex logic (`xstate` and `@xstate/react` are installed).
-- Comments are JSDoc on exported functions/types, or inline only where the code's behavior or a subtlety isn't obvious from reading it (a non-obvious edge case, a workaround, a "why" a reader couldn't infer). Don't narrate what self-explanatory code already says.
-
-### Components
-
-- Server-first: pages, layouts and data fetching stay on the server. Put `'use client'` on the smallest interactive component (leaves), and never fetch data in client components.
-- Reuse `components/ui` primitives before writing custom markup.
-
-### Naming and layout
-
-- One PascalCase component per file; hooks are `useXxx.ts`.
-- Colocate by feature: `components/<feature>/`, `lib/<feature>/`, `actions/<feature>/`. Types go in `types.ts`, constants in `const.ts`.
-- Prefix files shared by a feature with its name (`ItemCard`, `ItemsList`, `NewItemDialog`). Don't repeat the folder or feature name elsewhere in the name; prefer short, explicit names.
-
-### Actions and forms
-
-- Every mutation is a `'use server'` action, validated with a zod schema and consumed through `useActionState`.
-- Actions return errors (`ActionResponse` with `errors`/`message` and echoed `values`) instead of throwing.
-- Actions call `lib/<domain>` and never touch `db` directly.
-- Call `revalidatePath` after every mutation for the pages it affects.
-
-### Styling
-
-- Tailwind only, merging class names with `cn()`.
-- The app is dark-only (root layout hardcodes `dark`): no light-mode variants.
-- Mobile-first: base styles for mobile, `sm:`/`md:` for larger screens.
+**Side issues**: don't fix or stop to discuss unrelated problems you notice (bugs, tech debt, doc gaps). Log them in `BACKLOG.md`, which is local and git-ignored: edit it directly, never commit it (priority and effort per its legend: what, where, why, likely fix) and mention them in one line.
 
 ## Git
 
-- Conventional commits (`feat:`, `fix:`, `refactor:`, ...).
-- Never commit to or push `main` or `dev` directly, and never force-push.
-- Branches: `main` is production, `dev` is staging (the default branch). Feature PRs target `dev` and are **squash**-merged. A release is a `dev` → `main` PR (`/release`), merged with a **merge commit**, never a squash, or the two histories diverge and every later release conflicts. A hotfix (urgent production fix) is a `hotfix/…` branch from `main` with its PR into `main`; afterwards a `main` → `dev` PR brings it back, also merged with a **merge commit**.
-- Keep PR titles and descriptions concise: cut filler and repetition, but keep every piece of information a reviewer needs (what changed, why, caveats, how to verify).
+- Conventional commits. Never commit or push to `main` or `dev` directly, and never force-push.
+- `main` is production, `dev` is staging and the default branch.
+- Feature PRs target `dev` and are squash-merged.
+- A release (`/release`) is a `dev` → `main` PR merged with a **merge commit**, never a squash, or the histories diverge and every later release conflicts.
+- A hotfix is a `hotfix/…` branch from `main` with its PR into `main`, then a `main` → `dev` PR, also merged with a merge commit.
+- PR titles and descriptions: concise, but with everything a reviewer needs (what, why, caveats, how to verify).
+
+## Invariants
+
+- Authorization lives in the data layer: every `lib/*` query or mutation calls `getCurrentUser()` and scopes its `where` by `userId`. `proxy.ts` never authorizes: it only forwards the request path, and redirects `/` to `/dashboard` for a valid session token (signature and expiry, no revocation check).
+- Deleting a box or item cascades in the DB but not in Vercel Blob: remove image files through `lib/image`.
+
+## Code
+
+Principles (use judgment when one conflicts with clarity):
+
+- **KISS** and **YAGNI**: the simplest thing that works for today's need, no speculative options or abstractions.
+- **SRP**: one responsibility per function, component and module.
+- **DRY**: don't duplicate knowledge. Extract on the third occurrence, and don't merge code that only looks alike.
+- **Fail fast**: validate at boundaries and return errors early.
+- **Least astonishment**: names and behavior match what a reader expects.
+
+Conventions:
+
+- Booleans start with a verb: `isOpen`, `hasImage`, `canDelete`.
+- Early returns always use braces: `if (...) { return }`. Apply to new and edited code (older code doesn't).
+- XState (`xstate`, `@xstate/react`) for complex logic.
+- Comments: JSDoc on exports, and inline only for what the code can't say (an edge case, a workaround, a why).
+
+Components:
+
+- Server-first: pages, layouts and data fetching stay on the server. `'use client'` goes on the smallest interactive leaf; client components never fetch data.
+- Reuse `components/ui` primitives before custom markup.
+
+Naming and layout:
+
+- One PascalCase component per file; hooks are `useXxx.ts`.
+- Colocate by feature: `components/<feature>/`, `lib/<feature>/`, `actions/<feature>/`, with types in `types.ts` and constants in `const.ts`.
+- Prefix files shared by a feature with its name (`ItemCard`, `NewItemDialog`), but don't repeat the folder name otherwise. Short, explicit names.
+
+Actions and forms:
+
+- Every mutation is a `'use server'` action, validated with zod and consumed with `useActionState`.
+- Actions return errors (`ActionResponse` with `errors`/`message` and echoed `values`) instead of throwing.
+- Actions call `lib/<domain>`, never `db` directly, and call `revalidatePath` for the pages they affect.
+
+Styling:
+
+- Tailwind only, merging classes with `cn()`.
+- Dark-only (the root layout hardcodes `dark`): no light-mode variants.
+- Mobile-first: base styles for mobile, `sm:`/`md:` for larger screens.
+
+## Deploys and database
+
+- Vercel deploys only `main` (production) and `dev` (staging, sharing the dev database with local development). Feature branches are skipped (`scripts/vercel-ignore-build.sh`) and built by CI instead; `vercel deploy` makes a one-off preview.
+- Both deployments apply pending migrations (`scripts/vercel-build.sh`). Never run `db:migrate:prod` by hand; `yarn db:migrate` locally only to test a migration.
+- Migrations run before the new code is live: keep them backward compatible (add first, drop in a later release) and review destructive ones (`DROP`, `SET NOT NULL`) with care.
+
+## Gotchas
+
+- **yarn** v1 only: npm would create a `package-lock.json`.
+- Every `db:*` script has a `:prod` variant that hits the **production** database.
+- There is no test runner.
+- TypeScript is pinned to 6 (typescript-eslint doesn't support 7). Don't upgrade it or add a 6/7 alias: Next 16 would then auto-install TS 7. Move to 7 once typescript-eslint supports it ([typescript-eslint#10940](https://github.com/typescript-eslint/typescript-eslint/issues/10940)).
 
 ## Next.js
 

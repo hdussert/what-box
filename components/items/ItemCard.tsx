@@ -6,34 +6,27 @@ import ToolbarButton from '@/components/ToolbarButton'
 import { Card, CardDescription } from '@/components/ui/card'
 import { Item } from '@/db/schema'
 import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
 
 type ItemCardProps = {
   item: Item
   isSelected: boolean
   isFocused: boolean
+  isEditing: boolean
+  onEdit: () => void
+  onEditEnd: () => void
 }
 
-const ItemCard = ({ item, isSelected, isFocused }: ItemCardProps) => {
-  const [isEditing, setIsEditing] = useState(false)
-
-  useEffect(() => {
-    if (!isFocused) {
-      setIsEditing(false)
-    }
-  }, [isFocused])
-
+const ItemCard = ({
+  item,
+  isSelected,
+  isFocused,
+  isEditing,
+  onEdit,
+  onEditEnd,
+}: ItemCardProps) => {
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
-    setIsEditing(true)
-  }
-
-  const handleCancel = () => {
-    setIsEditing(false)
-  }
-
-  const handleSuccess = () => {
-    setIsEditing(false)
+    onEdit()
   }
 
   return (
@@ -70,8 +63,8 @@ const ItemCard = ({ item, isSelected, isFocused }: ItemCardProps) => {
         {isEditing ? (
           <UpdateItemForm
             item={item}
-            onCancel={handleCancel}
-            onSuccess={handleSuccess}
+            onCancel={onEditEnd}
+            onSuccess={onEditEnd}
           />
         ) : (
           <ItemDetails item={item} isFocused={isFocused} />

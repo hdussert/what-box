@@ -4,7 +4,7 @@ import ItemCard from '@/components/items/ItemCard'
 import SelectableRow from '@/components/selection/SelectableRow'
 import { useSelection } from '@/components/selection/SelectionProvider'
 import { Item } from '@/db/schema'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 type ItemsListProps = {
   items: Item[]
@@ -13,19 +13,18 @@ type ItemsListProps = {
 const ItemsList = ({ items }: ItemsListProps) => {
   const { isSelecting, isSelected, toggleSelect } = useSelection()
   const [itemFocused, setItemFocused] = useState<string>()
+  const [isEditing, setIsEditing] = useState(false)
 
-  useEffect(() => {
-    if (isSelecting) {
-      setItemFocused(undefined)
-    }
-  }, [isSelecting])
+  // Entering selection mode closes the open item and ends any edit
+  if (isSelecting && itemFocused) {
+    setItemFocused(undefined)
+    setIsEditing(false)
+  }
 
   const toggleFocused = (itemId: string) => {
-    if (itemId === itemFocused) {
-      setItemFocused(undefined)
-      return
-    }
-    setItemFocused(itemId)
+    // Opening or closing an item ends any edit in progress
+    setIsEditing(false)
+    setItemFocused(itemId === itemFocused ? undefined : itemId)
   }
 
   const onClick = (item: Item) => {
@@ -45,6 +44,9 @@ const ItemsList = ({ items }: ItemsListProps) => {
             item={item}
             isSelected={isSelected(item.id)}
             isFocused={itemFocused === item.id}
+            isEditing={itemFocused === item.id && isEditing}
+            onEdit={() => setIsEditing(true)}
+            onEditEnd={() => setIsEditing(false)}
           />
         </SelectableRow>
       ))}

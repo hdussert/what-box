@@ -71,5 +71,5 @@ export async function signUpAction(
   }
 
   // Outside the try so the catch can't swallow it
-  redirect('/dashboard')
+  redirect('/dashboard', 'replace')
 }
