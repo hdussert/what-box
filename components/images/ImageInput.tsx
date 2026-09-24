@@ -1,5 +1,6 @@
 import ImageInputClearButton from '@/components/images/ImageInputClearButton'
 import ImageInputPreview from '@/components/images/ImageInputPreview'
+import ImageSpinner from '@/components/images/ImageSpinner'
 import { FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import {
@@ -8,7 +9,7 @@ import {
   MAX_IMAGE_SIZE_READABLE,
 } from '@/lib/image/const'
 import { cn } from '@/lib/utils'
-import { ImagePlus, LoaderCircle } from 'lucide-react'
+import { ImagePlus } from 'lucide-react'
 import { InputHTMLAttributes, useRef, useState } from 'react'
 
 type ImageInputProps = {
@@ -66,9 +67,7 @@ const ImageInput = ({
   return image ? (
     <ImageInputPreview image={image} className={cn('relative', className)}>
       {isLoading ? (
-        <div className="absolute inset-0 bg-secondary/80 flex items-center justify-center">
-          <LoaderCircle size={48} className="animate-spin " />
-        </div>
+        <ImageSpinner />
       ) : (
         <ImageInputClearButton
           disabled={disabled}
