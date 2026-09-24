@@ -78,7 +78,7 @@ Styling:
 - **yarn** v1 only: npm would create a `package-lock.json`.
 - Every `db:*` script has a `:prod` variant that hits the **production** database.
 - There is no test runner.
-- TypeScript is pinned to 6 (typescript-eslint doesn't support 7). Don't upgrade it or add a 6/7 alias: Next 16 would then auto-install TS 7 (see `BACKLOG.md`).
+- TypeScript is pinned to 6 (typescript-eslint doesn't support 7). Don't upgrade it or add a 6/7 alias: Next 16 would then auto-install TS 7. Move to 7 once typescript-eslint supports it ([typescript-eslint#10940](https://github.com/typescript-eslint/typescript-eslint/issues/10940)).
 
 ## Next.js
 
