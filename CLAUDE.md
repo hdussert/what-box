@@ -2,7 +2,7 @@
 
 ## Workflow
 
-`/start`, `/finish` and `/release` run these steps; follow them for every task.
+`/start`, `/finish` and `/release` run these steps; follow them for every task. `/drop` abandons a task (closes its PR, deletes its branch).
 
 1. **Start**: a `feat/`, `fix/`, `refactor/`, `docs/` or `chore/` branch from `dev` (`hotfix/` from `main`, see Git), with a draft PR opened right away.
 2. **Plan**: for non-trivial work (several files, a feature, a schema change, anything ambiguous), propose a plan and wait for approval.
