@@ -28,7 +28,7 @@ const EditableImage = ({
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  // Uploads as soon as a file is picked (ImageInput calls this on change)
+  // Uploads as soon as a file is picked
   const uploadImage = (image?: File) => {
     setNewImage(image)
     if (!image) {
@@ -40,6 +40,8 @@ const EditableImage = ({
         toast.success('Image uploaded !')
         router.refresh()
       } else {
+        // Drop the preview so it doesn't look saved
+        setNewImage(undefined)
         toast.error('Could not upload the image.')
       }
     })
@@ -91,7 +93,7 @@ const EditableImage = ({
   ) : (
     <ImageInput
       image={newImage}
-      setImage={uploadImage}
+      onImageChange={uploadImage}
       className={className}
       disabled={isInputDisabled || isPending}
       isLoading={isPending}

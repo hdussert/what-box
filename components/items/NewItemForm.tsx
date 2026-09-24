@@ -72,7 +72,7 @@ const NewItemForm = ({ boxId, className, onSuccess }: NewItemFormProps) => {
           label="Image"
           description="(Optional)"
           image={image}
-          setImage={setImage}
+          onImageChange={setImage}
           className="flex-382"
           disabled={isPending}
           isLoading={isPending}

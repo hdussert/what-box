@@ -57,7 +57,7 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
           label="Image"
           description="(Optional)"
           image={image}
-          setImage={setImage}
+          onImageChange={setImage}
           isLoading={isPending}
           className="flex-1"
         />
