@@ -42,7 +42,10 @@ const Side = ({ email }: SideProps) => {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="overflow-hidden whitespace-nowrap">
-        <Logo className="px-1 text-lg" iconSize={24} />
+        <Logo
+          className="px-1 text-lg group-data-[collapsible=icon]:[&>span]:hidden"
+          iconSize={24}
+        />
         <p
           className="truncate px-1 text-xs text-muted-foreground group-data-[collapsible=icon]:hidden"
           title={email}
