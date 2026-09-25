@@ -18,6 +18,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
 import { Boxes, LogOut, PackagePlus } from 'lucide-react'
 import Link from 'next/link'
 
@@ -42,7 +43,12 @@ const Side = ({ email }: SideProps) => {
   return (
     <Sidebar collapsible="icon">
       {/* Collapses via grid rows (1fr → 0fr) to animate its height with the sidebar width */}
-      <SidebarHeader className="grid grid-rows-[1fr] whitespace-nowrap transition-[grid-template-rows,padding,opacity,visibility] duration-200 ease-linear group-data-[collapsible=icon]:invisible group-data-[collapsible=icon]:grid-rows-[0fr] group-data-[collapsible=icon]:py-0 group-data-[collapsible=icon]:opacity-0">
+      <SidebarHeader
+        className={cn(
+          'grid grid-rows-[1fr] whitespace-nowrap transition-[grid-template-rows,padding,opacity,visibility] duration-200 ease-linear',
+          'group-data-[collapsible=icon]:invisible group-data-[collapsible=icon]:grid-rows-[0fr] group-data-[collapsible=icon]:py-0 group-data-[collapsible=icon]:opacity-0',
+        )}
+      >
         <div className="flex min-h-0 flex-col gap-2 overflow-hidden">
           <Logo className="px-1 text-lg" iconSize={24} />
           <p
