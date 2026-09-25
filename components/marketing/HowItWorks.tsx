@@ -1,3 +1,5 @@
+import BoxLabel from '@/components/boxes/labels/BoxLabel'
+
 const STEPS = [
   {
     title: 'Create a box',
@@ -17,19 +19,25 @@ const HowItWorks = () => {
   return (
     <div className="flex flex-col items-center gap-8">
       <h2 className="text-3xl font-bold text-center">How does it work?</h2>
-      <ol className="flex flex-col gap-6">
-        {STEPS.map(({ title, description }, index) => (
-          <li key={title} className="flex items-start gap-4">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">
-              {index + 1}
-            </span>
-            <div>
-              <h3 className="font-bold">{title}</h3>
-              <p className="text-muted-foreground">{description}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <div className="flex flex-col items-center gap-12 md:flex-row">
+        <ol className="flex flex-col gap-6">
+          {STEPS.map(({ title, description }, index) => (
+            <li key={title} className="flex items-start gap-4">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">
+                {index + 1}
+              </span>
+              <div>
+                <h3 className="font-bold">{title}</h3>
+                <p className="text-muted-foreground">{description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        {/* A sample printed label: on white paper, and with the top and left borders it leaves to its print-sheet neighbours */}
+        <div className="w-full max-w-sm -rotate-2 border-l border-t border-black bg-white shadow-lg">
+          <BoxLabel id="example" shortId="K7M2QX" name="Kitchen" />
+        </div>
+      </div>
     </div>
   )
 }
