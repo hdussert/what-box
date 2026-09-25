@@ -1,3 +1,4 @@
+import MarketingSection from '@/components/marketing/MarketingSection'
 import { List, PackageSearch, ScanSearch } from 'lucide-react'
 
 const FEATURES = [
@@ -20,18 +21,17 @@ const FEATURES = [
 
 const Features = () => {
   return (
-    <ul className="grid w-full max-w-3xl gap-8 sm:grid-cols-3">
-      {FEATURES.map(({ title, description, Icon }) => (
-        <li
-          key={title}
-          className="flex flex-col items-center gap-2 text-center"
-        >
-          <Icon className="size-8" />
-          <h3 className="font-bold">{title}</h3>
-          <p className="text-muted-foreground">{description}</p>
-        </li>
-      ))}
-    </ul>
+    <MarketingSection>
+      <ul className="grid w-full gap-8 sm:grid-cols-3">
+        {FEATURES.map(({ title, description, Icon }) => (
+          <li key={title} className="flex flex-col items-center gap-2">
+            <Icon className="size-8" />
+            <h3 className="font-bold">{title}</h3>
+            <p className="text-muted-foreground">{description}</p>
+          </li>
+        ))}
+      </ul>
+    </MarketingSection>
   )
 }
 

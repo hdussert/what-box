@@ -1,4 +1,6 @@
 import BoxLabel from '@/components/boxes/labels/BoxLabel'
+import MarketingSection from '@/components/marketing/MarketingSection'
+import MarketingTitle from '@/components/marketing/MarketingTitle'
 
 const STEPS = [
   {
@@ -17,10 +19,10 @@ const STEPS = [
 
 const HowItWorks = () => {
   return (
-    <div className="flex flex-col items-center gap-8">
-      <h2 className="text-3xl font-bold text-center">How does it work?</h2>
+    <MarketingSection>
+      <MarketingTitle>How does it work?</MarketingTitle>
       <div className="flex flex-col items-center gap-12 md:flex-row">
-        <ol className="flex flex-col gap-6">
+        <ol className="flex flex-col gap-6 text-left">
           {STEPS.map(({ title, description }, index) => (
             <li key={title} className="flex items-start gap-4">
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">
@@ -34,11 +36,11 @@ const HowItWorks = () => {
           ))}
         </ol>
         {/* A sample printed label: on white paper, and with the top and left borders it leaves to its print-sheet neighbours */}
-        <div className="w-full max-w-sm -rotate-2 border-l border-t border-black bg-white shadow-lg">
+        <div className="w-full max-w-sm -rotate-2 border-l border-t border-black bg-white text-left shadow-lg">
           <BoxLabel id="example" shortId="K7M2QX" name="Kitchen" />
         </div>
       </div>
-    </div>
+    </MarketingSection>
   )
 }
 

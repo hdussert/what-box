@@ -1,14 +1,16 @@
+import MarketingSection from '@/components/marketing/MarketingSection'
+import MarketingTitle from '@/components/marketing/MarketingTitle'
 import SignUpButton from '@/components/marketing/SignUpButton'
 
 const SignUpCta = () => {
   return (
-    <div className="flex flex-col items-center gap-4 text-center">
-      <h2 className="text-3xl font-bold">Ready to find your things?</h2>
+    <MarketingSection className="gap-4">
+      <MarketingTitle>Ready to find your things?</MarketingTitle>
       <p className="text-muted-foreground">
         Create your first box in under a minute.
       </p>
       <SignUpButton size="lg" />
-    </div>
+    </MarketingSection>
   )
 }
 

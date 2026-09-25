@@ -1,8 +1,11 @@
+import MarketingSection from '@/components/marketing/MarketingSection'
+import MarketingTitle from '@/components/marketing/MarketingTitle'
+
 const Pitch = () => {
   return (
-    <div className="py-24" id="features">
-      <h2 className="text-3xl font-bold">No more digging around!</h2>
-      <ul className="my-4 space-y-1">
+    <MarketingSection id="features" className="gap-4">
+      <MarketingTitle>No more digging around!</MarketingTitle>
+      <ul className="space-y-1">
         <li>
           <i>&ldquo;Where are the blankets?&rdquo;</i>
         </li>
@@ -17,7 +20,7 @@ const Pitch = () => {
         Save time by inventorying your items with <b>WhatBox</b>: everything is
         right at your fingertips.
       </p>
-    </div>
+    </MarketingSection>
   )
 }
 
