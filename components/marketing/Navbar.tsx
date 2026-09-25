@@ -1,18 +1,17 @@
 import Logo from '@/components/Logo'
+import SignUpButton from '@/components/marketing/SignUpButton'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
 const Navbar = () => {
   return (
-    <nav className="w-full flex border-b-2 px-4 py-2 sticky top-0 bg-background ">
+    <nav className="sticky top-0 z-10 flex w-full border-b-2 bg-background/40 px-4 py-2 backdrop-blur-xl">
       <Logo />
       <div className="ml-auto flex gap-4">
         <Button asChild variant="outline">
           <Link href="/sign-in">Sign In</Link>
         </Button>
-        <Button asChild>
-          <Link href="/sign-up">Sign Up</Link>
-        </Button>
+        <SignUpButton />
       </div>
     </nav>
   )

@@ -1,4 +1,5 @@
 import BoxLabel from '@/components/boxes/labels/BoxLabel'
+import { env } from '@/env'
 import { BoxWithRelations } from '@/lib/box'
 import { createPortal } from 'react-dom'
 
@@ -38,7 +39,7 @@ const BoxLabelsSheet = ({ boxes }: BoxLabelsSheetProps) => {
         {boxes.map((box) => (
           <BoxLabel
             key={box.id}
-            id={box.id}
+            url={`${env.NEXT_PUBLIC_APP_URL}/boxes/${box.id}`}
             shortId={box.shortId}
             name={box.name}
           />
