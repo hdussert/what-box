@@ -10,7 +10,7 @@ const FEATURES = [
   },
   {
     title: 'Scan',
-    description: 'Scan a box’s QR code to see what’s inside.',
+    description: "Scan a box's QR code to see what's inside.",
     Icon: ScanSearch,
   },
   {
@@ -23,7 +23,7 @@ const FEATURES = [
 const Features = () => {
   return (
     <MarketingSection>
-      <MarketingTitle>Everything in its place</MarketingTitle>
+      <MarketingTitle>Always know where things are</MarketingTitle>
       <ul className="grid w-full gap-8 sm:grid-cols-3">
         {FEATURES.map(({ title, description, Icon }) => (
           <li key={title} className="flex flex-col items-center gap-2">

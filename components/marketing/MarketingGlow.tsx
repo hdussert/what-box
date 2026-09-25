@@ -13,7 +13,7 @@ const MarketingGlow = ({ className }: MarketingGlowProps) => (
   <div
     aria-hidden
     className={cn(
-      'pointer-events-none absolute -z-10 size-98 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl md:size-98',
+      'pointer-events-none absolute -z-10 size-98 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl',
       className,
     )}
   />

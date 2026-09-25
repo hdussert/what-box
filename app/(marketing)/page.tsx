@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const LandingPage = () => {
   // Signed-in visitors never get here: proxy.ts redirects them to /dashboard
   return (
-    <main className="flex min-h-screen overflow-x-clip flex-col items-center justify-center gap-24 px-4 pb-32 md:px-24">
+    <main className="flex flex-col items-center gap-24 overflow-x-clip px-4 pb-32 md:px-24">
       <Hero />
       <Pitch />
       <HowItWorks />

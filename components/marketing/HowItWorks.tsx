@@ -2,12 +2,13 @@ import BoxLabel from '@/components/boxes/labels/BoxLabel'
 import MarketingGlow from '@/components/marketing/MarketingGlow'
 import MarketingSection from '@/components/marketing/MarketingSection'
 import MarketingTitle from '@/components/marketing/MarketingTitle'
+import { SAMPLE_BOX } from '@/components/marketing/const'
 import { env } from '@/env'
 
 const STEPS = [
   {
     title: 'Create a box',
-    description: 'Name it, like “Kitchen” or “Winter clothes”.',
+    description: 'Name it, like "Kitchen" or "Winter clothes".',
   },
   {
     title: 'Add your items',
@@ -38,11 +39,11 @@ const HowItWorks = () => {
             </li>
           ))}
         </ol>
-        {/* A sample printed label: on white paper, and with the top and left borders it leaves to its print-sheet neighbours */}
+        {/* On white paper, adding the top and left borders a printed label leaves to its neighbours */}
         <div className="w-full max-w-sm -rotate-2 border-l border-t border-black bg-white text-left shadow-lg">
           <BoxLabel
-            shortId="K7M2QX"
-            name="Kitchen"
+            shortId={SAMPLE_BOX.shortId}
+            name={SAMPLE_BOX.name}
             url={`${env.NEXT_PUBLIC_APP_URL}/sign-up`}
           />
         </div>

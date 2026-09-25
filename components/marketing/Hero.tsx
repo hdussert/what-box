@@ -5,7 +5,7 @@ import { Package } from 'lucide-react'
 
 const Hero = () => {
   return (
-    <div className="flex flex-col md:flex-row items-center gap-2 justify-center h-[85vh]">
+    <div className="flex flex-col md:flex-row items-center gap-2 justify-center min-h-[85svh]">
       <Package size={200} />
       <div className="text-center md:text-left">
         <h1 className="text-5xl font-bold">WhatBox</h1>
@@ -16,7 +16,7 @@ const Hero = () => {
         </p>
         <div className="flex gap-2 mt-4 w-full justify-center md:justify-end">
           <Button asChild variant="link">
-            <a href="#features">Learn more</a>
+            <a href="#why">Learn more</a>
           </Button>
           <SignUpButton />
         </div>
