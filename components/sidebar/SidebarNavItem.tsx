@@ -1,23 +1,25 @@
+'use client'
+
 import { SidebarMenuButton, useSidebar } from '@/components/ui/sidebar'
 import Link from 'next/link'
-import { ComponentType } from 'react'
+import { ReactNode } from 'react'
 
 type SidebarNavLinkProps = {
   name: string
-  Icon: ComponentType
+  icon: ReactNode
   href: string
   onClick?: () => void
 }
 
 type SidebarNavButtonProps = {
   name: string
-  Icon: ComponentType
+  icon: ReactNode
   onClick?: () => void
 }
 
 export type SidebarNavItemProps = SidebarNavLinkProps | SidebarNavButtonProps
 
-const SidebarNavLink = ({ name, Icon, href, onClick }: SidebarNavLinkProps) => {
+const SidebarNavLink = ({ name, icon, href, onClick }: SidebarNavLinkProps) => {
   return (
     <SidebarMenuButton
       asChild
@@ -26,21 +28,21 @@ const SidebarNavLink = ({ name, Icon, href, onClick }: SidebarNavLinkProps) => {
       onClick={onClick}
     >
       <Link href={href}>
-        <Icon />
+        {icon}
         {name}
       </Link>
     </SidebarMenuButton>
   )
 }
 
-const SidebarNavButton = ({ name, Icon, onClick }: SidebarNavButtonProps) => {
+const SidebarNavButton = ({ name, icon, onClick }: SidebarNavButtonProps) => {
   return (
     <SidebarMenuButton
       className="hover:cursor-pointer whitespace-nowrap"
       onClick={onClick}
       tooltip={name}
     >
-      <Icon />
+      {icon}
       {name}
     </SidebarMenuButton>
   )

@@ -1,47 +1,22 @@
-'use client'
-
-import { signOutAction } from '@/actions/auth/sign-out'
-import NewBoxDialog from '@/components/boxes/NewBoxDialog'
-import { useDialog } from '@/components/dialog/DialogProvider'
 import Logo from '@/components/Logo'
-import {
-  SidebarNavItem,
-  SidebarNavItemProps,
-} from '@/components/sidebar/SidebarNavItem'
+import NewBoxNavItem from '@/components/sidebar/NewBoxNavItem'
+import { SidebarNavItem } from '@/components/sidebar/SidebarNavItem'
+import SideUser from '@/components/sidebar/SideUser'
+import SignOutButton from '@/components/sidebar/SignOutButton'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
-import { Boxes, LogOut, PackagePlus, Settings } from 'lucide-react'
+import { Boxes, Settings } from 'lucide-react'
 import Link from 'next/link'
-import { ReactNode } from 'react'
 
-type SideItemList = Array<SidebarNavItemProps & { key: string }>
-
-type SideProps = {
-  /** Server-rendered user info, shown under the logo */
-  user: ReactNode
-}
-
-const Side = ({ user }: SideProps) => {
-  const { openDialog } = useDialog()
-
-  const items: SideItemList = [
-    { key: 'dashboard', name: 'My boxes', Icon: Boxes, href: '/dashboard' },
-    {
-      key: 'new-box',
-      name: 'New box',
-      Icon: PackagePlus,
-      onClick: () => openDialog(NewBoxDialog, {}),
-    },
-  ]
+const Side = () => {
   return (
     <Sidebar collapsible="icon">
       {/* Collapses via grid rows (1fr → 0fr) to animate its height with the sidebar width */}
@@ -53,28 +28,26 @@ const Side = ({ user }: SideProps) => {
       >
         <div className="flex min-h-0 flex-col gap-2 overflow-hidden">
           <Logo className="px-1 text-lg" iconSize={24} />
-          {user}
+          <SideUser />
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.key}>
-              <SidebarNavItem {...item} key={item.key} />
-            </SidebarMenuItem>
-          ))}
+          <SidebarMenuItem>
+            <SidebarNavItem
+              name="My boxes"
+              icon={<Boxes />}
+              href="/dashboard"
+            />
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <NewBoxNavItem />
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarNavItem name="Settings" Icon={Settings} href="/settings" />
-        <SidebarMenuButton
-          className="hover:cursor-pointer whitespace-nowrap"
-          onClick={() => signOutAction()}
-          tooltip={'Sign out'}
-        >
-          <LogOut />
-          Sign out
-        </SidebarMenuButton>
+        <SidebarNavItem name="Settings" icon={<Settings />} href="/settings" />
+        <SignOutButton />
         <div className="px-2 pt-1 text-center text-xs text-muted-foreground whitespace-nowrap group-data-[collapsible=icon]:hidden">
           <Link href="/legal" className="hover:text-foreground">
             Legal notice
