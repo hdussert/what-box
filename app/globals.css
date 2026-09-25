@@ -124,3 +124,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* The landing page's 3D box (MarketingCube): wide screens that allow motion */
+@custom-variant cube {
+  @media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
+    @slot;
+  }
+}
+
+@media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
+  /* Snap on the box's faces, but only when near one: the rest scrolls freely */
+  html:has([data-cube-track]) {
+    scroll-snap-type: y proximity;
+  }
+}

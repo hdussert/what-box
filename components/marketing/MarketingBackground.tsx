@@ -13,7 +13,7 @@ const BLOBS = [
 const MarketingBackground = () => (
   <div
     aria-hidden
-    className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+    className="pointer-events-none absolute inset-0 -z-10 overflow-hidden cube:hidden"
   >
     <div className="relative mx-auto h-full max-w-3xl">
       {BLOBS.map((blob) => (

@@ -2,6 +2,7 @@ import Features from '@/components/marketing/Features'
 import Hero from '@/components/marketing/Hero'
 import HowItWorks from '@/components/marketing/HowItWorks'
 import MarketingBackground from '@/components/marketing/MarketingBackground'
+import MarketingCube from '@/components/marketing/MarketingCube'
 import Pitch from '@/components/marketing/Pitch'
 import SignUpCta from '@/components/marketing/SignUpCta'
 import type { Metadata } from 'next'
@@ -16,10 +17,12 @@ const LandingPage = () => {
     <main className="relative isolate flex min-h-screen flex-col items-center justify-center gap-24 px-4 pb-32 md:px-24">
       <MarketingBackground />
       <Hero />
-      <Pitch />
-      <HowItWorks />
-      <Features />
-      <SignUpCta />
+      <MarketingCube>
+        <Pitch />
+        <HowItWorks />
+        <Features />
+        <SignUpCta />
+      </MarketingCube>
     </main>
   )
 }
