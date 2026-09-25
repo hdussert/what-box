@@ -13,8 +13,8 @@ const Logo = ({ className, iconSize = 40 }: LogoProps) => (
     href="/"
     className={cn('flex items-center gap-2 font-bold text-2xl', className)}
   >
-    <Package size={iconSize} className="shrink-0" />
-    <span>WhatBox</span>
+    <Package size={iconSize} />
+    WhatBox
   </Link>
 )
 
