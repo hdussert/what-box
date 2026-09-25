@@ -1,4 +1,5 @@
 import Logo from '@/components/Logo'
+import SignUpButton from '@/components/marketing/SignUpButton'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -10,9 +11,7 @@ const Navbar = () => {
         <Button asChild variant="outline">
           <Link href="/sign-in">Sign In</Link>
         </Button>
-        <Button asChild>
-          <Link href="/sign-up">Sign Up</Link>
-        </Button>
+        <SignUpButton />
       </div>
     </nav>
   )

@@ -1,5 +1,4 @@
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
+import SignUpButton from '@/components/marketing/SignUpButton'
 
 const SignUpCta = () => {
   return (
@@ -8,9 +7,7 @@ const SignUpCta = () => {
       <p className="text-muted-foreground">
         Create your first box in under a minute.
       </p>
-      <Button asChild size="lg">
-        <Link href="/sign-up">Sign Up</Link>
-      </Button>
+      <SignUpButton size="lg" />
     </div>
   )
 }

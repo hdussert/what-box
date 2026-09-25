@@ -1,7 +1,7 @@
+import SignUpButton from '@/components/marketing/SignUpButton'
 import { Button } from '@/components/ui/button'
 import { SITE_TAGLINE } from '@/lib/const'
 import { Package } from 'lucide-react'
-import Link from 'next/link'
 
 const Hero = () => {
   return (
@@ -18,9 +18,7 @@ const Hero = () => {
           <Button asChild variant="link">
             <a href="#features">Learn more</a>
           </Button>
-          <Button asChild>
-            <Link href="/sign-up">Sign Up</Link>
-          </Button>
+          <SignUpButton />
         </div>
       </div>
     </div>
