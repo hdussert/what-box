@@ -3,6 +3,7 @@
 import { signOutAction } from '@/actions/auth/sign-out'
 import NewBoxDialog from '@/components/boxes/NewBoxDialog'
 import { useDialog } from '@/components/dialog/DialogProvider'
+import Logo from '@/components/Logo'
 import {
   SidebarNavItem,
   SidebarNavItemProps,
@@ -11,6 +12,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -21,7 +23,11 @@ import Link from 'next/link'
 
 type SideItemList = Array<SidebarNavItemProps & { key: string }>
 
-const Side = () => {
+type SideProps = {
+  email: string
+}
+
+const Side = ({ email }: SideProps) => {
   const { openDialog } = useDialog()
 
   const items: SideItemList = [
@@ -35,6 +41,15 @@ const Side = () => {
   ]
   return (
     <Sidebar collapsible="icon">
+      <SidebarHeader className="overflow-hidden whitespace-nowrap">
+        <Logo className="px-1 text-lg" iconSize={24} />
+        <p
+          className="truncate px-1 text-xs text-muted-foreground group-data-[collapsible=icon]:hidden"
+          title={email}
+        >
+          {email}
+        </p>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
           {items.map((item) => (
