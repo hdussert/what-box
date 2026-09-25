@@ -13,9 +13,10 @@ const Pitch = () => {
           <i>&ldquo;What&apos;s in that one?&rdquo;</i>
         </li>
       </ul>
-      Save time by inventoring your items with <b>WhatBox</b>.
-      <br />
-      No more digging around, everything is right at your fingertips.
+      <p>
+        Save time by inventorying your items with <b>WhatBox</b>: everything is
+        right at your fingertips.
+      </p>
     </div>
   )
 }

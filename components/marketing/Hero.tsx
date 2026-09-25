@@ -9,9 +9,13 @@ const Hero = () => {
       <Package size={200} />
       <div className="text-center md:text-left">
         <h1 className="text-5xl font-bold">WhatBox</h1>
-        <p className="mt-4 text-lg text-default-500">{SITE_TAGLINE}</p>
+        <p className="mt-4 text-lg text-muted-foreground">{SITE_TAGLINE}</p>
+        <p className="mt-2 max-w-md text-muted-foreground">
+          Know what&apos;s in every box, whether you&apos;re moving house,
+          filling a storage unit or clearing the garage.
+        </p>
         <div className="flex gap-2 mt-4 w-full justify-center md:justify-end">
-          <Button variant="link">
+          <Button asChild variant="link">
             <a href="#features">Learn more</a>
           </Button>
           <Button asChild>
