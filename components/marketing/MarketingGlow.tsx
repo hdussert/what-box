@@ -1,7 +1,10 @@
 import { cn } from '@/lib/utils'
 
 type MarketingGlowProps = {
-  /** Position it in its MarketingSection, e.g. `-top-16 -left-16` */
+  /**
+   * Where its center goes in its MarketingSection, with `top` and `left`
+   * only (e.g. `top-0 left-full` for the top-right corner)
+   */
   className?: string
 }
 
@@ -10,7 +13,7 @@ const MarketingGlow = ({ className }: MarketingGlowProps) => (
   <div
     aria-hidden
     className={cn(
-      'pointer-events-none absolute -z-10 size-98 rounded-full bg-primary opacity-20 blur-3xl md:size-148',
+      'pointer-events-none absolute -z-10 size-98 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl md:size-148',
       className,
     )}
   />
