@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar'
-import { Boxes, LogOut, PackagePlus } from 'lucide-react'
+import { Boxes, LogOut, PackagePlus, Settings } from 'lucide-react'
 import Link from 'next/link'
 
 type SideItemList = Array<SidebarNavItemProps & { key: string }>
@@ -45,6 +45,7 @@ const Side = () => {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
+        <SidebarNavItem name="Settings" Icon={Settings} href="/settings" />
         <SidebarMenuButton
           className="hover:cursor-pointer whitespace-nowrap"
           onClick={() => signOutAction()}
