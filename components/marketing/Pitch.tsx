@@ -1,9 +1,11 @@
+import MarketingGlow from '@/components/marketing/MarketingGlow'
 import MarketingSection from '@/components/marketing/MarketingSection'
 import MarketingTitle from '@/components/marketing/MarketingTitle'
 
 const Pitch = () => {
   return (
     <MarketingSection id="features" className="gap-4">
+      <MarketingGlow className="-top-16 -left-24" />
       <MarketingTitle>No more digging around!</MarketingTitle>
       <ul className="space-y-1">
         <li>

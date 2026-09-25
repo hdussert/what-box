@@ -1,3 +1,4 @@
+import MarketingGlow from '@/components/marketing/MarketingGlow'
 import MarketingSection from '@/components/marketing/MarketingSection'
 import { List, PackageSearch, ScanSearch } from 'lucide-react'
 
@@ -22,6 +23,7 @@ const FEATURES = [
 const Features = () => {
   return (
     <MarketingSection>
+      <MarketingGlow className="-bottom-24 left-1/4" />
       <ul className="grid w-full gap-8 sm:grid-cols-3">
         {FEATURES.map(({ title, description, Icon }) => (
           <li key={title} className="flex flex-col items-center gap-2">

@@ -1,4 +1,5 @@
 import BoxLabel from '@/components/boxes/labels/BoxLabel'
+import MarketingGlow from '@/components/marketing/MarketingGlow'
 import MarketingSection from '@/components/marketing/MarketingSection'
 import MarketingTitle from '@/components/marketing/MarketingTitle'
 import { env } from '@/env'
@@ -21,6 +22,7 @@ const STEPS = [
 const HowItWorks = () => {
   return (
     <MarketingSection>
+      <MarketingGlow className="top-1/4 -right-24" />
       <MarketingTitle>How does it work?</MarketingTitle>
       <div className="flex flex-col items-center gap-12 md:flex-row">
         <ol className="flex flex-col gap-6 text-left">
