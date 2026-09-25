@@ -11,6 +11,8 @@
 5. **Self-review**: `/code-review` the diff and fix the findings that hold up.
 6. **Finish**: update the PR's title and description and mark it ready. Never merge: the user reviews and merges.
 
+**Be concise** in replies, PRs, commits and docs: lead with the answer, and only mention options you'd recommend.
+
 **Side issues**: don't fix or stop to discuss unrelated problems you notice (bugs, tech debt, doc gaps). Log them in `BACKLOG.md`, which is local and git-ignored: edit it directly, never commit it (priority and effort per its legend: what, where, why, likely fix) and mention them in one line.
 
 ## Git
@@ -42,7 +44,7 @@ Conventions:
 - Booleans start with a verb: `isOpen`, `hasImage`, `canDelete`.
 - Early returns always use braces: `if (...) { return }`. Apply to new and edited code (older code doesn't).
 - XState (`xstate`, `@xstate/react`) for complex logic.
-- Comments: JSDoc on exports, and inline only for what the code can't say (an edge case, a workaround, a why).
+- Comments: JSDoc on exports, and inline only for what the code can't say (an edge case, a workaround, a why). Describe the code as it is, not its history: that goes in the commit. Rewrite, don't append.
 
 Components:
 
