@@ -1,6 +1,7 @@
 import BoxLabel from '@/components/boxes/labels/BoxLabel'
 import MarketingSection from '@/components/marketing/MarketingSection'
 import MarketingTitle from '@/components/marketing/MarketingTitle'
+import { env } from '@/env'
 
 const STEPS = [
   {
@@ -37,7 +38,11 @@ const HowItWorks = () => {
         </ol>
         {/* A sample printed label: on white paper, and with the top and left borders it leaves to its print-sheet neighbours */}
         <div className="w-full max-w-sm -rotate-2 border-l border-t border-black bg-white text-left shadow-lg">
-          <BoxLabel id="example" shortId="K7M2QX" name="Kitchen" />
+          <BoxLabel
+            shortId="K7M2QX"
+            name="Kitchen"
+            url={`${env.NEXT_PUBLIC_APP_URL}/sign-up`}
+          />
         </div>
       </div>
     </MarketingSection>
