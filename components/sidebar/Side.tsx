@@ -1,6 +1,6 @@
-import Logo from '@/components/Logo'
 import NewBoxNavItem from '@/components/sidebar/NewBoxNavItem'
 import { SidebarNavItem } from '@/components/sidebar/SidebarNavItem'
+import SideLogo from '@/components/sidebar/SideLogo'
 import SideUser from '@/components/sidebar/SideUser'
 import SignOutButton from '@/components/sidebar/SignOutButton'
 import {
@@ -27,7 +27,7 @@ const Side = () => {
         )}
       >
         <div className="flex min-h-0 flex-col gap-2 overflow-hidden">
-          <Logo className="px-1 text-lg" iconSize={24} />
+          <SideLogo />
           <SideUser />
         </div>
       </SidebarHeader>
