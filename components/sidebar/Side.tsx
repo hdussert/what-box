@@ -21,14 +21,16 @@ import {
 import { cn } from '@/lib/utils'
 import { Boxes, LogOut, PackagePlus, Settings } from 'lucide-react'
 import Link from 'next/link'
+import { ReactNode } from 'react'
 
 type SideItemList = Array<SidebarNavItemProps & { key: string }>
 
 type SideProps = {
-  email: string
+  /** Server-rendered user info, shown under the logo */
+  user: ReactNode
 }
 
-const Side = ({ email }: SideProps) => {
+const Side = ({ user }: SideProps) => {
   const { openDialog } = useDialog()
 
   const items: SideItemList = [
@@ -51,12 +53,7 @@ const Side = ({ email }: SideProps) => {
       >
         <div className="flex min-h-0 flex-col gap-2 overflow-hidden">
           <Logo className="px-1 text-lg" iconSize={24} />
-          <p
-            className="truncate px-1 text-xs text-muted-foreground"
-            title={email}
-          >
-            {email}
-          </p>
+          {user}
         </div>
       </SidebarHeader>
       <SidebarContent>
