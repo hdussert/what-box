@@ -22,7 +22,7 @@ const STEPS = [
 const HowItWorks = () => {
   return (
     <MarketingSection>
-      <MarketingGlow className="top-1/2 left-full" />
+      <MarketingGlow className="top-2/3 left-5/7" />
       <MarketingTitle>How does it work?</MarketingTitle>
       <div className="flex flex-col items-center gap-12 md:flex-row">
         <ol className="flex flex-col gap-6 text-left">
