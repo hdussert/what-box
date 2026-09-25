@@ -2,6 +2,7 @@ import Features from '@/components/marketing/Features'
 import Hero from '@/components/marketing/Hero'
 import HowItWorks from '@/components/marketing/HowItWorks'
 import Pitch from '@/components/marketing/Pitch'
+import SignUpCta from '@/components/marketing/SignUpCta'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ const LandingPage = () => {
       <Pitch />
       <HowItWorks />
       <Features />
+      <SignUpCta />
     </main>
   )
 }
