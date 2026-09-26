@@ -23,13 +23,13 @@ const STEPS = [
 const HowItWorks = () => {
   return (
     <MarketingSection>
-      <MarketingGlow className="top-2/3 left-5/7" />
+      <MarketingGlow className="top-4/5 left-1/2 md:top-2/3 md:left-5/7" />
       <MarketingTitle>How does it work?</MarketingTitle>
       <div className="flex flex-col items-center gap-12 md:flex-row">
         <ol className="flex flex-col gap-6 text-left">
           {STEPS.map(({ title, description }, index) => (
             <li key={title} className="flex items-start gap-4">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-full ring-2 ring-primary bg-primary/10 font-bold text-primary-foreground">
                 {index + 1}
               </span>
               <div>
