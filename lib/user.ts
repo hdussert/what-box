@@ -50,6 +50,24 @@ export async function updatePassword(userId: string, password: string) {
   return user
 }
 
+/**
+ * Change the signed-in user's password once their current one checks out,
+ * with the same lockout as sign-in. Revokes every session, this one too.
+ */
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+): Promise<CredentialsResult> {
+  const user = await getCurrentUser()
+  const result = await verifyCredentials(user.email, currentPassword)
+  if (result.status !== 'ok') {
+    return result
+  }
+
+  await updatePassword(user.id, newPassword)
+  return result
+}
+
 // Get user by email
 export const getUserByEmail = cache(async (email: string) => {
   return db.query.users.findFirst({
