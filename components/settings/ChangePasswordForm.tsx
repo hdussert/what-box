@@ -12,20 +12,6 @@ import { toast } from 'sonner'
 
 const initialState: ChangePasswordState = { success: false, message: '' }
 
-const FIELDS = [
-  {
-    name: 'currentPassword',
-    label: 'Current password',
-    autoComplete: 'current-password',
-  },
-  { name: 'password', label: 'New password', autoComplete: 'new-password' },
-  {
-    name: 'confirmPassword',
-    label: 'Confirm new password',
-    autoComplete: 'new-password',
-  },
-]
-
 /** Change the signed-in user's password; the form clears after each try. */
 const ChangePasswordForm = () => {
   const [state, formAction, isPending] = useActionState(
@@ -45,20 +31,44 @@ const ChangePasswordForm = () => {
     <form action={formAction} className="space-y-6">
       {hasFormError && <FieldError>{state.message}</FieldError>}
 
-      {FIELDS.map(({ name, label, autoComplete }) => (
-        <Field key={name}>
-          <FieldLabel htmlFor={name}>{label}</FieldLabel>
-          <Input
-            id={name}
-            name={name}
-            type="password"
-            autoComplete={autoComplete}
-            required
-            disabled={isPending}
-          />
-          <FieldError>{state.errors?.[name]?.[0]}</FieldError>
-        </Field>
-      ))}
+      <Field>
+        <FieldLabel htmlFor="currentPassword">Current password</FieldLabel>
+        <Input
+          id="currentPassword"
+          name="currentPassword"
+          type="password"
+          autoComplete="current-password"
+          required
+          disabled={isPending}
+        />
+        <FieldError>{state.errors?.currentPassword?.[0]}</FieldError>
+      </Field>
+
+      <Field>
+        <FieldLabel htmlFor="password">New password</FieldLabel>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          required
+          disabled={isPending}
+        />
+        <FieldError>{state.errors?.password?.[0]}</FieldError>
+      </Field>
+
+      <Field>
+        <FieldLabel htmlFor="confirmPassword">Confirm new password</FieldLabel>
+        <Input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          autoComplete="new-password"
+          required
+          disabled={isPending}
+        />
+        <FieldError>{state.errors?.confirmPassword?.[0]}</FieldError>
+      </Field>
 
       <Button type="submit" disabled={isPending}>
         {isPending ? 'Changing…' : 'Change password'}
