@@ -60,13 +60,33 @@ export async function changePassword(
   currentPassword: string,
   newPassword: string,
 ) {
-  const user = await getCurrentUser()
-  await checkCredentials(
-    user.email,
+  const user = await verifyCurrentPassword(
     currentPassword,
     'Incorrect current password',
   )
   return updatePassword(user.id, newPassword)
+}
+
+/**
+ * The signed-in user, once `password` checks out, with the same lockout as
+ * sign-in. Throws the lockout message or `invalidMessage` otherwise.
+ */
+export async function verifyCurrentPassword(
+  password: string,
+  invalidMessage: string,
+) {
+  const user = await getCurrentUser()
+  await checkCredentials(user.email, password, invalidMessage)
+  return user
+}
+
+/**
+ * Delete the signed-in user. Their boxes and items go with them (cascade),
+ * but not their image files: delete those first, through lib/image.
+ */
+export async function deleteCurrentUser() {
+  const user = await getCurrentUser()
+  await db.delete(users).where(eq(users.id, user.id))
 }
 
 // Get user by email

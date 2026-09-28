@@ -1,3 +1,8 @@
+/** Where all of a user's image files are stored. */
+export function userImagePrefix(userId: string) {
+  return `${userId}/`
+}
+
 export function buildImagePath({
   userId,
   boxId,
@@ -9,5 +14,5 @@ export function buildImagePath({
   itemId: string | null
   imageName: string
 }) {
-  return `${userId}/${boxId}${itemId ? `/${itemId}` : ''}/${imageName}`
+  return `${userImagePrefix(userId)}${boxId}${itemId ? `/${itemId}` : ''}/${imageName}`
 }
