@@ -1,6 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
+import { UserError, toUserMessage } from '@/lib/errors'
 import { deleteAllImageFiles } from '@/lib/image/storage'
 import { deleteSession } from '@/lib/session'
 import { deleteCurrentUser, verifyCurrentPassword } from '@/lib/user'
@@ -32,13 +33,13 @@ export async function deleteAccountAction(
     // one could clean up what's left
     await deleteAllImageFiles().catch((error) => {
       console.error('Failed to delete image files:', error)
-      throw new Error(
+      throw new UserError(
         "Couldn't delete your photos, so your account was kept: please try again.",
       )
     })
     await deleteCurrentUser().catch((error) => {
       console.error('Failed to delete the user:', error)
-      throw new Error(
+      throw new UserError(
         "Your photos were deleted, but your account couldn't be: please try again.",
       )
     })
@@ -56,7 +57,7 @@ export async function deleteAccountAction(
 
     return {
       success: false,
-      message: (error as Error).message || 'Account deletion failed',
+      message: toUserMessage(error, 'Account deletion failed'),
       error: 'Failed to delete your account',
     }
   }

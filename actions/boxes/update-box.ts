@@ -2,6 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { updateBox } from '@/lib/box'
+import { toUserMessage } from '@/lib/errors'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
@@ -60,7 +61,7 @@ export async function updateBoxAction(
 
     return {
       success: false,
-      message: (error as Error).message,
+      message: toUserMessage(error, 'Failed to update the box'),
       error: 'Failed to update box',
       values,
     }

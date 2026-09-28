@@ -1,6 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
+import { toUserMessage } from '@/lib/errors'
 import { createSession } from '@/lib/session'
 import { checkCredentials } from '@/lib/user'
 import { safeRedirectPath } from '@/lib/utils'
@@ -54,7 +55,7 @@ export async function signInAction(
 
     return {
       success: false,
-      message: (error as Error).message || 'Sign in failed',
+      message: toUserMessage(error, 'Sign in failed'),
       error: 'Failed to sign in',
       values,
     }

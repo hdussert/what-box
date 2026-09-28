@@ -1,6 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
+import { toUserMessage } from '@/lib/errors'
 import { deleteImage } from '@/lib/image/mutations'
 import { unstable_rethrow } from 'next/navigation'
 import z from 'zod'
@@ -27,8 +28,7 @@ export async function deleteImageAction(
     unstable_rethrow(error)
     return {
       success: false,
-      message:
-        error instanceof Error ? error.message : 'Failed to delete the image',
+      message: toUserMessage(error, 'Failed to delete the image'),
     }
   }
 }

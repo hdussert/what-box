@@ -1,6 +1,7 @@
 import { db } from '@/db'
 import { Box, boxes } from '@/db/schema'
 import { CreateBoxData, UpdateBoxData } from '@/lib/box/types'
+import { UserError } from '@/lib/errors'
 import { StoredImage } from '@/lib/image/types'
 import { getCurrentUser } from '@/lib/user'
 import { and, eq, inArray } from 'drizzle-orm'
@@ -26,7 +27,7 @@ export async function createBox({
     })
     .returning()
 
-  if (!newBox) throw new Error('Failed to create box')
+  if (!newBox) throw new UserError('Failed to create box')
 
   return newBox
 }
@@ -40,7 +41,7 @@ export async function updateBox({ id, ...data }: UpdateBoxData): Promise<Box> {
     .returning()
 
   if (!updatedBox) {
-    throw new Error('Failed to update the box')
+    throw new UserError('Failed to update the box')
   }
 
   return updatedBox
@@ -62,7 +63,7 @@ export async function updateBoxImage(
     .returning()
 
   if (!updatedBox) {
-    throw new Error('Failed to update the box image')
+    throw new UserError('Failed to update the box image')
   }
 
   return updatedBox

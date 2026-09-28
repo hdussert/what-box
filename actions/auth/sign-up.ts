@@ -2,6 +2,7 @@
 
 import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
+import { UserError, toUserMessage } from '@/lib/errors'
 import { createSession } from '@/lib/session'
 import { createUser, getUserByEmail } from '@/lib/user'
 import { redirect } from 'next/navigation'
@@ -39,7 +40,7 @@ export async function signUpAction(
     // Check if user already exists
     const existingUser = await getUserByEmail(data.email)
     if (existingUser) {
-      throw new Error('Failed to create account')
+      throw new UserError('Failed to create account')
     }
 
     // Create new user
@@ -58,9 +59,10 @@ export async function signUpAction(
     }
     return {
       success: false,
-      message:
-        (error as Error).message ||
+      message: toUserMessage(
+        error,
         'An error occurred while creating your account',
+      ),
       error: 'Failed to create account',
       values,
     }

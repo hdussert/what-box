@@ -1,5 +1,6 @@
 import { env } from '@/env'
 import { SESSION_COOKIE_NAME } from '@/lib/const'
+import { UserError } from '@/lib/errors'
 import { generateJWT, JWT_SECRET, JWTPayload, verifyJWT } from '@/lib/jwt'
 import { getUserById } from '@/lib/user'
 import * as jose from 'jose'
@@ -105,7 +106,7 @@ export async function createSession(userId: string) {
     })
   } catch (error) {
     console.error('Error creating session:', error)
-    throw new Error("Couldn't sign you in: please sign in again.", {
+    throw new UserError("Couldn't sign you in: please sign in again.", {
       cause: error,
     })
   }
