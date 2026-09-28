@@ -42,7 +42,6 @@ const RootLayout = ({ children }: PropsWithChildren) => {
     // suppressHydrationWarning: the script below adds a class before hydration
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
-        {/* Flag the page when embedded, to hide its scrollbar (see globals.css) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `if (window.self !== window.top) document.documentElement.classList.add('in-iframe')`,
