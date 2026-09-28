@@ -27,8 +27,8 @@ export default function ResetPasswordPage() {
           </Suspense>
           <p className="mt-4 text-sm text-center">
             Remember your password?&nbsp;
-            <Link href="/sign-up" className="font-medium">
-              Sign up
+            <Link href="/sign-in" className="font-medium">
+              Sign in
             </Link>
           </p>
         </CardContent>

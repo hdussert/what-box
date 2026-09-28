@@ -12,7 +12,7 @@ const BoxLabel = ({ name, shortId, url }: BoxLabelProps) => {
       <div className="min-w-0 flex-1 flex flex-col gap-2  text-black">
         <div className="font-mono font-bold">BOX {shortId}</div>
         <div className="text-xl font-black uppercase leading-tight">{name}</div>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-neutral-600">
           Scan to open box details
         </div>
       </div>
