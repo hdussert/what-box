@@ -1,5 +1,6 @@
 'use server'
 
+import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
 import { createSession } from '@/lib/session'
 import { createUser, getUserByEmail } from '@/lib/user'
@@ -10,13 +11,8 @@ import { z } from 'zod'
 const SignUpSchema = z
   .object({
     email: z.email('Invalid email format').min(1, 'Email is required'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
+  .and(NewPasswordSchema)
 
 export type SignUpData = z.infer<typeof SignUpSchema>
 export type SignUpValues = Pick<SignUpData, 'email'>
