@@ -2,6 +2,7 @@
 
 import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
+import { UserError } from '@/lib/errors'
 import { createSession, verifyResetToken } from '@/lib/session'
 import { updatePassword } from '@/lib/user'
 import { redirect } from 'next/navigation'
@@ -36,7 +37,7 @@ export async function resetPasswordAction(
 
     const { valid, user, error } = await verifyResetToken(token)
     if (!valid || !user) {
-      throw new Error(error)
+      throw new UserError(error)
     }
 
     await updatePassword(user.id, password)
@@ -52,11 +53,13 @@ export async function resetPasswordAction(
         values,
       }
     }
+    console.error(error)
     return {
       success: false,
       message:
-        (error as Error).message ||
-        'An error occurred while changing your password',
+        error instanceof UserError
+          ? error.message
+          : 'An error occurred while changing your password',
       error: 'Failed to change your password',
       values,
     }

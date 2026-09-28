@@ -1,5 +1,6 @@
 'use server'
 
+import { UserError } from '@/lib/errors'
 import { getImagePathnamesByItemIds } from '@/lib/image/queries'
 import { deleteImageFiles } from '@/lib/image/storage'
 import { deleteItems } from '@/lib/item'
@@ -40,7 +41,9 @@ export async function deleteItemsAction(itemIds: string[]) {
     return {
       success: false,
       message:
-        (error as Error).message ?? 'An error occurred while deleting items',
+        error instanceof UserError
+          ? error.message
+          : 'An error occurred while deleting items',
       error: 'Failed to delete items and associated data',
     }
   }

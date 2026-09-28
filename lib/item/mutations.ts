@@ -1,6 +1,7 @@
 import { db } from '@/db'
 import { Item, items } from '@/db/schema'
 import { getBoxById } from '@/lib/box/queries'
+import { UserError } from '@/lib/errors'
 import { StoredImage } from '@/lib/image/types'
 import { CreateItemData, UpdateItemData } from '@/lib/item/types'
 import { getCurrentUser } from '@/lib/user'
@@ -18,7 +19,7 @@ export async function updateItem({ id, ...data }: UpdateItemData) {
     .returning()
 
   if (!updatedItem) {
-    throw new Error('Failed to update the item')
+    throw new UserError('Failed to update the item')
   }
 
   return updatedItem
@@ -40,7 +41,7 @@ export async function updateItemImage(
     .returning()
 
   if (!updatedItem) {
-    throw new Error('Failed to update the item image')
+    throw new UserError('Failed to update the item image')
   }
 
   return updatedItem
@@ -58,7 +59,7 @@ export async function createItem({
   // userId filter, so it'd show up when that user views their box).
   const box = await getBoxById(data.boxId)
   if (!box) {
-    throw new Error('Box not found')
+    throw new UserError('Box not found')
   }
 
   const [newItem] = await db
@@ -72,7 +73,7 @@ export async function createItem({
     .returning()
 
   if (!newItem) {
-    throw new Error('Failed to create the item')
+    throw new UserError('Failed to create the item')
   }
 
   return newItem

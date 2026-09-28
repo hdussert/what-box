@@ -2,6 +2,7 @@
 
 import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
+import { UserError } from '@/lib/errors'
 import { createSession } from '@/lib/session'
 import { changePassword } from '@/lib/user'
 import { unstable_rethrow } from 'next/navigation'
@@ -43,9 +44,11 @@ export async function changePasswordAction(
       }
     }
 
+    console.error(error)
     return {
       success: false,
-      message: (error as Error).message || 'Password change failed',
+      message:
+        error instanceof UserError ? error.message : 'Password change failed',
       error: 'Failed to change your password',
     }
   }

@@ -1,6 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
+import { UserError } from '@/lib/errors'
 import { updateItem } from '@/lib/item'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
@@ -74,10 +75,14 @@ export async function updateItemAction(
       }
     }
 
+    console.error(error)
     return {
       success: false,
-      message: (error as Error).message,
-      error: 'Failed to create item',
+      message:
+        error instanceof UserError
+          ? error.message
+          : 'Failed to update the item',
+      error: 'Failed to update item',
       values,
     }
   }

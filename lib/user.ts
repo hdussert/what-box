@@ -1,5 +1,6 @@
 import { db } from '@/db'
 import { User, users } from '@/db/schema'
+import { UserError } from '@/lib/errors'
 import { hashPassword, verifyPassword } from '@/lib/password'
 import { getSession, hasSessionCookie } from '@/lib/session'
 import { eq } from 'drizzle-orm'
@@ -28,7 +29,7 @@ export async function createUser(email: string, password: string) {
       email: users.email,
     })
 
-  if (!user) throw new Error('Failed to create the account')
+  if (!user) throw new UserError('Failed to create the account')
   return user
 }
 
@@ -46,7 +47,7 @@ export async function updatePassword(userId: string, password: string) {
       email: users.email,
     })
 
-  if (!user) throw new Error("Couldn't change the user password")
+  if (!user) throw new UserError("Couldn't change the user password")
   return user
 }
 
@@ -132,10 +133,10 @@ export async function checkCredentials(
 ) {
   const result = await verifyCredentials(email, password)
   if (result.status === 'locked') {
-    throw new Error(lockoutMessage(result.lockedUntil))
+    throw new UserError(lockoutMessage(result.lockedUntil))
   }
   if (result.status === 'invalid') {
-    throw new Error(invalidMessage)
+    throw new UserError(invalidMessage)
   }
   return result.user
 }

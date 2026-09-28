@@ -2,6 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { createBox, getBoxByShortId } from '@/lib/box'
+import { UserError } from '@/lib/errors'
 import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { createWithImage } from '@/lib/image/mutations'
@@ -80,9 +81,11 @@ export async function createBoxAction(
         values,
       }
     }
+    console.error(error)
     return {
       success: false,
-      message: (error as Error).message,
+      message:
+        error instanceof UserError ? error.message : 'Failed to create the box',
       error: 'Failed to create box',
       values,
     }

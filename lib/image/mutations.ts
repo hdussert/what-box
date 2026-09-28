@@ -1,4 +1,5 @@
 import { getBoxById, updateBoxImage } from '@/lib/box'
+import { UserError } from '@/lib/errors'
 import { deleteImageFiles, uploadImageFile } from '@/lib/image/storage'
 import {
   ImageOwner,
@@ -48,7 +49,7 @@ export async function saveImage(data: UploadImageData): Promise<void> {
   const { boxId, itemId } = data
   const owner = itemId ? await getItemById(itemId) : await getBoxById(boxId)
   if (!owner) {
-    throw new Error(itemId ? 'Item not found' : 'Box not found')
+    throw new UserError(itemId ? 'Item not found' : 'Box not found')
   }
   const previousPathname = owner.imagePathname
 
@@ -86,7 +87,7 @@ export async function deleteImage({
   const owner = itemId ? await getItemById(itemId) : await getBoxById(boxId)
   const pathname = owner?.imagePathname
   if (!pathname) {
-    throw new Error('No image found')
+    throw new UserError('No image found')
   }
 
   if (itemId) {
