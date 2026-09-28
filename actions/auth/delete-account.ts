@@ -36,7 +36,12 @@ export async function deleteAccountAction(
         "Couldn't delete your photos, so your account was kept: please try again.",
       )
     })
-    await deleteCurrentUser()
+    await deleteCurrentUser().catch((error) => {
+      console.error('Failed to delete the user:', error)
+      throw new Error(
+        "Your photos were deleted, but your account couldn't be: please try again.",
+      )
+    })
     await deleteSession()
   } catch (error) {
     // Let getCurrentUser()'s sign-in redirect through
