@@ -39,7 +39,16 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: PropsWithChildren) => {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    // suppressHydrationWarning: the script below adds a class before hydration
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        {/* Flag the page when embedded, to hide its scrollbar (see globals.css) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if (window.self !== window.top) document.documentElement.classList.add('in-iframe')`,
+          }}
+        />
+      </head>
       <body
         className={`dark font-sans ${inter.variable} ${jetBrainsMono.variable} antialiased`}
       >

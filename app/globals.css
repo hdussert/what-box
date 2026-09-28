@@ -124,3 +124,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Set in app/layout.tsx when the page is embedded in an iframe */
+.in-iframe {
+  scrollbar-width: none;
+}
+.in-iframe::-webkit-scrollbar {
+  display: none;
+}
