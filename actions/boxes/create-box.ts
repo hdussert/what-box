@@ -78,7 +78,6 @@ export async function createBoxAction(
     }
   }
 
-  // Outside the try so the catch can't swallow it. Redirecting from the action
-  // sends the box page in the same response: no dashboard in between.
+  // Outside the try so the catch can't swallow it
   redirect('/boxes/' + id)
 }
