@@ -16,9 +16,12 @@ const ListSearch = () => {
   const { search, setSearch, isPending } = useList()
   const [value, setValue] = useState(search)
 
-  // Debounce URL updates
+  // Debounce URL updates. The URL holds the trimmed value, so compare that:
+  // with the raw one, a trailing space would never match and keep searching.
   useEffect(() => {
-    if (value === search) return
+    if (value.trim() === search) {
+      return
+    }
 
     const timeoutId = setTimeout(() => {
       setSearch(value)
