@@ -1,7 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
-import { userMessage } from '@/lib/errors'
+import { toUserMessage } from '@/lib/errors'
 import { updateItem } from '@/lib/item'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
@@ -77,7 +77,7 @@ export async function updateItemAction(
 
     return {
       success: false,
-      message: userMessage(error, 'Failed to update the item'),
+      message: toUserMessage(error, 'Failed to update the item'),
       error: 'Failed to update item',
       values,
     }

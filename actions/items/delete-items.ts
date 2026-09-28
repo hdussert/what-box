@@ -1,6 +1,6 @@
 'use server'
 
-import { userMessage } from '@/lib/errors'
+import { toUserMessage } from '@/lib/errors'
 import { getImagePathnamesByItemIds } from '@/lib/image/queries'
 import { deleteImageFiles } from '@/lib/image/storage'
 import { deleteItems } from '@/lib/item'
@@ -39,7 +39,7 @@ export async function deleteItemsAction(itemIds: string[]) {
     unstable_rethrow(error)
     return {
       success: false,
-      message: userMessage(error, 'An error occurred while deleting items'),
+      message: toUserMessage(error, 'An error occurred while deleting items'),
       error: 'Failed to delete items and associated data',
     }
   }

@@ -9,7 +9,7 @@ export class UserError extends Error {}
  * What an action shows for a caught error: its message if it's a UserError,
  * else `fallback`. Only the unexpected ones are logged.
  */
-export function userMessage(error: unknown, fallback: string) {
+export function toUserMessage(error: unknown, fallback: string) {
   if (error instanceof UserError) {
     return error.message
   }

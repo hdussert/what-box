@@ -1,7 +1,7 @@
 'use server'
 
 import { deleteBoxes } from '@/lib/box'
-import { userMessage } from '@/lib/errors'
+import { toUserMessage } from '@/lib/errors'
 import { getImagePathnamesByBoxIds } from '@/lib/image/queries'
 import { deleteImageFiles } from '@/lib/image/storage'
 import { revalidatePath } from 'next/cache'
@@ -38,7 +38,7 @@ export async function deleteBoxesAction(boxIds: string[]) {
     unstable_rethrow(error)
     return {
       success: false,
-      message: userMessage(error, 'An error occurred while deleting boxes'),
+      message: toUserMessage(error, 'An error occurred while deleting boxes'),
       error: 'Failed to delete boxes and associated data',
     }
   }

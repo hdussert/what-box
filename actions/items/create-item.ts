@@ -2,7 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { getBoxById } from '@/lib/box/queries'
-import { UserError, userMessage } from '@/lib/errors'
+import { UserError, toUserMessage } from '@/lib/errors'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { createWithImage } from '@/lib/image/mutations'
 import { prepareImage } from '@/lib/image/prepare'
@@ -103,7 +103,7 @@ export async function createItemAction(
 
     return {
       success: false,
-      message: userMessage(error, 'Failed to create the item'),
+      message: toUserMessage(error, 'Failed to create the item'),
       error: 'Failed to create item',
       values,
     }

@@ -2,7 +2,7 @@
 
 import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
-import { UserError, userMessage } from '@/lib/errors'
+import { UserError, toUserMessage } from '@/lib/errors'
 import { createSession } from '@/lib/session'
 import { createUser, getUserByEmail } from '@/lib/user'
 import { redirect } from 'next/navigation'
@@ -59,7 +59,7 @@ export async function signUpAction(
     }
     return {
       success: false,
-      message: userMessage(
+      message: toUserMessage(
         error,
         'An error occurred while creating your account',
       ),
