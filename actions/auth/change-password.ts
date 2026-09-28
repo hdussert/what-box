@@ -1,20 +1,14 @@
 'use server'
 
-import {
-  newPasswordFields,
-  withMatchingPasswords,
-} from '@/actions/auth/schemas'
+import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
 import { createSession } from '@/lib/session'
 import { changePassword } from '@/lib/user'
 import { z } from 'zod'
 
-const ChangePasswordSchema = withMatchingPasswords(
-  z.object({
-    currentPassword: z.string().min(1, 'Enter your current password'),
-    ...newPasswordFields,
-  }),
-)
+const ChangePasswordSchema = z
+  .object({ currentPassword: z.string().min(1, 'Enter your current password') })
+  .and(NewPasswordSchema)
 
 export type ChangePasswordData = z.infer<typeof ChangePasswordSchema>
 // No values echoed back: they're all passwords

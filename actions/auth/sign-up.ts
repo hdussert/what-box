@@ -1,9 +1,6 @@
 'use server'
 
-import {
-  newPasswordFields,
-  withMatchingPasswords,
-} from '@/actions/auth/schemas'
+import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
 import { createSession } from '@/lib/session'
 import { createUser, getUserByEmail } from '@/lib/user'
@@ -11,12 +8,11 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 // Define Zod schema for signup validation
-const SignUpSchema = withMatchingPasswords(
-  z.object({
+const SignUpSchema = z
+  .object({
     email: z.email('Invalid email format').min(1, 'Email is required'),
-    ...newPasswordFields,
-  }),
-)
+  })
+  .and(NewPasswordSchema)
 
 export type SignUpData = z.infer<typeof SignUpSchema>
 export type SignUpValues = Pick<SignUpData, 'email'>

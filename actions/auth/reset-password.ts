@@ -1,9 +1,6 @@
 'use server'
 
-import {
-  newPasswordFields,
-  withMatchingPasswords,
-} from '@/actions/auth/schemas'
+import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
 import { createSession, verifyResetToken } from '@/lib/session'
 import { updatePassword } from '@/lib/user'
@@ -11,7 +8,7 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 // Define Zod schema for signup validation
-const ResetPasswordSchema = withMatchingPasswords(z.object(newPasswordFields))
+const ResetPasswordSchema = NewPasswordSchema
 
 export type ResetPasswordData = z.infer<typeof ResetPasswordSchema>
 export type ResetPasswordValues = ResetPasswordData
