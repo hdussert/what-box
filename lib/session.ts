@@ -84,6 +84,11 @@ export async function generateResetToken(userId: string) {
   return generateJWT({ userId, type: 'reset' }, RESET_TOKEN_EXPIRATION)
 }
 
+/**
+ * Sign the browser in as `userId` with a session cookie. Throws a
+ * user-facing Error if it can't: by then callers may have created the
+ * account or changed the password, so it asks to sign in again, not to retry.
+ */
 export async function createSession(userId: string) {
   try {
     const token = await generateSessionToken(userId)
@@ -98,11 +103,11 @@ export async function createSession(userId: string) {
       path: '/',
       sameSite: 'lax',
     })
-
-    return true
   } catch (error) {
     console.error('Error creating session:', error)
-    return false
+    throw new Error("Couldn't sign you in: please sign in again.", {
+      cause: error,
+    })
   }
 }
 

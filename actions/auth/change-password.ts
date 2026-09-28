@@ -31,12 +31,7 @@ export async function changePasswordAction(
     const user = await changePassword(data.currentPassword, data.password)
 
     // The change revoked every session: keep this browser signed in
-    const isSignedIn = await createSession(user.id)
-    if (!isSignedIn) {
-      throw new Error(
-        'Password changed, but you were signed out: sign in with your new password.',
-      )
-    }
+    await createSession(user.id)
   } catch (error) {
     // Let getCurrentUser()'s sign-in redirect through
     unstable_rethrow(error)
