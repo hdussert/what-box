@@ -6,7 +6,7 @@ import {
 } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
 import { createSession } from '@/lib/session'
-import { changePassword, lockoutMessage } from '@/lib/user'
+import { changePassword } from '@/lib/user'
 import { z } from 'zod'
 
 const ChangePasswordSchema = withMatchingPasswords(
@@ -33,16 +33,10 @@ export async function changePasswordAction(
   try {
     const data = ChangePasswordSchema.parse(raw)
 
-    const result = await changePassword(data.currentPassword, data.password)
-    if (result.status === 'locked') {
-      throw new Error(lockoutMessage(result.lockedUntil))
-    }
-    if (result.status === 'invalid') {
-      throw new Error('Incorrect current password')
-    }
+    const user = await changePassword(data.currentPassword, data.password)
 
     // The change revoked every session: keep this browser signed in
-    await createSession(result.user.id)
+    await createSession(user.id)
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
