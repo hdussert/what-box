@@ -52,7 +52,7 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     [pathname],
   )
 
-  // Set during render: React's pattern for state that follows a prop
+  // Close it once the page changes (React's "adjusting state when a prop changes" pattern)
   if (isOpen && dialog && dialog.pathname !== pathname) {
     setIsOpen(false)
   }
