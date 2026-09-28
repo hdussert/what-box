@@ -7,18 +7,20 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from '@/components/ui/input-group'
-import { Search, X } from 'lucide-react'
+import { LoaderCircle, Search, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const DEBOUNCE_MS = 200
 
 const ListSearch = () => {
-  const { search, setSearch } = useList()
+  const { search, setSearch, isPending } = useList()
   const [value, setValue] = useState(search)
 
-  // Debounce URL updates
+  // Debounce URL updates. Compare trimmed: setSearch trims the URL value
   useEffect(() => {
-    if (value === search) return
+    if (value.trim() === search) {
+      return
+    }
 
     const timeoutId = setTimeout(() => {
       setSearch(value)
@@ -38,7 +40,7 @@ const ListSearch = () => {
       />
 
       <InputGroupAddon>
-        <Search />
+        {isPending ? <LoaderCircle className="animate-spin" /> : <Search />}
       </InputGroupAddon>
 
       {isSearching ? (

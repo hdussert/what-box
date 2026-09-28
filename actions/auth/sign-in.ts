@@ -1,8 +1,9 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
+import { toUserMessage } from '@/lib/errors'
 import { createSession } from '@/lib/session'
-import { lockoutMessage, verifyCredentials } from '@/lib/user'
+import { checkCredentials } from '@/lib/user'
 import { safeRedirectPath } from '@/lib/utils'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -33,16 +34,15 @@ export async function signInAction(
     // Validate with Zod
     const data = SignInSchema.parse(raw)
 
-    const result = await verifyCredentials(data.email, data.password)
-    if (result.status === 'locked') {
-      throw new Error(lockoutMessage(result.lockedUntil))
-    }
-    if (result.status === 'invalid') {
-      throw new Error('Invalid email or password')
-    }
+    // Doesn't say which of the two is wrong, so emails can't be probed
+    const user = await checkCredentials(
+      data.email,
+      data.password,
+      'Invalid email or password',
+    )
 
     // Create session
-    await createSession(result.user.id)
+    await createSession(user.id)
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
@@ -55,7 +55,7 @@ export async function signInAction(
 
     return {
       success: false,
-      message: (error as Error).message || 'Sign in failed',
+      message: toUserMessage(error, 'Sign in failed'),
       error: 'Failed to sign in',
       values,
     }

@@ -1,0 +1,55 @@
+'use server'
+
+import { NewPasswordSchema } from '@/actions/auth/schemas'
+import { ActionResponse } from '@/actions/types'
+import { toUserMessage } from '@/lib/errors'
+import { createSession } from '@/lib/session'
+import { changePassword } from '@/lib/user'
+import { unstable_rethrow } from 'next/navigation'
+import { z } from 'zod'
+
+const ChangePasswordSchema = z
+  .object({ currentPassword: z.string().min(1, 'Enter your current password') })
+  .and(NewPasswordSchema)
+
+export type ChangePasswordData = z.infer<typeof ChangePasswordSchema>
+// No values echoed back: they're all passwords
+export type ChangePasswordState = ActionResponse
+
+export async function changePasswordAction(
+  prevState: ChangePasswordState,
+  formData: FormData,
+): Promise<ChangePasswordState> {
+  const raw: ChangePasswordData = {
+    currentPassword: formData.get('currentPassword') as string,
+    password: formData.get('password') as string,
+    confirmPassword: formData.get('confirmPassword') as string,
+  }
+
+  try {
+    const data = ChangePasswordSchema.parse(raw)
+
+    const user = await changePassword(data.currentPassword, data.password)
+
+    // The change revoked every session: keep this browser signed in
+    await createSession(user.id)
+  } catch (error) {
+    // Let getCurrentUser()'s sign-in redirect through
+    unstable_rethrow(error)
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        message: 'Validation failed',
+        errors: z.flattenError(error).fieldErrors,
+      }
+    }
+
+    return {
+      success: false,
+      message: toUserMessage(error, 'Password change failed'),
+      error: 'Failed to change your password',
+    }
+  }
+
+  return { success: true, message: 'Password changed' }
+}

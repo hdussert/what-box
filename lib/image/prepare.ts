@@ -1,3 +1,4 @@
+import { UserError } from '@/lib/errors'
 import { IMAGE_FORMATS } from '@/lib/image/const'
 import { PreparedImage } from '@/lib/image/types'
 import { randomUUID } from 'crypto'
@@ -18,13 +19,13 @@ export async function prepareImage(file: File): Promise<PreparedImage> {
       .rotate()
       .toBuffer({ resolveWithObject: true })
   } catch {
-    throw new Error('Invalid image file')
+    throw new UserError('Invalid image file')
   }
 
   // The format sharp found in the bytes, not the one the browser declared
   const { format } = output.info
   if (!Object.hasOwn(IMAGE_FORMATS, format)) {
-    throw new Error('Invalid image file')
+    throw new UserError('Invalid image file')
   }
   const contentType = IMAGE_FORMATS[format as keyof typeof IMAGE_FORMATS]
 

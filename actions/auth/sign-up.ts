@@ -1,6 +1,8 @@
 'use server'
 
+import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
+import { UserError, toUserMessage } from '@/lib/errors'
 import { createSession } from '@/lib/session'
 import { createUser, getUserByEmail } from '@/lib/user'
 import { redirect } from 'next/navigation'
@@ -10,13 +12,8 @@ import { z } from 'zod'
 const SignUpSchema = z
   .object({
     email: z.email('Invalid email format').min(1, 'Email is required'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
+  .and(NewPasswordSchema)
 
 export type SignUpData = z.infer<typeof SignUpSchema>
 export type SignUpValues = Pick<SignUpData, 'email'>
@@ -43,7 +40,7 @@ export async function signUpAction(
     // Check if user already exists
     const existingUser = await getUserByEmail(data.email)
     if (existingUser) {
-      throw new Error('Failed to create account')
+      throw new UserError('Failed to create account')
     }
 
     // Create new user
@@ -62,9 +59,10 @@ export async function signUpAction(
     }
     return {
       success: false,
-      message:
-        (error as Error).message ||
+      message: toUserMessage(
+        error,
         'An error occurred while creating your account',
+      ),
       error: 'Failed to create account',
       values,
     }

@@ -1,6 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
+import { toUserMessage } from '@/lib/errors'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
 import { prepareImage } from '@/lib/image/prepare'
@@ -32,7 +33,7 @@ export async function addImageAction(
     unstable_rethrow(error)
     return {
       success: false,
-      message: (error as Error).message || 'Failed to upload the image',
+      message: toUserMessage(error, 'Failed to upload the image'),
     }
   }
 }

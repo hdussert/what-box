@@ -4,6 +4,7 @@ import { ActionResponse } from '@/actions/types'
 import { ForgotPasswordEmailTemplate } from '@/components/auth/ForgotPasswordEmailTemplate'
 import { env } from '@/env'
 import { resend } from '@/lib/email/resend'
+import { toUserMessage } from '@/lib/errors'
 import { generateResetToken } from '@/lib/session'
 import {
   canRequestPasswordReset,
@@ -78,7 +79,7 @@ export async function forgotPasswordAction(
 
     return {
       success: false,
-      message: (error as Error).message || 'Internal Server Error',
+      message: toUserMessage(error, 'Internal Server Error'),
       error: 'Internal Server Error',
       values,
     }

@@ -1,5 +1,6 @@
 import { db } from '@/db'
 import { User, users } from '@/db/schema'
+import { UserError } from '@/lib/errors'
 import { hashPassword, verifyPassword } from '@/lib/password'
 import { getSession, hasSessionCookie } from '@/lib/session'
 import { eq } from 'drizzle-orm'
@@ -28,7 +29,7 @@ export async function createUser(email: string, password: string) {
       email: users.email,
     })
 
-  if (!user) throw new Error('Failed to create the account')
+  if (!user) throw new UserError('Failed to create the account')
   return user
 }
 
@@ -46,8 +47,46 @@ export async function updatePassword(userId: string, password: string) {
       email: users.email,
     })
 
-  if (!user) throw new Error("Couldn't change the user password")
+  if (!user) throw new UserError("Couldn't change the user password")
   return user
+}
+
+/**
+ * Change the signed-in user's password once their current one checks out,
+ * with the same lockout as sign-in. Revokes every session, this one too.
+ * Throws a user-facing Error when the current password is refused.
+ */
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+) {
+  const user = await verifyCurrentPassword(
+    currentPassword,
+    'Incorrect current password',
+  )
+  return updatePassword(user.id, newPassword)
+}
+
+/**
+ * The signed-in user, once `password` checks out, with the same lockout as
+ * sign-in. Throws the lockout message or `invalidMessage` otherwise.
+ */
+export async function verifyCurrentPassword(
+  password: string,
+  invalidMessage: string,
+) {
+  const user = await getCurrentUser()
+  await checkCredentials(user.email, password, invalidMessage)
+  return user
+}
+
+/**
+ * Delete the signed-in user. Their boxes and items go with them (cascade),
+ * but not their image files: delete those first, through lib/image.
+ */
+export async function deleteCurrentUser() {
+  const user = await getCurrentUser()
+  await db.delete(users).where(eq(users.id, user.id))
 }
 
 // Get user by email
@@ -57,13 +96,13 @@ export const getUserByEmail = cache(async (email: string) => {
   })
 })
 
-export type CredentialsResult =
+type CredentialsResult =
   | { status: 'ok'; user: User }
   | { status: 'invalid' }
   | { status: 'locked'; lockedUntil: Date }
 
-/** Shared copy for a 'locked' result. */
-export function lockoutMessage(lockedUntil: Date) {
+/** The message for a 'locked' result. */
+function lockoutMessage(lockedUntil: Date) {
   const minutes = Math.max(
     1,
     Math.ceil((lockedUntil.getTime() - Date.now()) / 60_000),
@@ -76,7 +115,7 @@ export function lockoutMessage(lockedUntil: Date) {
  * failures: MAX_FAILED_LOGIN_ATTEMPTS wrong passwords in a row locks the
  * account for LOCKOUT_DURATION_MS. A correct password resets the counter.
  */
-export async function verifyCredentials(
+async function verifyCredentials(
   email: string,
   password: string,
 ): Promise<CredentialsResult> {
@@ -101,6 +140,25 @@ export async function verifyCredentials(
   }
 
   return { status: 'ok', user }
+}
+
+/**
+ * verifyCredentials for callers that only need the user: throws a
+ * user-facing Error instead, the lockout message or `invalidMessage`.
+ */
+export async function checkCredentials(
+  email: string,
+  password: string,
+  invalidMessage: string,
+) {
+  const result = await verifyCredentials(email, password)
+  if (result.status === 'locked') {
+    throw new UserError(lockoutMessage(result.lockedUntil))
+  }
+  if (result.status === 'invalid') {
+    throw new UserError(invalidMessage)
+  }
+  return result.user
 }
 
 async function recordFailedLogin(user: User) {

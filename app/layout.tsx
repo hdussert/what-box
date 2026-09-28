@@ -1,20 +1,23 @@
 import { env } from '@/env'
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from '@/lib/const'
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import { PropsWithChildren } from 'react'
 import { Toaster } from 'sonner'
 import './globals.css'
 
-const inter = Inter({
+// Self-hosted (Latin, variable weight) so builds don't depend on Google
+// Fonts being reachable; licenses sit next to the files
+const inter = localFont({
+  src: '../assets/fonts/Inter-Variable-latin.woff2',
   variable: '--font-inter',
-  subsets: ['latin'],
+  weight: '100 900',
 })
 
-const jetBrainsMono = JetBrains_Mono({
+const jetBrainsMono = localFont({
+  src: '../assets/fonts/JetBrainsMono-Variable-latin.woff2',
   variable: '--font-mono',
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
+  weight: '100 800',
 })
 
 export const metadata: Metadata = {

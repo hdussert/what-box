@@ -2,6 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { getBoxById } from '@/lib/box/queries'
+import { UserError, toUserMessage } from '@/lib/errors'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { createWithImage } from '@/lib/image/mutations'
 import { prepareImage } from '@/lib/image/prepare'
@@ -57,7 +58,7 @@ export async function createItemAction(
     // (createItem checks again: that's the data-layer rule)
     const box = await getBoxById(data.boxId)
     if (!box) {
-      throw new Error('Box not found')
+      throw new UserError('Box not found')
     }
 
     const id = randomUUID()
@@ -102,7 +103,7 @@ export async function createItemAction(
 
     return {
       success: false,
-      message: 'Internal server error', //(error as Error).message,
+      message: toUserMessage(error, 'Failed to create the item'),
       error: 'Failed to create item',
       values,
     }

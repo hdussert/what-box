@@ -2,6 +2,7 @@
 
 import { SortOption, SortValue } from '@/components/list/types'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useTransition } from 'react'
 
 export type ListStateOptions = {
   sortOptions: SortOption[]
@@ -15,6 +16,8 @@ export const useListState = ({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  // Pending from the URL change until the server has rendered the new list
+  const [isPending, startTransition] = useTransition()
 
   // Used as fields values
   const search = searchParams.get('search') ?? ''
@@ -35,7 +38,9 @@ export const useListState = ({
 
     const query = params.toString()
     const url = query ? `${pathname}?${query}` : pathname
-    router.replace(url, { scroll: false })
+    startTransition(() => {
+      router.replace(url, { scroll: false })
+    })
   }
 
   const setSort = (value: SortValue) => {
@@ -50,7 +55,9 @@ export const useListState = ({
 
     const query = params.toString()
     const url = query ? `${pathname}?${query}` : pathname
-    router.replace(url, { scroll: false })
+    startTransition(() => {
+      router.replace(url, { scroll: false })
+    })
   }
 
   return {
@@ -59,5 +66,6 @@ export const useListState = ({
     sort,
     setSort,
     sortOptions,
+    isPending,
   }
 }

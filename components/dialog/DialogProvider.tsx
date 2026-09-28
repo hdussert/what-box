@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import {
   ComponentType,
   createContext,
@@ -21,6 +22,8 @@ type DialogComponent<P extends object = object> = ComponentType<
 // A render function instead of { component, props }, so each dialog's props stay typed
 type DialogState = {
   render: (baseProps: DialogBaseProps) => ReactNode
+  // The page it was opened on: a dialog belongs to one page
+  pathname: string
 }
 
 type DialogContextValue = {
@@ -34,6 +37,7 @@ type DialogContextValue = {
 const DialogContext = createContext<DialogContextValue | null>(null)
 
 export function DialogProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname()
   const [dialog, setDialog] = useState<DialogState | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -41,11 +45,16 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     <P extends object>(Component: DialogComponent<P>, props: P) => {
       setDialog({
         render: (baseProps) => <Component {...props} {...baseProps} />,
+        pathname,
       })
       setIsOpen(true)
     },
-    [],
+    [pathname],
   )
+
+  if (isOpen && dialog && dialog.pathname !== pathname) {
+    setIsOpen(false)
+  }
 
   const closeDialog = useCallback(() => {
     setIsOpen(false)

@@ -8,7 +8,7 @@ const MarketingSection = ({
 }: ComponentProps<'section'>) => (
   <section
     className={cn(
-      'relative isolate flex w-full max-w-3xl flex-col items-center gap-8 rounded-xl border border-white/10 bg-white/5 px-6 py-10 text-center backdrop-blur-xl sm:px-10',
+      'relative isolate flex w-full max-w-3xl flex-col items-center gap-8 rounded-xl border border-white/10 bg-white/5 px-6 py-10 text-center sm:px-10 overflow-hidden',
       className,
     )}
     {...props}

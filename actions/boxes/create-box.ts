@@ -2,6 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { createBox, getBoxByShortId } from '@/lib/box'
+import { toUserMessage } from '@/lib/errors'
 import { generateShortId } from '@/lib/id'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { createWithImage } from '@/lib/image/mutations'
@@ -9,7 +10,7 @@ import { prepareImage } from '@/lib/image/prepare'
 import { getCurrentUser } from '@/lib/user'
 import { randomUUID } from 'crypto'
 import { revalidatePath } from 'next/cache'
-import { unstable_rethrow } from 'next/navigation'
+import { redirect, unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
 
 const CreateBoxSchema = z.object({
@@ -20,13 +21,8 @@ const CreateBoxSchema = z.object({
 type CreateBoxData = z.infer<typeof CreateBoxSchema>
 type CreateBoxValues = Omit<CreateBoxData, 'image'>
 
-type CreateBoxResult = {
-  id: string
-}
-
 export type CreateBoxState = ActionResponse & {
   values: CreateBoxValues
-  result?: CreateBoxResult
 }
 export async function createBoxAction(
   prevState: CreateBoxState,
@@ -40,6 +36,7 @@ export async function createBoxAction(
     image: image,
   }
   const values: CreateBoxValues = raw
+  const id = randomUUID()
 
   try {
     // Auth check only: throws when signed out
@@ -57,18 +54,11 @@ export async function createBoxAction(
       shortId = generateShortId()
     }
 
-    const id = randomUUID()
-    const box = await createWithImage({ boxId: id }, image, (storedImage) =>
+    await createWithImage({ boxId: id }, image, (storedImage) =>
       createBox({ id, name: data.name, shortId, image: storedImage }),
     )
 
     revalidatePath('/dashboard')
-    return {
-      success: true,
-      message: 'Box created successfully',
-      values,
-      result: { id: box.id },
-    }
   } catch (error) {
     // Let getCurrentUser()'s sign-in redirect through
     unstable_rethrow(error)
@@ -82,9 +72,12 @@ export async function createBoxAction(
     }
     return {
       success: false,
-      message: (error as Error).message,
+      message: toUserMessage(error, 'Failed to create the box'),
       error: 'Failed to create box',
       values,
     }
   }
+
+  // Outside the try so the catch can't swallow it
+  redirect('/boxes/' + id)
 }

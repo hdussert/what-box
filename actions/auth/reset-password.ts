@@ -1,21 +1,15 @@
 'use server'
 
+import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
+import { UserError, toUserMessage } from '@/lib/errors'
 import { createSession, verifyResetToken } from '@/lib/session'
 import { updatePassword } from '@/lib/user'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 // Define Zod schema for signup validation
-const ResetPasswordSchema = z
-  .object({
-    password: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
+const ResetPasswordSchema = NewPasswordSchema
 
 export type ResetPasswordData = z.infer<typeof ResetPasswordSchema>
 export type ResetPasswordValues = ResetPasswordData
@@ -43,7 +37,7 @@ export async function resetPasswordAction(
 
     const { valid, user, error } = await verifyResetToken(token)
     if (!valid || !user) {
-      throw new Error(error)
+      throw new UserError(error)
     }
 
     await updatePassword(user.id, password)
@@ -61,9 +55,10 @@ export async function resetPasswordAction(
     }
     return {
       success: false,
-      message:
-        (error as Error).message ||
+      message: toUserMessage(
+        error,
         'An error occurred while changing your password',
+      ),
       error: 'Failed to change your password',
       values,
     }

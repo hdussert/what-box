@@ -28,7 +28,7 @@ git push -u origin HEAD
 gh pr create --draft --base <base> --title "<type>: <summary>" --body "<one or two lines: the goal>"
 ```
 
-End the body with the attribution line from the system prompt, if there is one. Share the PR link. Vercel doesn't build feature branches, so this only runs CI.
+End the body with the attribution line from the system prompt, if there is one. Share the PR link and open it in the browser (`gh pr view --web`), so the user can follow the commits as they land. Vercel doesn't build feature branches, so this only runs CI.
 
 ## 3. Plan or go
 
