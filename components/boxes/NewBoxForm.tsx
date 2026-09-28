@@ -15,11 +15,10 @@ import { useActionState, useState } from 'react'
 import { toast } from 'sonner'
 
 type NewBoxFormProps = {
-  onSuccess: (boxId: string) => void
   className?: string
 }
 
-const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
+const NewBoxForm = ({ className }: NewBoxFormProps) => {
   // Use useActionState hook for the form submission action
   const initialState: CreateBoxState = {
     success: false,
@@ -35,16 +34,10 @@ const NewBoxForm = ({ onSuccess, className }: NewBoxFormProps) => {
     CreateBoxState,
     FormData
   >(
-    // Handles the result here, once per submit, rather than in an effect
+    // Only returns on failure: on success the action redirects to the box
     async (prevState, formData) => {
       const result = await createBoxAction(prevState, formData, image)
-      if (result.success) {
-        toast.success(result.message)
-        setImage(undefined)
-        onSuccess(result.result!.id)
-      } else {
-        toast.error(result.message)
-      }
+      toast.error(result.message)
       return result
     },
     initialState,

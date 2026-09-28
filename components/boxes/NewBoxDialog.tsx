@@ -17,12 +17,10 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/useIsMobile'
-import { useRouter } from 'next/navigation'
 
 type NewBoxDialogProps = DialogBaseProps
 
 const NewBoxDialog = ({ isOpen, setIsOpen }: NewBoxDialogProps) => {
-  const router = useRouter()
   const isMobile = useIsMobile()
 
   if (isMobile) {
@@ -35,13 +33,7 @@ const NewBoxDialog = ({ isOpen, setIsOpen }: NewBoxDialogProps) => {
               Create a new box and start taking inventory
             </DrawerDescription>
           </DrawerHeader>
-          <NewBoxForm
-            onSuccess={(boxId) => {
-              router.push('/boxes/' + boxId)
-              setIsOpen(false)
-            }}
-            className="px-4 mb-12"
-          />
+          <NewBoxForm className="px-4 mb-12" />
         </DrawerContent>
       </Drawer>
     )
@@ -55,12 +47,7 @@ const NewBoxDialog = ({ isOpen, setIsOpen }: NewBoxDialogProps) => {
             Create a new box and start taking inventory
           </DialogDescription>
         </DialogHeader>
-        <NewBoxForm
-          onSuccess={(boxId) => {
-            router.push('/boxes/' + boxId)
-            setIsOpen(false)
-          }}
-        />
+        <NewBoxForm />
       </DialogContent>
     </Dialog>
   )
