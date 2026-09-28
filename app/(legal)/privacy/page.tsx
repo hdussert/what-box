@@ -145,9 +145,10 @@ export default function PrivacyPolicyPage() {
       <section className="flex flex-col gap-2">
         <Typography.H2>Your rights</Typography.H2>
         <Typography.P>
-          You can access, correct, export or delete your data, and object to or
-          restrict its processing. To exercise these rights, including deleting
-          your account, write to {email}. We answer within one month.
+          You can delete your account and all its data at any time from your
+          settings. You can also access, correct or export your data, and object
+          to or restrict its processing: to exercise these rights, write to{' '}
+          {email}. We answer within one month.
         </Typography.P>
         <Typography.P>
           If you think your rights aren&apos;t respected, you can file a
