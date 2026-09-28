@@ -28,7 +28,7 @@ const HeroScene = () => (
           rx="2"
           className="fill-background stroke-primary"
         />
-        {/* QRThat */}
+        {/* QR */}
         <g transform="translate(36 7)" className="fill-foreground stroke-none">
           <path d="M0 0h6v6h-6z M1 1v4h4v-4z M2 2h2v2h-2z" fillRule="evenodd" />
           <path
@@ -41,15 +41,24 @@ const HeroScene = () => (
           />
           <rect x="8" y="0" width="2" height="2" />
           <rect x="8" y="4" width="2" height="2" />
-          <rect x="6" y="8" width="2" height="2" />
-          <rect x="10" y="8" width="2" height="2" />
-          <rect x="14" y="8" width="2" height="2" />
-          <rect x="8" y="10" width="2" height="2" />
+          <rect x="0" y="8" width="2" height="2" />
+          <rect x="4" y="8" width="2" height="2" />
+          <rect x="8" y="8" width="2" height="2" />
+          <rect x="12" y="8" width="2" height="2" />
+          <rect x="16" y="8" width="2" height="2" />
+
+          <rect x="10" y="10" width="2" height="2" />
+          <rect x="14" y="10" width="2" height="2" />
+
+          <rect x="8" y="12" width="2" height="2" />
           <rect x="12" y="12" width="2" height="2" />
           <rect x="16" y="12" width="2" height="2" />
-          <rect x="8" y="14" width="2" height="2" />
+
+          <rect x="10" y="14" width="2" height="2" />
           <rect x="14" y="14" width="2" height="2" />
-          <rect x="10" y="16" width="2" height="2" />
+
+          <rect x="8" y="16" width="2" height="2" />
+          <rect x="12" y="16" width="2" height="2" />
           <rect x="16" y="16" width="2" height="2" />
         </g>
         <line x1="7" y1="12" x2="28" y2="12" className="stroke-foreground" />
