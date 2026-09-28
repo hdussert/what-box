@@ -44,7 +44,7 @@ Conventions:
 - Booleans start with a verb: `isOpen`, `hasImage`, `canDelete`.
 - Early returns always use braces: `if (...) { return }`. Apply to new and edited code (older code doesn't).
 - XState (`xstate`, `@xstate/react`) for complex logic.
-- Comments: JSDoc on exports, and inline only for what the code can't say (an edge case, a workaround, a why). Describe the code as it is, not its history: that goes in the commit. Rewrite, don't append.
+- Comments: JSDoc on exports. Inline, only to answer a question the code raises but can't answer: a fact from elsewhere, or the reason for a decision. Test: without it, would a reader who knows the codebase be confused, or "fix" the code and break it? Never restate the code, justify a technique, or describe the bug it fixes, the behavior it prevents or its history: that goes in the commit. Rewrite, don't append.
 
 Components:
 
