@@ -1,7 +1,7 @@
 'use server'
 
 import { ActionResponse } from '@/actions/types'
-import { UserError } from '@/lib/errors'
+import { userMessage } from '@/lib/errors'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { saveImage } from '@/lib/image/mutations'
 import { prepareImage } from '@/lib/image/prepare'
@@ -31,13 +31,9 @@ export async function addImageAction(
   } catch (error) {
     // Let getCurrentUser()'s sign-in redirect through
     unstable_rethrow(error)
-    console.error(error)
     return {
       success: false,
-      message:
-        error instanceof UserError
-          ? error.message
-          : 'Failed to upload the image',
+      message: userMessage(error, 'Failed to upload the image'),
     }
   }
 }

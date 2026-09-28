@@ -2,7 +2,7 @@
 
 import { NewPasswordSchema } from '@/actions/auth/schemas'
 import { ActionResponse } from '@/actions/types'
-import { UserError } from '@/lib/errors'
+import { UserError, userMessage } from '@/lib/errors'
 import { createSession, verifyResetToken } from '@/lib/session'
 import { updatePassword } from '@/lib/user'
 import { redirect } from 'next/navigation'
@@ -53,13 +53,12 @@ export async function resetPasswordAction(
         values,
       }
     }
-    console.error(error)
     return {
       success: false,
-      message:
-        error instanceof UserError
-          ? error.message
-          : 'An error occurred while changing your password',
+      message: userMessage(
+        error,
+        'An error occurred while changing your password',
+      ),
       error: 'Failed to change your password',
       values,
     }

@@ -2,7 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { getBoxById } from '@/lib/box/queries'
-import { UserError } from '@/lib/errors'
+import { UserError, userMessage } from '@/lib/errors'
 import { IMAGE_MIME_TYPES, MAX_IMAGE_SIZE } from '@/lib/image/const'
 import { createWithImage } from '@/lib/image/mutations'
 import { prepareImage } from '@/lib/image/prepare'
@@ -101,13 +101,9 @@ export async function createItemAction(
       }
     }
 
-    console.error(error)
     return {
       success: false,
-      message:
-        error instanceof UserError
-          ? error.message
-          : 'Failed to create the item',
+      message: userMessage(error, 'Failed to create the item'),
       error: 'Failed to create item',
       values,
     }
