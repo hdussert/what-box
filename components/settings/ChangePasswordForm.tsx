@@ -70,7 +70,7 @@ const ChangePasswordForm = () => {
         <FieldError>{state.errors?.confirmPassword?.[0]}</FieldError>
       </Field>
 
-      <Button type="submit" variant="foreground" disabled={isPending}>
+      <Button type="submit" variant="secondary" disabled={isPending}>
         {isPending ? 'Changing…' : 'Change password'}
       </Button>
     </form>
