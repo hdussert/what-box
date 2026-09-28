@@ -22,7 +22,7 @@ type DialogComponent<P extends object = object> = ComponentType<
 // A render function instead of { component, props }, so each dialog's props stay typed
 type DialogState = {
   render: (baseProps: DialogBaseProps) => ReactNode
-  // The page it was opened on: navigating away closes it (e.g. an action's redirect)
+  // The page it was opened on: a dialog belongs to one page
   pathname: string
 }
 
@@ -52,9 +52,7 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     [pathname],
   )
 
-  // Close it once the page changes, so coming back doesn't reopen it. Set
-  // during render (React's pattern for state that follows a prop), not in
-  // an effect, so the old dialog never shows on the new page.
+  // Set during render: React's pattern for state that follows a prop
   if (isOpen && dialog && dialog.pathname !== pathname) {
     setIsOpen(false)
   }
