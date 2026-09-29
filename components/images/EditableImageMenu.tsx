@@ -44,22 +44,23 @@ const EditableImageMenu = ({
         className="sr-only"
       />
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            type="button"
-            variant="secondary"
-            size="icon-sm"
-            className="absolute top-0 right-0 rounded-tl-none rounded-br-none fade-in animate-in"
-            disabled={disabled}
-          >
-            <EllipsisVertical />
-          </Button>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              variant="secondary"
+              size="icon-sm"
+              className="absolute top-0 right-0 rounded-tl-none rounded-br-none fade-in animate-in"
+            />
+          }
+          disabled={disabled}
+        >
+          <EllipsisVertical />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => inputRef.current?.click()}>
+          <DropdownMenuItem onClick={() => inputRef.current?.click()}>
             Replace this image
           </DropdownMenuItem>
-          <DropdownMenuItem variant="destructive" onSelect={onDelete}>
+          <DropdownMenuItem variant="destructive" onClick={onDelete}>
             Remove this image
           </DropdownMenuItem>
         </DropdownMenuContent>
