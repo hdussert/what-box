@@ -1,6 +1,6 @@
 import { CardDescription, CardTitle } from '@/components/ui/card'
 import { Item } from '@/db/schema'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 type ItemDetailsProps = {
   item: Item

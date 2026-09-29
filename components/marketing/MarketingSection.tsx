@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { ComponentProps } from 'react'
 
 /** A landing page section: a centered column below the hero. Positions its MarketingGlow. */
