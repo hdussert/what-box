@@ -25,23 +25,21 @@ import {
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { Trash } from 'lucide-react'
-import { ComponentProps, ReactNode, useState, useTransition } from 'react'
+import { ReactNode, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
 type DeleteBoxesButtonProps = {
   boxIds: string[]
   onSuccess?: () => void
-  variant?: ComponentProps<typeof ToolbarButton>['variant']
   children?: ReactNode
 }
 
 export function DeleteBoxesButton({
   boxIds,
   onSuccess,
-  variant,
   children = <Trash />,
 }: DeleteBoxesButtonProps) {
-  const trigger = <ToolbarButton variant={variant} disabled={!boxIds.length} />
+  const trigger = <ToolbarButton disabled={!boxIds.length} />
   const [isOpen, setIsOpen] = useState(false)
   const isMobile = useIsMobile()
 

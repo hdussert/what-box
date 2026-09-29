@@ -35,20 +35,12 @@ const BoxesToolbar = ({ boxIds }: BoxesToolbarProps) => {
         }
         selectionActions={({ selectedIds, done }) => (
           <>
-            <PrintLabelsButton
-              boxIds={selectedIds}
-              onSuccess={done}
-              variant="default"
-            >
+            <PrintLabelsButton boxIds={selectedIds} onSuccess={done}>
               <Printer />
               <span className="sr-only sm:not-sr-only">Print</span>
               {selectedIds.length}
             </PrintLabelsButton>
-            <DeleteBoxesButton
-              boxIds={selectedIds}
-              onSuccess={done}
-              variant="destructive"
-            >
+            <DeleteBoxesButton boxIds={selectedIds} onSuccess={done}>
               <Trash />
               <span className="sr-only sm:not-sr-only">Delete</span>
               {selectedIds.length}
