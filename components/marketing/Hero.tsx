@@ -1,6 +1,6 @@
 import HeroScene from '@/components/marketing/HeroScene'
 import SignUpButton from '@/components/marketing/SignUpButton'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import Typography from '@/components/ui/typography'
 
 const Hero = () => {
@@ -16,14 +16,12 @@ const Hero = () => {
         </Typography.P>
         <div className="mt-8 flex justify-center gap-2 md:justify-start">
           <SignUpButton size="lg" />
-          <Button
-            render={<a href="#why" />}
-            nativeButton={false}
-            variant="link"
-            size="lg"
+          <a
+            href="#why"
+            className={buttonVariants({ variant: 'link', size: 'lg' })}
           >
             Learn more
-          </Button>
+          </a>
         </div>
       </div>
       <div className="flex w-full justify-center md:flex-382">
