@@ -9,7 +9,6 @@ import {
   useContext,
   useState,
 } from 'react'
-import { flushSync } from 'react-dom'
 
 export type DialogBaseProps = {
   isOpen: boolean
@@ -44,13 +43,9 @@ export function DialogProvider({ children }: { children: ReactNode }) {
 
   const openDialog = useCallback(
     <P extends object>(Component: DialogComponent<P>, props: P) => {
-      // Mount it closed first: Base UI skips the enter transition of a drawer that mounts open
-      flushSync(() => {
-        setDialog({
-          render: (baseProps) => <Component {...props} {...baseProps} />,
-          pathname,
-        })
-        setIsOpen(false)
+      setDialog({
+        render: (baseProps) => <Component {...props} {...baseProps} />,
+        pathname,
       })
       setIsOpen(true)
     },
