@@ -76,7 +76,7 @@ const UpdateItemForm = ({ item, onCancel, onSuccess }: UpdateItemFormProps) => {
         </Field>
       </form>
 
-      <div className="absolute bottom-2 right-2 animate-in fade-in">
+      <div className="absolute bottom-1 right-1 animate-in fade-in">
         <Button
           variant="ghost"
           size="sm"
