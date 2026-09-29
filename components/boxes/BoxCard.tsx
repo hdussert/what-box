@@ -23,8 +23,9 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
 
   return (
     <Item
+      variant="muted"
       className={cn(
-        'p-0 pr-4 gap-4 flex-1 flex-nowrap min-w-0 cursor-pointer transition hover:bg-muted/50',
+        'p-0 pr-4 gap-4 flex-1 flex-nowrap min-w-0 cursor-pointer transition hover:bg-muted',
         {
           'ring-2 ring-primary': isSelected,
         },

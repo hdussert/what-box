@@ -31,8 +31,9 @@ const ItemCard = ({
 
   return (
     <ItemRow
+      variant="muted"
       className={cn(
-        'p-0 flex-1 flex-nowrap items-stretch gap-2 cursor-pointer transition hover:bg-muted/50 relative',
+        'p-0 flex-1 flex-nowrap items-stretch gap-2 cursor-pointer transition hover:bg-muted relative',
         isSelected && 'ring-2 ring-primary',
       )}
       onClick={(e) => {
@@ -83,9 +84,17 @@ const ItemCard = ({
 
         {isFocused && !isEditing && (
           <div className="absolute bottom-2 right-2 animate-in fade-in">
-            <ToolbarButton onClick={handleEdit}>Edit</ToolbarButton>
+            <ToolbarButton
+              onClick={handleEdit}
+              className="hover:bg-input/50 dark:hover:bg-input/50"
+            >
+              Edit
+            </ToolbarButton>
 
-            <DeleteItemsButton itemIds={[item.id]} />
+            <DeleteItemsButton
+              itemIds={[item.id]}
+              className="hover:bg-input/50 dark:hover:bg-input/50"
+            />
           </div>
         )}
       </div>
