@@ -3,7 +3,7 @@ import DeleteItemsButton from '@/components/items/DeleteItemsButton'
 import ItemDetails from '@/components/items/ItemDetails'
 import UpdateItemForm from '@/components/items/UpdateItemForm'
 import ToolbarButton from '@/components/ToolbarButton'
-import { Card, CardDescription } from '@/components/ui/card'
+import { Item as ItemRow } from '@/components/ui/item'
 import { Item } from '@/db/schema'
 import { cn } from 'cn'
 
@@ -30,9 +30,9 @@ const ItemCard = ({
   }
 
   return (
-    <Card
+    <ItemRow
       className={cn(
-        'p-0 flex-1 flex-row gap-2 hover:brightness-120 transition relative',
+        'p-0 flex-1 flex-nowrap items-stretch gap-2 cursor-pointer transition hover:bg-muted/50 relative',
         isSelected && 'ring-2 ring-primary',
       )}
       onClick={(e) => {
@@ -70,13 +70,16 @@ const ItemCard = ({
           <ItemDetails item={item} isFocused={isFocused} />
         )}
 
-        <CardDescription className="text-xs">
+        <time
+          dateTime={item.createdAt.toISOString()}
+          className="text-xs text-muted-foreground"
+        >
           {item.createdAt.toLocaleDateString('en-US', {
             year: '2-digit',
             month: '2-digit',
             day: '2-digit',
           })}
-        </CardDescription>
+        </time>
 
         {isFocused && !isEditing && (
           <div className="absolute bottom-2 right-2 animate-in fade-in">
@@ -86,7 +89,7 @@ const ItemCard = ({
           </div>
         )}
       </div>
-    </Card>
+    </ItemRow>
   )
 }
 
