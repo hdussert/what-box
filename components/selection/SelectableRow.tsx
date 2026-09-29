@@ -19,7 +19,7 @@ const SelectableRow = ({
   children,
 }: SelectableRowProps) => {
   return (
-    <div className="flex items-center gap-3" onClick={onClick}>
+    <div role="listitem" className="flex items-center gap-3" onClick={onClick}>
       <Checkbox
         checked={isSelected}
         aria-hidden={!isSelecting}

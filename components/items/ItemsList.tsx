@@ -3,6 +3,7 @@
 import ItemCard from '@/components/items/ItemCard'
 import SelectableRow from '@/components/selection/SelectableRow'
 import { useSelection } from '@/components/selection/SelectionProvider'
+import { ItemGroup } from '@/components/ui/item'
 import { Item } from '@/db/schema'
 import { useState } from 'react'
 
@@ -32,7 +33,7 @@ const ItemsList = ({ items }: ItemsListProps) => {
   }
 
   return (
-    <div className="flex gap-2 flex-col py-2">
+    <ItemGroup className="gap-2 py-2">
       {items.map((item, index) => (
         <SelectableRow
           key={index}
@@ -50,7 +51,7 @@ const ItemsList = ({ items }: ItemsListProps) => {
           />
         </SelectableRow>
       ))}
-    </div>
+    </ItemGroup>
   )
 }
 
