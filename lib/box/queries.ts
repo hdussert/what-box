@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/user'
 import { escapeLike } from '@/lib/utils'
 import { and, eq, exists, ilike, sql } from 'drizzle-orm'
 import 'server-only'
+import { BOXES_PAGE_SIZE } from './const'
 import { BoxesPaginated, BoxesQuery, BoxWithRelations } from './types'
 import { toOrderBy } from './utils'
 
@@ -42,46 +43,47 @@ export async function getBoxes(
   const search = query.search?.trim()
   const pattern = search ? `%${escapeLike(search)}%` : undefined
 
-  const [total, rows] = await Promise.all([
-    db.$count(
-      boxes,
-      and(
-        eq(boxes.userId, user.id),
-        pattern ? matchesSearch(boxes, pattern) : undefined,
-      ),
+  const countQuery = db.$count(
+    boxes,
+    and(
+      eq(boxes.userId, user.id),
+      pattern ? matchesSearch(boxes, pattern) : undefined,
     ),
-    db.query.boxes.findMany({
-      where: {
-        userId: user.id,
-        ...(pattern ? { RAW: (table) => matchesSearch(table, pattern) } : {}),
-      },
-      orderBy: (table, { desc, asc }) =>
-        toOrderBy(query.sort, table, desc, asc),
-      limit: 20,
-      offset: 0,
-      with: {
-        items: pattern
-          ? {
-              // Matching items first, so the card summary shows them
-              orderBy: (items, { sql }) => [
-                sql`CASE WHEN ${ilike(items.name, pattern)} THEN 0 ELSE 1 END`,
-              ],
-            }
-          : true,
-      },
-    }),
-  ])
+  )
 
+  const pageQuery = db.query.boxes.findMany({
+    where: {
+      userId: user.id,
+      ...(pattern ? { RAW: (table) => matchesSearch(table, pattern) } : {}),
+    },
+    orderBy: (table, operators) => toOrderBy(query.sort, table, operators),
+    limit: BOXES_PAGE_SIZE,
+    with: { items: pattern ? matchingItemsFirst(pattern) : true },
+  })
+
+  const [total, rows] = await Promise.all([countQuery, pageQuery])
   return { rows, total }
 }
 
 /** A box matches a search by its name, its short ID or the name of an item inside it. */
 function matchesSearch(table: typeof boxes, pattern: string) {
+  const nameMatches = ilike(table.name, pattern)
+  const shortIdMatches = ilike(table.shortId, pattern)
   const hasMatchingItem = exists(
     db
       .select({ id: items.id })
       .from(items)
       .where(and(eq(items.boxId, table.id), ilike(items.name, pattern))),
   )
-  return sql`(${ilike(table.name, pattern)} OR ${ilike(table.shortId, pattern)} OR ${hasMatchingItem})`
+
+  return sql`(${nameMatches} OR ${shortIdMatches} OR ${hasMatchingItem})`
+}
+
+/** Orders a box's items with the search matches first, so the card summary shows them. */
+function matchingItemsFirst(pattern: string) {
+  return {
+    orderBy: (itemsTable: typeof items) => [
+      sql`CASE WHEN ${ilike(itemsTable.name, pattern)} THEN 0 ELSE 1 END`,
+    ],
+  }
 }

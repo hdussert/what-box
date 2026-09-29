@@ -1,6 +1,8 @@
 import { SortOption } from '@/components/list/types'
 import { boxes } from '@/db/schema'
 
+export const BOXES_PAGE_SIZE = 20
+
 // Note : Safety net, making sure the column exists
 export const BOXES_SORTABLE_COLUMNS = {
   createdAt: boxes.createdAt,

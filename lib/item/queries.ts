@@ -43,7 +43,7 @@ export async function getItems(
       boxId,
       ...(pattern ? { name: { ilike: pattern } } : {}),
     },
-    orderBy: (table, { desc, asc }) => toOrderBy(query.sort, table, desc, asc),
+    orderBy: (table, operators) => toOrderBy(query.sort, table, operators),
     limit: 20,
     offset: 0,
   })

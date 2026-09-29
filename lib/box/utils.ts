@@ -14,11 +14,15 @@ export function parseSort(sort: SortValue | undefined) {
   }
 }
 
+type SortOperators = Record<
+  'asc' | 'desc',
+  (column: SQLWrapper<unknown> | AnyColumn) => SQL
+>
+
 export function toOrderBy(
   sort: SortValue | undefined,
   boxesTable: typeof boxes,
-  desc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
-  asc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
+  { asc, desc }: SortOperators,
 ) {
   const { field, direction } = parseSort(sort)
   const sortFunc = direction === 'asc' ? asc : desc
