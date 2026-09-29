@@ -86,14 +86,14 @@ const ItemCard = ({
           <div className="absolute bottom-2 right-2 animate-in fade-in">
             <ToolbarButton
               onClick={handleEdit}
-              className="dark:hover:bg-input/50"
+              className="hover:bg-input/50"
             >
               Edit
             </ToolbarButton>
 
             <DeleteItemsButton
               itemIds={[item.id]}
-              className="dark:hover:bg-input/50"
+              className="hover:bg-input/50"
             />
           </div>
         )}
