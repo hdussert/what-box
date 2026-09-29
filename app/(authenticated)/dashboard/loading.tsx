@@ -29,7 +29,11 @@ export default function DashboardLoading() {
 
       <div className="flex gap-2 flex-col">
         {Array.from({ length: BOX_CARD_COUNT }).map((_, index) => (
-          <Item key={index} className="p-0 pr-4 gap-4 flex-nowrap min-w-0">
+          <Item
+            key={index}
+            variant="muted"
+            className="p-0 pr-4 gap-4 flex-nowrap min-w-0"
+          >
             <Skeleton className="aspect-square w-20 shrink-0" />
             <div className="flex flex-col flex-1 min-w-0 gap-1">
               <Skeleton className="h-5.5 w-2/5" />

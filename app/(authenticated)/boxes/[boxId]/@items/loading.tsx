@@ -21,7 +21,11 @@ export default function ItemsLoading() {
 
       <div className="flex gap-2 flex-col py-2">
         {Array.from({ length: ITEM_CARD_COUNT }).map((_, index) => (
-          <Item key={index} className="p-0 gap-2 flex-nowrap items-stretch">
+          <Item
+            key={index}
+            variant="muted"
+            className="p-0 gap-2 flex-nowrap items-stretch"
+          >
             <Skeleton className="size-20" />
             <div className="flex flex-1 p-2">
               <div className="flex flex-col flex-1 my-auto gap-1">
