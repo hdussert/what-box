@@ -25,7 +25,7 @@ const NewBoxDialog = ({ isOpen, setIsOpen }: NewBoxDialogProps) => {
 
   if (isMobile) {
     return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen} noBodyStyles>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>New Box</DrawerTitle>
