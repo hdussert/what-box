@@ -30,7 +30,7 @@ const ItemsToolbar = ({ boxId, itemIds }: ItemsToolbarProps) => {
           <DeleteItemsButton itemIds={selectedIds} onSuccess={done}>
             <Trash />
             Delete
-            <span className="font-mono">({selectedIds.length})</span>
+            <span className="font-mono">{selectedIds.length || ''}</span>
           </DeleteItemsButton>
         )}
         actions={<NewItemButton boxId={boxId} />}

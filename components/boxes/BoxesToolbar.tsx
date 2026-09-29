@@ -37,13 +37,13 @@ const BoxesToolbar = ({ boxIds }: BoxesToolbarProps) => {
           <>
             <PrintLabelsButton boxIds={selectedIds} onSuccess={done}>
               <Printer />
-              Print
-              <span className="font-mono">({selectedIds.length})</span>
+              <span className="hidden sm:inline-block">Print</span>
+              <span className="font-mono">{selectedIds.length || ''}</span>
             </PrintLabelsButton>
             <DeleteBoxesButton boxIds={selectedIds} onSuccess={done}>
               <Trash />
-              Delete
-              <span className="font-mono">({selectedIds.length})</span>
+              <span className="hidden sm:inline-block">Delete</span>
+              <span className="font-mono">{selectedIds.length || ''}</span>
             </DeleteBoxesButton>
           </>
         )}
