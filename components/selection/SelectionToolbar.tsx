@@ -28,20 +28,20 @@ const SelectionToolbar = ({
   if (!isSelecting) {
     return (
       <div className="flex justify-between">
-        <div>{startActions}</div>
         <div>{actions}</div>
+        <div>{startActions}</div>
       </div>
     )
   }
 
   return (
     <div className="flex justify-between">
-      <div className="flex gap-1">
-        {selectionActions({ selectedIds, done: stopSelecting })}
-      </div>
       <div>
         <ToolbarButton onClick={() => selectAll(ids)}>Select all</ToolbarButton>
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
+      </div>
+      <div className="flex gap-1">
+        {selectionActions({ selectedIds, done: stopSelecting })}
       </div>
     </div>
   )
