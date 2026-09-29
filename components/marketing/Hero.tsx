@@ -16,8 +16,13 @@ const Hero = () => {
         </Typography.P>
         <div className="mt-8 flex justify-center gap-2 md:justify-start">
           <SignUpButton size="lg" />
-          <Button asChild variant="link" size="lg">
-            <a href="#why">Learn more</a>
+          <Button
+            render={<a href="#why" />}
+            nativeButton={false}
+            variant="link"
+            size="lg"
+          >
+            Learn more
           </Button>
         </div>
       </div>

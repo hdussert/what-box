@@ -6,8 +6,8 @@ type SignUpButtonProps = Pick<ComponentProps<typeof Button>, 'size'>
 
 /** Link to the sign-up page, styled as the primary button. */
 const SignUpButton = ({ size }: SignUpButtonProps) => (
-  <Button asChild size={size}>
-    <Link href="/sign-up">Sign Up</Link>
+  <Button render={<Link href="/sign-up" />} nativeButton={false} size={size}>
+    Sign Up
   </Button>
 )
 
