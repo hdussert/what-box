@@ -28,22 +28,13 @@ export const SidebarNavItem = ({
 
   return (
     <SidebarMenuButton
-      asChild={Boolean(href)}
+      render={href ? <Link href={href} /> : undefined}
       tooltip={name}
       className="cursor-pointer whitespace-nowrap"
       onClick={handleClick}
     >
-      {href ? (
-        <Link href={href}>
-          {icon}
-          {name}
-        </Link>
-      ) : (
-        <>
-          {icon}
-          {name}
-        </>
-      )}
+      {icon}
+      {name}
     </SidebarMenuButton>
   )
 }
