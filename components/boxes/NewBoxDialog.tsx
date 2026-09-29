@@ -33,7 +33,7 @@ const NewBoxDialog = ({ isOpen, setIsOpen }: NewBoxDialogProps) => {
               Create a new box and start taking inventory
             </DrawerDescription>
           </DrawerHeader>
-          <NewBoxForm className="px-4 mb-12" />
+          <NewBoxForm className="px-4 pb-4" />
         </DrawerContent>
       </Drawer>
     )
