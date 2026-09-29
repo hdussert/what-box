@@ -3,6 +3,7 @@
 import BoxCard from '@/components/boxes/BoxCard'
 import SelectableRow from '@/components/selection/SelectableRow'
 import { useSelection } from '@/components/selection/SelectionProvider'
+import { ItemGroup } from '@/components/ui/item'
 import { BoxWithRelations } from '@/lib/box'
 import { useRouter } from 'next/navigation'
 
@@ -17,7 +18,7 @@ const BoxesList = ({ boxes }: BoxesListProps) => {
   const onClick = isSelecting ? toggleSelect : navigateToBoxPage
 
   return (
-    <div className="flex gap-2 flex-col">
+    <ItemGroup className="gap-2">
       {boxes.map((box, index) => (
         <SelectableRow
           key={index}
@@ -28,7 +29,7 @@ const BoxesList = ({ boxes }: BoxesListProps) => {
           <BoxCard box={box} isSelected={isSelected(box.id)} />
         </SelectableRow>
       ))}
-    </div>
+    </ItemGroup>
   )
 }
 

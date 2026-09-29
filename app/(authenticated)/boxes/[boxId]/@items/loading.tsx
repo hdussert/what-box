@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card'
+import { Item } from '@/components/ui/item'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const ITEM_CARD_COUNT = 6
@@ -21,7 +21,11 @@ export default function ItemsLoading() {
 
       <div className="flex gap-2 flex-col py-2">
         {Array.from({ length: ITEM_CARD_COUNT }).map((_, index) => (
-          <Card key={index} className="p-0 flex-row gap-2">
+          <Item
+            key={index}
+            variant="muted"
+            className="p-0 gap-2 flex-nowrap items-stretch"
+          >
             <Skeleton className="size-20" />
             <div className="flex flex-1 p-2">
               <div className="flex flex-col flex-1 my-auto gap-1">
@@ -34,7 +38,7 @@ export default function ItemsLoading() {
               </div>
               <Skeleton className="h-4 w-16" />
             </div>
-          </Card>
+          </Item>
         ))}
       </div>
     </div>

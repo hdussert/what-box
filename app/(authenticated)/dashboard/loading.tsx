@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card'
+import { Item } from '@/components/ui/item'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import Typography from '@/components/ui/typography'
@@ -29,20 +29,21 @@ export default function DashboardLoading() {
 
       <div className="flex gap-2 flex-col">
         {Array.from({ length: BOX_CARD_COUNT }).map((_, index) => (
-          <Card
+          <Item
             key={index}
-            className="p-0 pr-4 flex-row gap-4 items-center min-w-0"
+            variant="muted"
+            className="p-0 pr-4 gap-4 flex-nowrap min-w-0"
           >
-            <Skeleton className="aspect-square w-20" />
+            <Skeleton className="aspect-square w-20 shrink-0" />
             <div className="flex flex-col flex-1 min-w-0 gap-1">
-              <div className="flex justify-between items-center">
+              <Skeleton className="h-5.5 w-2/5" />
+              <Skeleton className="h-[21px] w-3/4" />
+              <div className="flex justify-between">
                 <Skeleton className="h-4 w-14" />
                 <Skeleton className="h-4 w-16" />
               </div>
-              <Skeleton className="h-4 w-2/5" />
-              <Skeleton className="h-3 w-3/4" />
             </div>
-          </Card>
+          </Item>
         ))}
       </div>
     </div>
