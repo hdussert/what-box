@@ -40,7 +40,12 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: PropsWithChildren) => {
   return (
     // suppressHydrationWarning: the script below adds a class before hydration
-    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      className="dark"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -49,7 +54,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
         />
       </head>
       <body
-        className={`dark font-sans ${inter.variable} ${jetBrainsMono.variable} antialiased`}
+        className={`font-sans ${inter.variable} ${jetBrainsMono.variable} antialiased`}
       >
         <Toaster position="top-right" />
         {children}
