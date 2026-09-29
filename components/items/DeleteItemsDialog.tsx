@@ -87,8 +87,11 @@ export function DeleteItemsDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose disabled={isPending} asChild>
-            <Button variant="secondary">Cancel</Button>
+          <DialogClose
+            disabled={isPending}
+            render={<Button variant="secondary" />}
+          >
+            Cancel
           </DialogClose>
           <Button
             variant="destructive"
