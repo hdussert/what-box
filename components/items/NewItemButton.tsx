@@ -53,18 +53,20 @@ export function NewItemButton({ boxId }: NewItemButtonProps) {
 
   if (isMobile) {
     return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen} noBodyStyles>
-        <DrawerTrigger asChild>
-          <ToolbarButton>
-            <Plus /> Add
-          </ToolbarButton>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
+        <DrawerTrigger render={<ToolbarButton />}>
+          <Plus /> Add
         </DrawerTrigger>
-        <DrawerContent className="px-3 mb-6">
+        <DrawerContent>
           <DrawerHeader className="flex-row items-center justify-between">
             <DrawerTitle>New item</DrawerTitle>
             {keepOpenCheckbox}
           </DrawerHeader>
-          <NewItemForm boxId={boxId} onSuccess={handleSuccess} />
+          <NewItemForm
+            boxId={boxId}
+            onSuccess={handleSuccess}
+            className="px-4 pb-4"
+          />
         </DrawerContent>
       </Drawer>
     )

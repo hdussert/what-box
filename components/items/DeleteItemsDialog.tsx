@@ -54,15 +54,18 @@ export function DeleteItemsDialog({
 
   if (isMobile) {
     return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen} noBodyStyles>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Delete {itemIds.length} item(s)?</DrawerTitle>
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <DrawerClose disabled={isPending} asChild>
-              <Button variant="secondary">Cancel</Button>
+            <DrawerClose
+              disabled={isPending}
+              render={<Button variant="secondary" />}
+            >
+              Cancel
             </DrawerClose>
             <Button
               variant="destructive"

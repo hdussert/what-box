@@ -58,11 +58,9 @@ export function DeleteBoxesButton({
 
   if (isMobile) {
     return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen} noBodyStyles>
-        <DrawerTrigger asChild>
-          <ToolbarButton>
-            <Trash />
-          </ToolbarButton>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
+        <DrawerTrigger render={<ToolbarButton />}>
+          <Trash />
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
