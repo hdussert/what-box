@@ -8,7 +8,7 @@
 2. **Plan**: for non-trivial work (several files, a feature, a schema change, anything ambiguous), propose a plan and wait for approval.
 3. **Implement**: small conventional commits. Stay on the task.
 4. **Verify**: `yarn verify` (type check, lint and build, as in CI). For UI changes, check the app in the browser, or say you couldn't.
-5. **Self-review**: `/code-review` the diff and fix the findings that hold up.
+5. **Self-review**: `/simplify` the diff for readability, then `/code-review` it and fix the findings that hold up.
 6. **Finish**: update the PR's title and description and mark it ready. Never merge: the user reviews and merges.
 
 **Be concise** in replies, PRs, commits and docs: lead with the answer, and only mention options you'd recommend.
@@ -38,6 +38,7 @@ Principles (use judgment when one conflicts with clarity):
 - **DRY**: don't duplicate knowledge. Extract on the third occurrence, and don't merge code that only looks alike.
 - **Fail fast**: validate at boundaries and return errors early.
 - **Least astonishment**: names and behavior match what a reader expects.
+- **Readable at a glance**: a function's top level says what it does, the how lives in named pieces below. Name intermediate values and extract helpers instead of nesting deeply or explaining with comments; name everything that carries meaning (constants over magic values, objects over same-typed positional arguments).
 
 Conventions:
 
