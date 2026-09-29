@@ -3,8 +3,9 @@
 import { getBoxesByIdsAction } from '@/actions/boxes/get-boxes-by-ids'
 import ToolbarButton from '@/components/ToolbarButton'
 import BoxLabelsSheet from '@/components/boxes/labels/BoxLabelsSheet'
+import { Spinner } from '@/components/ui/spinner'
 import { BoxWithRelations } from '@/lib/box'
-import { LoaderCircle, Printer } from 'lucide-react'
+import { Printer } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
@@ -33,7 +34,7 @@ const PrintLabelsButton = ({ boxIds }: PrintLabelsButtonProps) => {
   return (
     <>
       <ToolbarButton onClick={print} disabled={isPending}>
-        {isPending ? <LoaderCircle className="animate-spin" /> : <Printer />}
+        {isPending ? <Spinner /> : <Printer />}
       </ToolbarButton>
       {boxes ? <BoxLabelsSheet boxes={boxes} /> : null}
     </>
