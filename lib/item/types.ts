@@ -1,10 +1,7 @@
 import { SortValue } from '@/components/list/types'
 import { Item } from '@/db/schema'
 import { StoredImage } from '@/lib/image/types'
-import { ITEMS_SORTABLE_COLUMNS } from '@/lib/item/const'
 import { Paginated } from '@/lib/types'
-
-export type ItemsSortField = keyof typeof ITEMS_SORTABLE_COLUMNS
 
 export type ItemsQuery = {
   search?: string
