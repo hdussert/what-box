@@ -1,17 +1,9 @@
 import { SortOption } from '@/components/list/types'
-import { boxes } from '@/db/schema'
 
 export const BOXES_PAGE_SIZE = 20
 
 /** Word forms for `pluralize`. */
 export const BOX_WORDS = { one: 'box', other: 'boxes' }
-
-// Note : Safety net, making sure the column exists
-export const BOXES_SORTABLE_COLUMNS = {
-  createdAt: boxes.createdAt,
-  name: boxes.name,
-  shortId: boxes.shortId,
-} as const
 
 export const BOXES_SORT_OPTIONS: SortOption[] = [
   {

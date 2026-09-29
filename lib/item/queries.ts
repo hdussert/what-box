@@ -1,6 +1,7 @@
 import { db } from '@/db'
 import { Item, items } from '@/db/schema'
-import { toOrderBy } from '@/lib/item'
+import { ITEMS_DEFAULT_SORT } from '@/lib/item/const'
+import { toOrderBy } from '@/lib/list/utils'
 import { getCurrentUser } from '@/lib/user'
 import { escapeLike } from '@/lib/utils'
 import { and, eq, ilike, sql } from 'drizzle-orm'
@@ -43,7 +44,8 @@ export async function getItems(
       boxId,
       ...(pattern ? { name: { ilike: pattern } } : {}),
     },
-    orderBy: (table, operators) => toOrderBy(query.sort, table, operators),
+    orderBy: (table, operators) =>
+      toOrderBy(query.sort ?? ITEMS_DEFAULT_SORT, table, operators),
     limit: 20,
     offset: 0,
   })

@@ -1,12 +1,12 @@
 import { db } from '@/db'
 import { boxes, items } from '@/db/schema'
+import { toOrderBy } from '@/lib/list/utils'
 import { getCurrentUser } from '@/lib/user'
 import { escapeLike } from '@/lib/utils'
 import { and, eq, exists, ilike, sql } from 'drizzle-orm'
 import 'server-only'
-import { BOXES_PAGE_SIZE } from './const'
+import { BOXES_DEFAULT_SORT, BOXES_PAGE_SIZE } from './const'
 import { BoxesPaginated, BoxesQuery, BoxWithRelations } from './types'
-import { toOrderBy } from './utils'
 
 // Single box queries
 export async function getBoxById(
@@ -56,7 +56,8 @@ export async function getBoxes(
       userId: user.id,
       ...(pattern ? { RAW: (table) => matchesSearch(table, pattern) } : {}),
     },
-    orderBy: (table, operators) => toOrderBy(query.sort, table, operators),
+    orderBy: (table, operators) =>
+      toOrderBy(query.sort ?? BOXES_DEFAULT_SORT, table, operators),
     limit: BOXES_PAGE_SIZE,
     with: { items: pattern ? matchingItemsFirst(pattern) : true },
   })
