@@ -1,10 +1,3 @@
-import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-
 /**
  * Returns `path` if it's a same-site path, `fallback` otherwise. Guards
  * redirects built from user input (e.g. `?next=`) against sending users to

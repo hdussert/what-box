@@ -1,7 +1,7 @@
 import ImagePreview from '@/components/images/ImagePreview'
 import { Card, CardDescription, CardTitle } from '@/components/ui/card'
 import { BoxWithRelations } from '@/lib/box'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { Package } from 'lucide-react'
 
 type BoxCardProps = {

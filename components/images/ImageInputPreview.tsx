@@ -1,5 +1,5 @@
 import ImagePreview from '@/components/images/ImagePreview'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { PropsWithChildren, useEffect, useState } from 'react'
 
 type ImageInputPreviewProps = PropsWithChildren<{

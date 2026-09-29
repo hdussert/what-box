@@ -1,5 +1,5 @@
 import { Checkbox } from '@/components/ui/checkbox'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { PropsWithChildren } from 'react'
 
 type SelectableRowProps = PropsWithChildren<{
