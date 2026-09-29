@@ -17,3 +17,8 @@ export function safeRedirectPath(path: unknown, fallback = '/dashboard') {
   }
   return url.pathname + url.search + url.hash
 }
+
+/** Escapes `\`, `%` and `_` so user input matches literally in `LIKE`/`ILIKE`. */
+export function escapeLike(value: string) {
+  return value.replace(/[\\%_]/g, '\\$&')
+}

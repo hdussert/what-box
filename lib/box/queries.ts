@@ -1,8 +1,8 @@
 import { db } from '@/db'
-import { boxes } from '@/db/schema'
-import { getBoxIdsByItemName } from '@/lib/item'
+import { boxes, items } from '@/db/schema'
 import { getCurrentUser } from '@/lib/user'
-import { and, eq, ilike, inArray, or, sql } from 'drizzle-orm'
+import { escapeLike } from '@/lib/utils'
+import { and, eq, exists, ilike, sql } from 'drizzle-orm'
 import 'server-only'
 import { BoxesPaginated, BoxesQuery, BoxWithRelations } from './types'
 import { toOrderBy } from './utils'
@@ -39,61 +39,49 @@ export async function getBoxes(
   query: BoxesQuery = {},
 ): Promise<BoxesPaginated> {
   const user = await getCurrentUser()
-  const search = query.search?.trim() // Search can mean "box name" but also "an item inside a box"
+  const search = query.search?.trim()
+  const pattern = search ? `%${escapeLike(search)}%` : undefined
 
-  // Boxes containing an item we are searching
-  const boxIdsWithMatchingItem = search ? await getBoxIdsByItemName(search) : []
-  const searchHasMatchingItems = search && boxIdsWithMatchingItem.length > 0
-
-  // Count the boxes matching the results (used for pagination)
-  const [{ count }] = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(boxes)
-    .where(
+  const [total, rows] = await Promise.all([
+    db.$count(
+      boxes,
       and(
         eq(boxes.userId, user.id),
-        or(
-          search ? ilike(boxes.name, `%${search}%`) : undefined, // Search in box name
-          search ? ilike(boxes.shortId, `%${search}%`) : undefined,
-          search ? inArray(boxes.id, boxIdsWithMatchingItem) : undefined, // Search in items names (via box IDs)
-        ),
+        pattern ? matchesSearch(boxes, pattern) : undefined,
       ),
-    )
+    ),
+    db.query.boxes.findMany({
+      where: {
+        userId: user.id,
+        ...(pattern ? { RAW: (table) => matchesSearch(table, pattern) } : {}),
+      },
+      orderBy: (table, { desc, asc }) =>
+        toOrderBy(query.sort, table, desc, asc),
+      limit: 20,
+      offset: 0,
+      with: {
+        items: pattern
+          ? {
+              // Matching items first, so the card summary shows them
+              orderBy: (items, { sql }) => [
+                sql`CASE WHEN ${ilike(items.name, pattern)} THEN 0 ELSE 1 END`,
+              ],
+            }
+          : true,
+      },
+    }),
+  ])
 
-  const total = Number(count) || 0
+  return { rows, total }
+}
 
-  const boxesResult = await db.query.boxes.findMany({
-    where: {
-      userId: user.id,
-      // Only filter by name/item match when there's an actual search term -
-      // omitting this when `search` is falsy previously built the pattern
-      // `%undefined%`, which matched nothing.
-      ...(search
-        ? {
-            OR: [
-              { name: { ilike: `%${search}%` } },
-              { shortId: { ilike: `%${search}%` } },
-              { id: { in: boxIdsWithMatchingItem } },
-            ],
-          }
-        : {}),
-    },
-    orderBy: (table, { desc, asc }) => toOrderBy(query.sort, table, desc, asc),
-    limit: 20,
-    offset: 0,
-    with: {
-      items: searchHasMatchingItems
-        ? {
-            orderBy: (items, { sql }) => [
-              sql`CASE WHEN ${ilike(
-                items.name,
-                `%${search}%`,
-              )} THEN 0 ELSE 1 END`, // Prioritize items matching the search
-            ],
-          }
-        : true,
-    },
-  })
-
-  return { rows: boxesResult, total }
+/** A box matches a search by its name, its short ID or the name of an item inside it. */
+function matchesSearch(table: typeof boxes, pattern: string) {
+  const hasMatchingItem = exists(
+    db
+      .select({ id: items.id })
+      .from(items)
+      .where(and(eq(items.boxId, table.id), ilike(items.name, pattern))),
+  )
+  return sql`(${ilike(table.name, pattern)} OR ${ilike(table.shortId, pattern)} OR ${hasMatchingItem})`
 }
