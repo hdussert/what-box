@@ -33,7 +33,7 @@ const ItemCard = ({
     <ItemRow
       variant="muted"
       className={cn(
-        'p-0 flex-1 flex-nowrap items-stretch gap-2 cursor-pointer transition hover:bg-muted relative',
+        'p-0 flex-1 min-w-0 flex-nowrap items-stretch gap-2 cursor-pointer transition hover:bg-muted relative',
         isSelected && 'ring-2 ring-primary',
       )}
       onClick={(e) => {
@@ -60,7 +60,7 @@ const ItemCard = ({
         />
       </div>
 
-      <div className="flex flex-1 p-2">
+      <div className="flex flex-1 min-w-0 p-2">
         {isEditing ? (
           <UpdateItemForm
             item={item}

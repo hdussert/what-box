@@ -7,7 +7,7 @@ type ItemDetailsProps = {
   isFocused: boolean
 }
 const ItemDetails = ({ item, isFocused }: ItemDetailsProps) => (
-  <div className="flex flex-col flex-1 my-auto gap-1">
+  <div className="flex flex-col flex-1 min-w-0 my-auto gap-1">
     <ItemTitle
       className={cn(
         'block w-full truncate text-base font-semibold transition-all h-9 py-1 leading-6',
