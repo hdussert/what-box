@@ -6,26 +6,35 @@ import BoxLabelsSheet from '@/components/boxes/labels/BoxLabelsSheet'
 import { Spinner } from '@/components/ui/spinner'
 import { BoxWithRelations } from '@/lib/box'
 import { Printer } from 'lucide-react'
-import { useState, useTransition } from 'react'
-import { toast } from 'sonner'
+import { ComponentProps, ReactNode, useState, useTransition } from 'react'
 
-type PrintLabelsButtonProps = { boxIds: string[] }
+type PrintLabelsButtonProps = {
+  boxIds: string[]
+  /** Called once the print dialog closes */
+  onSuccess?: () => void
+  variant?: ComponentProps<typeof ToolbarButton>['variant']
+  children?: ReactNode
+}
 
-const PrintLabelsButton = ({ boxIds }: PrintLabelsButtonProps) => {
+const PrintLabelsButton = ({
+  boxIds,
+  onSuccess,
+  variant,
+  children = <Printer />,
+}: PrintLabelsButtonProps) => {
   const [boxes, setBoxes] = useState<BoxWithRelations[]>()
   const [isPending, startTransition] = useTransition()
 
   const print = () => {
-    if (!boxIds.length) {
-      toast.error('Nothing to print !')
-      return
-    }
-
     startTransition(async () => {
       const fetchedBoxes = await getBoxesByIdsAction(boxIds)
       setBoxes(fetchedBoxes)
       // Important: wait until React has rendered the labels.
       requestAnimationFrame(() => {
+        // window.print() doesn't block on iOS, and onSuccess may unmount the sheet
+        if (onSuccess) {
+          window.addEventListener('afterprint', onSuccess, { once: true })
+        }
         window.print()
       })
     })
@@ -33,8 +42,12 @@ const PrintLabelsButton = ({ boxIds }: PrintLabelsButtonProps) => {
 
   return (
     <>
-      <ToolbarButton onClick={print} disabled={isPending}>
-        {isPending ? <Spinner /> : <Printer />}
+      <ToolbarButton
+        variant={variant}
+        onClick={print}
+        disabled={isPending || !boxIds.length}
+      >
+        {isPending ? <Spinner /> : children}
       </ToolbarButton>
       {boxes ? <BoxLabelsSheet boxes={boxes} /> : null}
     </>

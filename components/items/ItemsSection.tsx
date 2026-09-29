@@ -14,7 +14,7 @@ const ItemsSection = (props: ItemsSectionProps) => {
 
   return (
     <div>
-      <ItemsToolbar boxId={boxId} />
+      <ItemsToolbar boxId={boxId} itemIds={items.map(({ id }) => id)} />
       {isEmpty ? <ItemsListEmpty /> : <ItemsList items={items} />}
     </div>
   )
