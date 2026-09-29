@@ -71,10 +71,8 @@ export function NewItemButton({ boxId }: NewItemButtonProps) {
   }
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <ToolbarButton>
-          <Plus /> Add
-        </ToolbarButton>
+      <DialogTrigger render={<ToolbarButton />}>
+        <Plus /> Add
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="flex-row items-center justify-between pr-6">

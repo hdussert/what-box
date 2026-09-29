@@ -100,8 +100,11 @@ export function DeleteAccountDialog({ isOpen, setIsOpen }: DialogBaseProps) {
           </DialogHeader>
           {passwordField}
           <DialogFooter>
-            <DialogClose disabled={isPending} asChild>
-              <Button variant="secondary">Cancel</Button>
+            <DialogClose
+              disabled={isPending}
+              render={<Button variant="secondary" />}
+            >
+              Cancel
             </DialogClose>
             {deleteButton}
           </DialogFooter>

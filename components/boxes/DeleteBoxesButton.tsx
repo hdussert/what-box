@@ -88,10 +88,8 @@ export function DeleteBoxesButton({
   }
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <ToolbarButton>
-          <Trash />
-        </ToolbarButton>
+      <DialogTrigger render={<ToolbarButton />}>
+        <Trash />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
