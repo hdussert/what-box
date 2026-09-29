@@ -1,6 +1,7 @@
 'use client'
 
 import { useList } from '@/components/list/ListProvider'
+import ListSortOption from '@/components/list/ListSortOption'
 import {
   Select,
   SelectContent,
@@ -9,34 +10,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowDownWideNarrow, ArrowUpWideNarrow } from 'lucide-react'
 
 const ListSort = () => {
   const { sort, setSort, sortOptions } = useList()
   return (
     <Select
-      onValueChange={(value: (typeof sortOptions)[number]['value']) =>
-        setSort(value)
-      }
+      onValueChange={(value) => {
+        if (value) {
+          setSort(value)
+        }
+      }}
       defaultValue={sort}
     >
       <SelectTrigger>
-        <SelectValue />
+        <SelectValue>
+          {(value) => (
+            <ListSortOption
+              option={sortOptions.find((option) => option.value === value)}
+            />
+          )}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {sortOptions.map((sort) => (
+          {sortOptions.map((option) => (
             <SelectItem
-              key={sort.value}
-              value={sort.value}
+              key={option.value}
+              value={option.value}
               className="flex justify-between items-stretch"
             >
-              {sort.direction === 'desc' ? (
-                <ArrowDownWideNarrow />
-              ) : (
-                <ArrowUpWideNarrow />
-              )}
-              {sort.label}
+              <ListSortOption option={option} />
             </SelectItem>
           ))}
         </SelectGroup>
