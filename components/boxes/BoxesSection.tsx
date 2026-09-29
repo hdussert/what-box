@@ -13,7 +13,7 @@ const BoxesSection = (props: BoxesPaginated) => {
   return (
     <div className="flex gap-2 flex-col">
       <BoxesHeader total={total} />
-      <BoxesToolbar />
+      <BoxesToolbar boxIds={boxes.map(({ id }) => id)} />
       {isEmpty ? <BoxesListEmpty /> : <BoxesList boxes={boxes} />}
     </div>
   )

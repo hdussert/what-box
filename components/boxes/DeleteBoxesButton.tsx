@@ -25,18 +25,21 @@ import {
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { Trash } from 'lucide-react'
-import { useState, useTransition } from 'react'
+import { ReactNode, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
 type DeleteBoxesButtonProps = {
   boxIds: string[]
   onSuccess?: () => void
+  children?: ReactNode
 }
 
 export function DeleteBoxesButton({
   boxIds,
   onSuccess,
+  children = <Trash />,
 }: DeleteBoxesButtonProps) {
+  const trigger = <ToolbarButton disabled={!boxIds.length} />
   const [isOpen, setIsOpen] = useState(false)
   const isMobile = useIsMobile()
 
@@ -59,9 +62,7 @@ export function DeleteBoxesButton({
   if (isMobile) {
     return (
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerTrigger render={<ToolbarButton />}>
-          <Trash />
-        </DrawerTrigger>
+        <DrawerTrigger render={trigger}>{children}</DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Delete {boxIds.length} box(es)?</DrawerTitle>
@@ -86,9 +87,7 @@ export function DeleteBoxesButton({
   }
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger render={<ToolbarButton />}>
-        <Trash />
-      </DialogTrigger>
+      <DialogTrigger render={trigger}>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete {boxIds.length} box(es)?</DialogTitle>

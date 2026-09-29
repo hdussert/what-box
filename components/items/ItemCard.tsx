@@ -83,11 +83,8 @@ const ItemCard = ({
         </time>
 
         {isFocused && !isEditing && (
-          <div className="absolute bottom-2 right-2 animate-in fade-in">
-            <ToolbarButton
-              onClick={handleEdit}
-              className="hover:bg-input/50"
-            >
+          <div className="absolute bottom-1 right-1 animate-in fade-in">
+            <ToolbarButton onClick={handleEdit} className="hover:bg-input/50">
               Edit
             </ToolbarButton>
 
