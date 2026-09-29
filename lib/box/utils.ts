@@ -17,8 +17,8 @@ export function parseSort(sort: SortValue | undefined) {
 export function toOrderBy(
   sort: SortValue | undefined,
   boxesTable: typeof boxes,
-  asc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
   desc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
+  asc: (column: SQLWrapper<unknown> | AnyColumn) => SQL,
 ) {
   const { field, direction } = parseSort(sort)
   const sortFunc = direction === 'asc' ? asc : desc
