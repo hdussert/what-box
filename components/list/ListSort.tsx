@@ -10,17 +10,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { startTransition, useOptimistic } from 'react'
 
 const ListSort = () => {
   const { sort, setSort, sortOptions } = useList()
+  // The URL, and so `sort`, only updates once the server has rendered the new list
+  const [optimisticSort, setOptimisticSort] = useOptimistic(sort)
+
   return (
     <Select
+      value={optimisticSort}
       onValueChange={(value) => {
-        if (value) {
-          setSort(value)
+        if (!value) {
+          return
         }
+        startTransition(() => {
+          setOptimisticSort(value)
+          setSort(value)
+        })
       }}
-      defaultValue={sort}
     >
       <SelectTrigger>
         <SelectValue>
