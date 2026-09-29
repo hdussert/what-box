@@ -1,5 +1,8 @@
 import { SortOption } from '@/components/list/types'
 
+/** Word forms for `pluralize`. */
+export const ITEM_WORDS = { one: 'item', other: 'items' }
+
 export const ITEMS_SORT_OPTIONS: SortOption[] = [
   {
     label: 'Date',

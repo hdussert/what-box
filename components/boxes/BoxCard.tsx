@@ -6,6 +6,8 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { BoxWithRelations } from '@/lib/box'
+import { ITEM_WORDS } from '@/lib/item/const'
+import { pluralize } from '@/lib/utils'
 import { cn } from 'cn'
 import { Package } from 'lucide-react'
 
@@ -16,7 +18,7 @@ type BoxCardProps = {
 
 const BoxCard = ({ box, isSelected }: BoxCardProps) => {
   const itemsSummary = box.items.length
-    ? `${box.items.length} ${box.items.length === 1 ? 'item' : 'items'} · ${box.items
+    ? `${pluralize(box.items.length, ITEM_WORDS)} · ${box.items
         .map((item) => item.name)
         .join(', ')}`
     : 'Empty'

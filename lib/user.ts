@@ -3,6 +3,7 @@ import { User, users } from '@/db/schema'
 import { UserError } from '@/lib/errors'
 import { hashPassword, verifyPassword } from '@/lib/password'
 import { getSession, hasSessionCookie } from '@/lib/session'
+import { pluralize } from '@/lib/utils'
 import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -107,7 +108,7 @@ function lockoutMessage(lockedUntil: Date) {
     1,
     Math.ceil((lockedUntil.getTime() - Date.now()) / 60_000),
   )
-  return `Too many failed attempts. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`
+  return `Too many failed attempts. Try again in ${pluralize(minutes, { one: 'minute', other: 'minutes' })}.`
 }
 
 /**

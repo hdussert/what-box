@@ -22,3 +22,14 @@ export function safeRedirectPath(path: unknown, fallback = '/dashboard') {
 export function escapeLike(value: string) {
   return value.replace(/[\\%_]/g, '\\$&')
 }
+
+const pluralRules = new Intl.PluralRules('en')
+
+/** Prefixes `count` to the word form it takes: "1 box", "3 boxes". */
+export function pluralize(
+  count: number,
+  forms: { one: string; other: string },
+) {
+  const form = pluralRules.select(count) === 'one' ? forms.one : forms.other
+  return `${count} ${form}`
+}

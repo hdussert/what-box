@@ -12,7 +12,7 @@ export async function deleteItemsAction(itemIds: string[]) {
     return {
       success: false,
       message: 'No items selected for deletion',
-    }
+    } as const
   }
 
   try {
@@ -33,7 +33,7 @@ export async function deleteItemsAction(itemIds: string[]) {
     return {
       success: true,
       deleted: itemIds.length,
-    }
+    } as const
   } catch (error) {
     // Let getCurrentUser()'s sign-in redirect through
     unstable_rethrow(error)
@@ -41,6 +41,6 @@ export async function deleteItemsAction(itemIds: string[]) {
       success: false,
       message: toUserMessage(error, 'An error occurred while deleting items'),
       error: 'Failed to delete items and associated data',
-    }
+    } as const
   }
 }
