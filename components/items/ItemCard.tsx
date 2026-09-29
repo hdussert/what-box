@@ -5,7 +5,7 @@ import UpdateItemForm from '@/components/items/UpdateItemForm'
 import ToolbarButton from '@/components/ToolbarButton'
 import { Card, CardDescription } from '@/components/ui/card'
 import { Item } from '@/db/schema'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 type ItemCardProps = {
   item: Item

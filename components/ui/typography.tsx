@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { ComponentProps } from 'react'
 
 const H1 = ({ className, ...props }: ComponentProps<'h1'>) => (

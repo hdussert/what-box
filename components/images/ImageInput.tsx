@@ -8,7 +8,7 @@ import {
   MAX_IMAGE_SIZE,
   MAX_IMAGE_SIZE_READABLE,
 } from '@/lib/image/const'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { ImagePlus } from 'lucide-react'
 import { InputHTMLAttributes, useRef, useState } from 'react'
 
