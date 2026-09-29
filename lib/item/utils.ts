@@ -30,7 +30,7 @@ export function toOrderBy(
   const itemField = field as ItemsSortField
   const itemColumn = itemsTable[itemField]
 
-  if (typeof itemColumn === 'string') {
+  if (itemColumn.dataType === 'string') {
     return sortFunc(sql`lower(${itemColumn})`)
   }
 
