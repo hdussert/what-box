@@ -24,6 +24,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { pluralize } from '@/lib/utils'
 import { Trash } from 'lucide-react'
 import { ReactNode, useState, useTransition } from 'react'
 import { toast } from 'sonner'
@@ -50,7 +51,9 @@ export function DeleteBoxesButton({
       const result = await deleteBoxesAction(boxIds)
 
       if (result.success) {
-        toast.success(`${result.deleted} box(es) deleted`)
+        toast.success(
+          `${pluralize(result.deleted, { one: 'box', other: 'boxes' })} deleted`,
+        )
         onSuccess?.()
       } else {
         toast.error(result.error || 'Failed to delete boxes')
@@ -65,7 +68,9 @@ export function DeleteBoxesButton({
         <DrawerTrigger render={trigger}>{children}</DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Delete {boxIds.length} box(es)?</DrawerTitle>
+            <DrawerTitle>
+              Delete {pluralize(boxIds.length, { one: 'box', other: 'boxes' })}?
+            </DrawerTitle>
             <DrawerDescription>
               This action cannot be undone. All images and items in these boxes
               will also be deleted.
@@ -90,7 +95,9 @@ export function DeleteBoxesButton({
       <DialogTrigger render={trigger}>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete {boxIds.length} box(es)?</DialogTitle>
+          <DialogTitle>
+            Delete {pluralize(boxIds.length, { one: 'box', other: 'boxes' })}?
+          </DialogTitle>
           <DialogDescription>
             This action cannot be undone. All images and items in these boxes
             will also be deleted.

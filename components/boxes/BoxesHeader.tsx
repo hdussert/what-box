@@ -2,6 +2,7 @@
 
 import { useList } from '@/components/list/ListProvider'
 import Typography from '@/components/ui/typography'
+import { pluralize } from '@/lib/utils'
 
 type BoxesHeaderProps = {
   total: number
@@ -9,15 +10,14 @@ type BoxesHeaderProps = {
 
 const BoxesHeader = ({ total }: BoxesHeaderProps) => {
   const { search } = useList()
-  const noun = search ? 'result' : 'box'
-  const plural = search ? 'results' : 'boxes'
+  const forms = search
+    ? { one: 'result', other: 'results' }
+    : { one: 'box', other: 'boxes' }
 
   return (
     <div className="pb-2">
       <Typography.H1 className="mb-2">My boxes</Typography.H1>
-      <p className="text-muted-foreground">
-        {total} {total === 1 ? noun : plural}
-      </p>
+      <p className="text-muted-foreground">{pluralize(total, forms)}</p>
     </div>
   )
 }
