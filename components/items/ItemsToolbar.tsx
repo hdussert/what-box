@@ -29,8 +29,8 @@ const ItemsToolbar = ({ boxId, itemIds }: ItemsToolbarProps) => {
         selectionActions={({ selectedIds, done }) => (
           <DeleteItemsButton itemIds={selectedIds} onSuccess={done}>
             <Trash />
-            <span className="sr-only sm:not-sr-only">Delete</span>
-            {selectedIds.length}
+            Delete
+            <span className="font-mono">({selectedIds.length})</span>
           </DeleteItemsButton>
         )}
         actions={<NewItemButton boxId={boxId} />}

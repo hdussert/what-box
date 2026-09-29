@@ -35,12 +35,12 @@ const SelectionToolbar = ({
   }
 
   return (
-    <div className="flex justify-between">
+    <div className="flex flex-wrap justify-between gap-y-1">
       <div>
         <ToolbarButton onClick={() => selectAll(ids)}>Select all</ToolbarButton>
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
-      <div className="flex gap-1">
+      <div className="ml-auto flex gap-1">
         {selectionActions({ selectedIds, done: stopSelecting })}
       </div>
     </div>

@@ -37,13 +37,13 @@ const BoxesToolbar = ({ boxIds }: BoxesToolbarProps) => {
           <>
             <PrintLabelsButton boxIds={selectedIds} onSuccess={done}>
               <Printer />
-              <span className="sr-only sm:not-sr-only">Print</span>
-              {selectedIds.length}
+              Print
+              <span className="font-mono">({selectedIds.length})</span>
             </PrintLabelsButton>
             <DeleteBoxesButton boxIds={selectedIds} onSuccess={done}>
               <Trash />
-              <span className="sr-only sm:not-sr-only">Delete</span>
-              {selectedIds.length}
+              Delete
+              <span className="font-mono">({selectedIds.length})</span>
             </DeleteBoxesButton>
           </>
         )}
