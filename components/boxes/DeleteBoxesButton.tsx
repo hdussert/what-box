@@ -24,6 +24,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { BOX_WORDS } from '@/lib/box/const'
 import { pluralize } from '@/lib/utils'
 import { Trash } from 'lucide-react'
 import { ReactNode, useState, useTransition } from 'react'
@@ -51,9 +52,7 @@ export function DeleteBoxesButton({
       const result = await deleteBoxesAction(boxIds)
 
       if (result.success) {
-        toast.success(
-          `${pluralize(result.deleted, { one: 'box', other: 'boxes' })} deleted`,
-        )
+        toast.success(`${pluralize(result.deleted, BOX_WORDS)} deleted`)
         onSuccess?.()
       } else {
         toast.error(result.error || 'Failed to delete boxes')
@@ -69,7 +68,7 @@ export function DeleteBoxesButton({
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>
-              Delete {pluralize(boxIds.length, { one: 'box', other: 'boxes' })}?
+              Delete {pluralize(boxIds.length, BOX_WORDS)}?
             </DrawerTitle>
             <DrawerDescription>
               This action cannot be undone. All images and items in these boxes
@@ -96,7 +95,7 @@ export function DeleteBoxesButton({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Delete {pluralize(boxIds.length, { one: 'box', other: 'boxes' })}?
+            Delete {pluralize(boxIds.length, BOX_WORDS)}?
           </DialogTitle>
           <DialogDescription>
             This action cannot be undone. All images and items in these boxes

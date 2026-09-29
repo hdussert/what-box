@@ -2,6 +2,7 @@
 
 import { useList } from '@/components/list/ListProvider'
 import Typography from '@/components/ui/typography'
+import { BOX_WORDS } from '@/lib/box/const'
 import { pluralize } from '@/lib/utils'
 
 type BoxesHeaderProps = {
@@ -10,9 +11,7 @@ type BoxesHeaderProps = {
 
 const BoxesHeader = ({ total }: BoxesHeaderProps) => {
   const { search } = useList()
-  const forms = search
-    ? { one: 'result', other: 'results' }
-    : { one: 'box', other: 'boxes' }
+  const forms = search ? { one: 'result', other: 'results' } : BOX_WORDS
 
   return (
     <div className="pb-2">

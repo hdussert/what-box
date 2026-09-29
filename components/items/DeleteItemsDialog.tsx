@@ -20,6 +20,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { ITEM_WORDS } from '@/lib/item/const'
 import { pluralize } from '@/lib/utils'
 import { useTransition } from 'react'
 import { toast } from 'sonner'
@@ -44,9 +45,7 @@ export function DeleteItemsDialog({
       const result = await deleteItemsAction(itemIds)
 
       if (result.success) {
-        toast.success(
-          `${pluralize(result.deleted, { one: 'item', other: 'items' })} deleted`,
-        )
+        toast.success(`${pluralize(result.deleted, ITEM_WORDS)} deleted`)
         onSuccess?.()
       } else {
         toast.error(result.error || 'Failed to delete items')
@@ -61,8 +60,7 @@ export function DeleteItemsDialog({
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>
-              Delete{' '}
-              {pluralize(itemIds.length, { one: 'item', other: 'items' })}?
+              Delete {pluralize(itemIds.length, ITEM_WORDS)}?
             </DrawerTitle>
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </DrawerHeader>
@@ -90,7 +88,7 @@ export function DeleteItemsDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Delete {pluralize(itemIds.length, { one: 'item', other: 'items' })}?
+            Delete {pluralize(itemIds.length, ITEM_WORDS)}?
           </DialogTitle>
           <DialogDescription>
             This action cannot be undone. All images and items in these items
