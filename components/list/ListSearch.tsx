@@ -7,7 +7,8 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from '@/components/ui/input-group'
-import { LoaderCircle, Search, X } from 'lucide-react'
+import { Spinner } from '@/components/ui/spinner'
+import { Search, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const DEBOUNCE_MS = 200
@@ -39,9 +40,7 @@ const ListSearch = () => {
         onChange={(e) => setValue(e.target.value)}
       />
 
-      <InputGroupAddon>
-        {isPending ? <LoaderCircle className="animate-spin" /> : <Search />}
-      </InputGroupAddon>
+      <InputGroupAddon>{isPending ? <Spinner /> : <Search />}</InputGroupAddon>
 
       {isSearching ? (
         <InputGroupAddon align="inline-end">
