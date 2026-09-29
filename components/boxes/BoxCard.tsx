@@ -1,5 +1,10 @@
 import ImagePreview from '@/components/images/ImagePreview'
-import { Card, CardDescription, CardTitle } from '@/components/ui/card'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import { BoxWithRelations } from '@/lib/box'
 import { cn } from 'cn'
 import { Package } from 'lucide-react'
@@ -10,10 +15,16 @@ type BoxCardProps = {
 }
 
 const BoxCard = ({ box, isSelected }: BoxCardProps) => {
+  const itemsSummary = box.items.length
+    ? `${box.items.length} ${box.items.length === 1 ? 'item' : 'items'} · ${box.items
+        .map((item) => item.name)
+        .join(', ')}`
+    : 'Empty'
+
   return (
-    <Card
+    <Item
       className={cn(
-        'p-0 pr-4 flex-1 flex-row gap-4 cursor-pointer hover:brightness-120 transition items-center min-w-0',
+        'p-0 pr-4 gap-4 flex-1 flex-nowrap min-w-0 cursor-pointer transition hover:bg-muted/50',
         {
           'ring-2 ring-primary': isSelected,
         },
@@ -23,38 +34,32 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
         <ImagePreview
           src={box.imageUrl}
           alt="Box image"
-          className="aspect-square w-20"
+          className="aspect-square w-20 shrink-0"
         />
       ) : (
-        <div className="bg-input/30 rounded-md aspect-square w-20 flex items-center justify-center">
+        <div className="bg-input/30 rounded-md aspect-square w-20 shrink-0 flex items-center justify-center">
           <Package size={48} />
         </div>
       )}
-      <div className="flex flex-col flex-1 min-w-0 gap-1">
-        <div className="flex justify-between items-center">
-          <CardDescription className="text-xs font-mono">
-            {box.shortId}
-          </CardDescription>
-
-          <CardDescription className="text-xs">
+      <ItemContent className="min-w-0">
+        <ItemTitle className="block w-full truncate text-base font-semibold">
+          {box.name}
+        </ItemTitle>
+        <ItemDescription className="line-clamp-1">
+          {itemsSummary}
+        </ItemDescription>
+        <div className="flex justify-between text-xs text-muted-foreground/70">
+          <span className="font-mono">{box.shortId}</span>
+          <time dateTime={box.createdAt.toISOString()}>
             {box.createdAt.toLocaleDateString('en-US', {
               year: '2-digit',
               month: '2-digit',
               day: '2-digit',
             })}
-          </CardDescription>
+          </time>
         </div>
-
-        <CardTitle>{box.name}</CardTitle>
-        <CardDescription className="leading-none whitespace-nowrap text-ellipsis overflow-hidden text-xs">
-          {box.items.length
-            ? `Items (${box.items.length}) : ${box.items
-                .map((item) => item.name)
-                .join(', ')}`
-            : 'Empty'}
-        </CardDescription>
-      </div>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }
 
