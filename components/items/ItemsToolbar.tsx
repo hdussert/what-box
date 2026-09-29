@@ -3,6 +3,7 @@
 import DeleteItemsButton from '@/components/items/DeleteItemsButton'
 import { NewItemButton } from '@/components/items/NewItemButton'
 import ListControls from '@/components/list/ListControls'
+import ActionLabel from '@/components/selection/ActionLabel'
 import { useSelection } from '@/components/selection/SelectionProvider'
 import SelectionToolbar from '@/components/selection/SelectionToolbar'
 import ToolbarButton from '@/components/ToolbarButton'
@@ -23,14 +24,16 @@ const ItemsToolbar = ({ boxId, itemIds }: ItemsToolbarProps) => {
         ids={itemIds}
         startActions={
           <ToolbarButton onClick={startSelecting}>
-            <Trash /> Delete
+            <ActionLabel icon={<Trash />} label="Delete" />
           </ToolbarButton>
         }
         selectionActions={({ selectedIds, done }) => (
           <DeleteItemsButton itemIds={selectedIds} onSuccess={done}>
-            <Trash />
-            Delete
-            <span className="font-mono">{selectedIds.length || ''}</span>
+            <ActionLabel
+              icon={<Trash />}
+              label="Delete"
+              count={selectedIds.length}
+            />
           </DeleteItemsButton>
         )}
         actions={<NewItemButton boxId={boxId} />}

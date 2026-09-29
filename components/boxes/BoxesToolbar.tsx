@@ -4,6 +4,7 @@ import { DeleteBoxesButton } from '@/components/boxes/DeleteBoxesButton'
 import PrintLabelsButton from '@/components/boxes/labels/PrintLabelsButton'
 import NewBoxButton from '@/components/boxes/NewBoxButton'
 import ListControls from '@/components/list/ListControls'
+import ActionLabel from '@/components/selection/ActionLabel'
 import { useSelection } from '@/components/selection/SelectionProvider'
 import SelectionToolbar from '@/components/selection/SelectionToolbar'
 import ToolbarButton from '@/components/ToolbarButton'
@@ -26,24 +27,28 @@ const BoxesToolbar = ({ boxIds }: BoxesToolbarProps) => {
         startActions={
           <>
             <ToolbarButton onClick={startSelecting}>
-              <Printer /> Print
+              <ActionLabel icon={<Printer />} label="Print" />
             </ToolbarButton>
             <ToolbarButton onClick={startSelecting}>
-              <Trash /> Delete
+              <ActionLabel icon={<Trash />} label="Delete" />
             </ToolbarButton>
           </>
         }
         selectionActions={({ selectedIds, done }) => (
           <>
             <PrintLabelsButton boxIds={selectedIds} onSuccess={done}>
-              <Printer />
-              <span className="hidden sm:inline-block">Print</span>
-              <span className="font-mono">{selectedIds.length || ''}</span>
+              <ActionLabel
+                icon={<Printer />}
+                label="Print"
+                count={selectedIds.length}
+              />
             </PrintLabelsButton>
             <DeleteBoxesButton boxIds={selectedIds} onSuccess={done}>
-              <Trash />
-              <span className="hidden sm:inline-block">Delete</span>
-              <span className="font-mono">{selectedIds.length || ''}</span>
+              <ActionLabel
+                icon={<Trash />}
+                label="Delete"
+                count={selectedIds.length}
+              />
             </DeleteBoxesButton>
           </>
         )}
