@@ -54,6 +54,7 @@ export async function getBoxes(
         eq(boxes.userId, user.id),
         or(
           search ? ilike(boxes.name, `%${search}%`) : undefined, // Search in box name
+          search ? ilike(boxes.shortId, `%${search}%`) : undefined,
           search ? inArray(boxes.id, boxIdsWithMatchingItem) : undefined, // Search in items names (via box IDs)
         ),
       ),
@@ -71,6 +72,7 @@ export async function getBoxes(
         ? {
             OR: [
               { name: { ilike: `%${search}%` } },
+              { shortId: { ilike: `%${search}%` } },
               { id: { in: boxIdsWithMatchingItem } },
             ],
           }
