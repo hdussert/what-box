@@ -1,5 +1,5 @@
 import { SortValue } from '@/components/list/types'
-import { Column, is, SQL, sql, SQLWrapper } from 'drizzle-orm'
+import { Column, getColumns, SQL, sql, SQLWrapper, Table } from 'drizzle-orm'
 
 type SortOperators = Record<'asc' | 'desc', (column: SQLWrapper) => SQL>
 
@@ -9,12 +9,12 @@ type SortOperators = Record<'asc' | 'desc', (column: SQLWrapper) => SQL>
  */
 export function toOrderBy(
   sort: SortValue,
-  table: object,
+  table: Table,
   { asc, desc }: SortOperators,
 ) {
   const [field, direction] = sort.split('_')
-  const column: unknown = table[field as keyof typeof table]
-  if (!is(column, Column)) {
+  const column: Column | undefined = getColumns(table)[field]
+  if (!column) {
     throw new Error(`Unknown sort field: ${field}`)
   }
 
