@@ -1,14 +1,12 @@
 import { useState } from 'react'
 
 export function useSelectionState() {
-  const [mode, setMode] = useState<string | null>(null)
+  const [isSelecting, setIsSelecting] = useState<boolean>(false)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  const isSelecting = mode !== null
-
-  const startSelecting = (nextMode: string) => setMode(nextMode)
+  const startSelecting = () => setIsSelecting(true)
   const stopSelecting = () => {
-    setMode(null)
+    setIsSelecting(false)
     setSelectedIds([])
   }
 
@@ -25,7 +23,6 @@ export function useSelectionState() {
   }
 
   return {
-    mode,
     isSelecting,
     startSelecting,
     stopSelecting,
