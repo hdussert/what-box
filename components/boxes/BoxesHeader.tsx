@@ -23,7 +23,7 @@ const BoxesHeader = ({ total, unprintedIds }: BoxesHeaderProps) => {
         {unprintedIds.length ? (
           <>
             <span aria-hidden>·</span>
-            <PrintLabelsButton boxIds={unprintedIds}>
+            <PrintLabelsButton boxIds={unprintedIds} variant="link">
               {pluralize(unprintedIds.length, LABEL_WORDS)} to print
             </PrintLabelsButton>
           </>
