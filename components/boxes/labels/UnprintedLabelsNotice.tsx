@@ -1,9 +1,15 @@
 'use client'
 
 import PrintLabelsButton from '@/components/boxes/labels/PrintLabelsButton'
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from '@/components/ui/alert'
 import { BOX_WORDS } from '@/lib/box/const'
 import { pluralize } from '@/lib/utils'
-import { Printer } from 'lucide-react'
+import { Printer, PrinterX } from 'lucide-react'
 
 type UnprintedLabelsNoticeProps = {
   boxIds: string[]
@@ -16,12 +22,20 @@ const UnprintedLabelsNotice = ({ boxIds }: UnprintedLabelsNoticeProps) => {
   }
 
   return (
-    <div className="flex items-center justify-between gap-2 rounded-md bg-muted/50 px-3 py-1 text-sm text-muted-foreground">
-      <span>{pluralize(boxIds.length, BOX_WORDS)} without a label</span>
-      <PrintLabelsButton boxIds={boxIds}>
-        <Printer /> Print
-      </PrintLabelsButton>
-    </div>
+    <Alert role="status">
+      <PrinterX />
+      <AlertTitle>
+        {pluralize(boxIds.length, BOX_WORDS)} without a label
+      </AlertTitle>
+      <AlertDescription>
+        Print their QR labels to find them by scanning.
+      </AlertDescription>
+      <AlertAction>
+        <PrintLabelsButton boxIds={boxIds}>
+          <Printer /> Print
+        </PrintLabelsButton>
+      </AlertAction>
+    </Alert>
   )
 }
 
