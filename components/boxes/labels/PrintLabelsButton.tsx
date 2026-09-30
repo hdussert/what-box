@@ -1,17 +1,15 @@
 'use client'
 
 import { getBoxesByIdsAction } from '@/actions/boxes/get-boxes-by-ids'
-import { markLabelsPrintedAction } from '@/actions/boxes/mark-labels-printed'
 import ToolbarButton from '@/components/ToolbarButton'
 import BoxLabelsSheet from '@/components/boxes/labels/BoxLabelsSheet'
+import { MarkLabelsPrintedDialog } from '@/components/boxes/labels/MarkLabelsPrintedDialog'
+import { useDialog } from '@/components/dialog/DialogProvider'
 import { Spinner } from '@/components/ui/spinner'
 import { BoxWithRelations } from '@/lib/box'
-import { LABEL_WORDS } from '@/lib/box/const'
-import { pluralize } from '@/lib/utils'
 import { Printer } from 'lucide-react'
 import { ReactNode, useState, useTransition } from 'react'
 import { flushSync } from 'react-dom'
-import { toast } from 'sonner'
 
 type PrintLabelsButtonProps = {
   boxIds: string[]
@@ -27,6 +25,7 @@ const PrintLabelsButton = ({
 }: PrintLabelsButtonProps) => {
   const [boxes, setBoxes] = useState<BoxWithRelations[]>()
   const [isPending, startTransition] = useTransition()
+  const { openDialog } = useDialog()
 
   const print = () => {
     startTransition(async () => {
@@ -46,7 +45,9 @@ const PrintLabelsButton = ({
           // Another button's print would otherwise include this sheet too
           setBoxes(undefined)
           onSuccess?.()
-          offerToMarkPrinted(unprintedIds)
+          if (unprintedIds.length) {
+            openDialog(MarkLabelsPrintedDialog, { boxIds: unprintedIds })
+          }
         },
         { once: true },
       )
@@ -62,33 +63,6 @@ const PrintLabelsButton = ({
       {boxes ? <BoxLabelsSheet boxes={boxes} /> : null}
     </>
   )
-}
-
-/**
- * Asks before marking: the browser can't tell a finished print from a
- * cancelled one.
- */
-function offerToMarkPrinted(boxIds: string[]) {
-  if (!boxIds.length) {
-    return
-  }
-
-  toast(`Mark ${pluralize(boxIds.length, LABEL_WORDS)} as printed?`, {
-    duration: 15_000,
-    action: {
-      label: 'Mark',
-      onClick: async () => {
-        const result = await markLabelsPrintedAction(boxIds)
-        if (result.success) {
-          toast.success(
-            `${pluralize(result.marked, LABEL_WORDS)} marked as printed`,
-          )
-        } else {
-          toast.error(result.message)
-        }
-      },
-    },
-  })
 }
 
 export default PrintLabelsButton
