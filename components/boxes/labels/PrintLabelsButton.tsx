@@ -10,6 +10,7 @@ import { LABEL_WORDS } from '@/lib/box/const'
 import { pluralize } from '@/lib/utils'
 import { Printer } from 'lucide-react'
 import { ReactNode, useState, useTransition } from 'react'
+import { flushSync } from 'react-dom'
 import { toast } from 'sonner'
 
 type PrintLabelsButtonProps = {
@@ -30,26 +31,26 @@ const PrintLabelsButton = ({
   const print = () => {
     startTransition(async () => {
       const fetchedBoxes = await getBoxesByIdsAction(boxIds)
-      setBoxes(fetchedBoxes)
       const unprintedIds = (fetchedBoxes ?? [])
         .filter((box) => !box.labelPrinted)
         .map(({ id }) => id)
 
-      // Important: wait until React has rendered the labels.
-      requestAnimationFrame(() => {
-        // window.print() doesn't block on iOS, and onSuccess may unmount the sheet
-        window.addEventListener(
-          'afterprint',
-          () => {
-            // Another button's print would otherwise include this sheet too
-            setBoxes(undefined)
-            onSuccess?.()
-            offerToMarkPrinted(unprintedIds)
-          },
-          { once: true },
-        )
-        window.print()
-      })
+      // print() needs the sheet and its print styles in the page, and a plain
+      // setState only schedules the render
+      flushSync(() => setBoxes(fetchedBoxes))
+
+      // window.print() doesn't block on iOS, and onSuccess may unmount the sheet
+      window.addEventListener(
+        'afterprint',
+        () => {
+          // Another button's print would otherwise include this sheet too
+          setBoxes(undefined)
+          onSuccess?.()
+          offerToMarkPrinted(unprintedIds)
+        },
+        { once: true },
+      )
+      window.print()
     })
   }
 
