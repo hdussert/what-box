@@ -4,13 +4,13 @@ export function useSelectionState() {
   const [isSelecting, setIsSelecting] = useState<boolean>(false)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  const clearSelection = () => setSelectedIds([])
-
   const startSelecting = () => setIsSelecting(true)
   const stopSelecting = () => {
     setIsSelecting(false)
     setSelectedIds([])
   }
+
+  const selectAll = (ids: string[]) => setSelectedIds(ids)
 
   const isSelected = (id: string) => selectedIds.includes(id)
 
@@ -28,7 +28,7 @@ export function useSelectionState() {
     stopSelecting,
 
     selectedIds,
-    clearSelection,
+    selectAll,
     isSelected,
     toggleSelect,
   }

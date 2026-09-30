@@ -4,8 +4,9 @@ import { UpdateBoxState, updateBoxAction } from '@/actions/boxes/update-box'
 import { Button } from '@/components/ui/button'
 import { FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/ui/spinner'
 import { Box } from '@/db/schema'
-import { Check, LoaderCircle, X } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import { useActionState, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -68,11 +69,7 @@ const UpdateBoxForm = ({ box, onCancel, onSuccess }: UpdateBoxFormProps) => {
               aria-label="Save"
               disabled={isPending}
             >
-              {isPending ? (
-                <LoaderCircle className="animate-spin" />
-              ) : (
-                <Check />
-              )}
+              {isPending ? <Spinner /> : <Check />}
             </Button>
             <Button
               variant="ghost"

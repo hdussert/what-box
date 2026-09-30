@@ -71,7 +71,7 @@ export function DeleteAccountDialog({ isOpen, setIsOpen }: DialogBaseProps) {
 
   if (isMobile) {
     return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen} noBodyStyles>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent>
           <form action={formAction}>
             <DrawerHeader>
@@ -80,8 +80,11 @@ export function DeleteAccountDialog({ isOpen, setIsOpen }: DialogBaseProps) {
             </DrawerHeader>
             <div className="flex flex-col gap-4 px-4">{passwordField}</div>
             <DrawerFooter>
-              <DrawerClose disabled={isPending} asChild>
-                <Button variant="secondary">Cancel</Button>
+              <DrawerClose
+                disabled={isPending}
+                render={<Button variant="secondary" />}
+              >
+                Cancel
               </DrawerClose>
               {deleteButton}
             </DrawerFooter>
@@ -100,8 +103,11 @@ export function DeleteAccountDialog({ isOpen, setIsOpen }: DialogBaseProps) {
           </DialogHeader>
           {passwordField}
           <DialogFooter>
-            <DialogClose disabled={isPending} asChild>
-              <Button variant="secondary">Cancel</Button>
+            <DialogClose
+              disabled={isPending}
+              render={<Button variant="secondary" />}
+            >
+              Cancel
             </DialogClose>
             {deleteButton}
           </DialogFooter>

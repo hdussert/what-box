@@ -20,7 +20,7 @@ export const useListState = ({
   const [isPending, startTransition] = useTransition()
 
   // Used as fields values
-  const search = searchParams.get('search') ?? ''
+  const search = (searchParams.get('search') ?? '').trim()
   const sortParam = searchParams.get('sort')
   const sort =
     sortOptions.find((option) => option.value === sortParam)?.value ??

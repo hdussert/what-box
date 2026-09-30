@@ -4,23 +4,54 @@ import { DeleteBoxesButton } from '@/components/boxes/DeleteBoxesButton'
 import PrintLabelsButton from '@/components/boxes/labels/PrintLabelsButton'
 import NewBoxButton from '@/components/boxes/NewBoxButton'
 import ListControls from '@/components/list/ListControls'
+import ActionLabel from '@/components/selection/ActionLabel'
+import { useSelection } from '@/components/selection/SelectionProvider'
 import SelectionToolbar from '@/components/selection/SelectionToolbar'
+import ToolbarButton from '@/components/ToolbarButton'
 import { Separator } from '@/components/ui/separator'
+import { Printer, Trash } from 'lucide-react'
 
-const BoxesToolbar = () => {
+type BoxesToolbarProps = {
+  boxIds: string[]
+}
+
+const BoxesToolbar = ({ boxIds }: BoxesToolbarProps) => {
+  const { startSelecting } = useSelection()
+
   return (
     <div className="sticky top-0 z-20 shadow-xl bg-background -mx-2 px-2 pt-2">
       <ListControls />
       <Separator className="mt-2 mb-1" />
       <SelectionToolbar
-        selectionActions={({ selectedIds, clearSelection }) => [
-          <DeleteBoxesButton
-            key="delete"
-            boxIds={selectedIds}
-            onSuccess={clearSelection}
-          />,
-          <PrintLabelsButton key="print" boxIds={selectedIds} />,
-        ]}
+        ids={boxIds}
+        startActions={
+          <>
+            <ToolbarButton onClick={startSelecting}>
+              <ActionLabel icon={<Printer />} label="Print" />
+            </ToolbarButton>
+            <ToolbarButton onClick={startSelecting}>
+              <ActionLabel icon={<Trash />} label="Delete" />
+            </ToolbarButton>
+          </>
+        }
+        selectionActions={({ selectedIds, done }) => (
+          <>
+            <PrintLabelsButton boxIds={selectedIds} onSuccess={done}>
+              <ActionLabel
+                icon={<Printer />}
+                label="Print"
+                count={selectedIds.length}
+              />
+            </PrintLabelsButton>
+            <DeleteBoxesButton boxIds={selectedIds} onSuccess={done}>
+              <ActionLabel
+                icon={<Trash />}
+                label="Delete"
+                count={selectedIds.length}
+              />
+            </DeleteBoxesButton>
+          </>
+        )}
         actions={<NewBoxButton label="Add" />}
       />
     </div>

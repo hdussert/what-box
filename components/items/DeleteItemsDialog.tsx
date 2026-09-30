@@ -20,6 +20,8 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { ITEM_WORDS } from '@/lib/item/const'
+import { pluralize } from '@/lib/utils'
 import { useTransition } from 'react'
 import { toast } from 'sonner'
 
@@ -43,7 +45,7 @@ export function DeleteItemsDialog({
       const result = await deleteItemsAction(itemIds)
 
       if (result.success) {
-        toast.success(`${result.deleted} item(s) deleted`)
+        toast.success(`${pluralize(result.deleted, ITEM_WORDS)} deleted`)
         onSuccess?.()
       } else {
         toast.error(result.error || 'Failed to delete items')
@@ -54,15 +56,20 @@ export function DeleteItemsDialog({
 
   if (isMobile) {
     return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen} noBodyStyles>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Delete {itemIds.length} item(s)?</DrawerTitle>
+            <DrawerTitle>
+              Delete {pluralize(itemIds.length, ITEM_WORDS)}?
+            </DrawerTitle>
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <DrawerClose disabled={isPending} asChild>
-              <Button variant="secondary">Cancel</Button>
+            <DrawerClose
+              disabled={isPending}
+              render={<Button variant="secondary" />}
+            >
+              Cancel
             </DrawerClose>
             <Button
               variant="destructive"
@@ -80,15 +87,20 @@ export function DeleteItemsDialog({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete {itemIds.length} item(s)?</DialogTitle>
+          <DialogTitle>
+            Delete {pluralize(itemIds.length, ITEM_WORDS)}?
+          </DialogTitle>
           <DialogDescription>
             This action cannot be undone. All images and items in these items
             will also be deleted.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose disabled={isPending} asChild>
-            <Button variant="secondary">Cancel</Button>
+          <DialogClose
+            disabled={isPending}
+            render={<Button variant="secondary" />}
+          >
+            Cancel
           </DialogClose>
           <Button
             variant="destructive"

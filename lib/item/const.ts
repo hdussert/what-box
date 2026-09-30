@@ -1,11 +1,7 @@
 import { SortOption } from '@/components/list/types'
-import { items } from '@/db/schema'
 
-export const ITEMS_SORTABLE_COLUMNS = {
-  createdAt: items.createdAt,
-  name: items.name,
-  quantity: items.quantity,
-} as const
+/** Word forms for `pluralize`. */
+export const ITEM_WORDS = { one: 'item', other: 'items' }
 
 export const ITEMS_SORT_OPTIONS: SortOption[] = [
   {
@@ -46,4 +42,4 @@ export const ITEMS_SORT_OPTIONS: SortOption[] = [
   },
 ]
 
-export const ITEMS_DEFAULT_SORT = ITEMS_SORT_OPTIONS[1].value
+export const ITEMS_DEFAULT_SORT = ITEMS_SORT_OPTIONS[0].value

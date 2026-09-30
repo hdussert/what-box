@@ -12,7 +12,7 @@ export async function deleteBoxesAction(boxIds: string[]) {
     return {
       success: false,
       message: 'No boxes selected for deletion',
-    }
+    } as const
   }
 
   try {
@@ -32,7 +32,7 @@ export async function deleteBoxesAction(boxIds: string[]) {
     return {
       success: true,
       deleted: boxIds.length,
-    }
+    } as const
   } catch (error) {
     // Let getCurrentUser()'s sign-in redirect through
     unstable_rethrow(error)
@@ -40,6 +40,6 @@ export async function deleteBoxesAction(boxIds: string[]) {
       success: false,
       message: toUserMessage(error, 'An error occurred while deleting boxes'),
       error: 'Failed to delete boxes and associated data',
-    }
+    } as const
   }
 }

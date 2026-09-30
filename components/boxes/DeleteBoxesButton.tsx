@@ -24,19 +24,24 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { BOX_WORDS } from '@/lib/box/const'
+import { pluralize } from '@/lib/utils'
 import { Trash } from 'lucide-react'
-import { useState, useTransition } from 'react'
+import { ReactNode, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
 type DeleteBoxesButtonProps = {
   boxIds: string[]
   onSuccess?: () => void
+  children?: ReactNode
 }
 
 export function DeleteBoxesButton({
   boxIds,
   onSuccess,
+  children = <Trash />,
 }: DeleteBoxesButtonProps) {
+  const trigger = <ToolbarButton disabled={!boxIds.length} />
   const [isOpen, setIsOpen] = useState(false)
   const isMobile = useIsMobile()
 
@@ -47,7 +52,7 @@ export function DeleteBoxesButton({
       const result = await deleteBoxesAction(boxIds)
 
       if (result.success) {
-        toast.success(`${result.deleted} box(es) deleted`)
+        toast.success(`${pluralize(result.deleted, BOX_WORDS)} deleted`)
         onSuccess?.()
       } else {
         toast.error(result.error || 'Failed to delete boxes')
@@ -58,15 +63,13 @@ export function DeleteBoxesButton({
 
   if (isMobile) {
     return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen} noBodyStyles>
-        <DrawerTrigger asChild>
-          <ToolbarButton>
-            <Trash />
-          </ToolbarButton>
-        </DrawerTrigger>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
+        <DrawerTrigger render={trigger}>{children}</DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Delete {boxIds.length} box(es)?</DrawerTitle>
+            <DrawerTitle>
+              Delete {pluralize(boxIds.length, BOX_WORDS)}?
+            </DrawerTitle>
             <DrawerDescription>
               This action cannot be undone. All images and items in these boxes
               will also be deleted.
@@ -88,14 +91,12 @@ export function DeleteBoxesButton({
   }
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <ToolbarButton>
-          <Trash />
-        </ToolbarButton>
-      </DialogTrigger>
+      <DialogTrigger render={trigger}>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete {boxIds.length} box(es)?</DialogTitle>
+          <DialogTitle>
+            Delete {pluralize(boxIds.length, BOX_WORDS)}?
+          </DialogTitle>
           <DialogDescription>
             This action cannot be undone. All images and items in these boxes
             will also be deleted.

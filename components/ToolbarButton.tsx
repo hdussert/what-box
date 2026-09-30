@@ -6,6 +6,7 @@ type ToolbarButtonProps = PropsWithChildren<
   {
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
     disabled?: boolean
+    className?: string
   } & VariantProps<typeof buttonVariants>
 >
 

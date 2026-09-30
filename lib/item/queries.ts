@@ -1,7 +1,9 @@
 import { db } from '@/db'
 import { Item, items } from '@/db/schema'
-import { toOrderBy } from '@/lib/item'
+import { ITEMS_DEFAULT_SORT } from '@/lib/item/const'
+import { toOrderBy } from '@/lib/list/utils'
 import { getCurrentUser } from '@/lib/user'
+import { escapeLike } from '@/lib/utils'
 import { and, eq, ilike, sql } from 'drizzle-orm'
 import 'server-only'
 import { ItemsPaginated, ItemsQuery } from './types'
@@ -20,10 +22,11 @@ export async function getItems(
   const user = await getCurrentUser()
 
   const search = query.search?.trim()
+  const pattern = search ? `%${escapeLike(search)}%` : undefined
   const filters = [
     eq(items.userId, user.id),
     eq(items.boxId, boxId),
-    search ? ilike(items.name, `%${search}%`) : undefined,
+    pattern ? ilike(items.name, pattern) : undefined,
   ].filter(Boolean)
 
   const whereClause = and(...filters)
@@ -39,33 +42,13 @@ export async function getItems(
     where: {
       userId: user.id,
       boxId,
-      // Only filter by name when there's an actual search term - same fix
-      // as getBoxes() (lib/box/queries.ts): omitting this when `search` is
-      // falsy previously built the literal pattern `%undefined%`.
-      ...(search ? { name: { ilike: `%${search}%` } } : {}),
+      ...(pattern ? { name: { ilike: pattern } } : {}),
     },
-    orderBy: (table, { desc, asc }) => toOrderBy(query.sort, table, desc, asc),
+    orderBy: (table, operators) =>
+      toOrderBy(query.sort ?? ITEMS_DEFAULT_SORT, table, operators),
     limit: 20,
     offset: 0,
   })
 
   return { rows: itemsList, total }
-}
-
-export async function getBoxIdsByItemName(itemName: string) {
-  const user = await getCurrentUser()
-  const search = itemName.trim()
-
-  if (!search) {
-    return []
-  }
-
-  const itemsList = await db
-    .select({ boxId: items.boxId })
-    .from(items)
-    .where(and(eq(items.userId, user.id), ilike(items.name, `%${search}%`)))
-    .groupBy(items.boxId)
-
-  const boxIds = itemsList.map((i) => i.boxId)
-  return boxIds
 }

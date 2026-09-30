@@ -1,10 +1,3 @@
-import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-
 /**
  * Returns `path` if it's a same-site path, `fallback` otherwise. Guards
  * redirects built from user input (e.g. `?next=`) against sending users to
@@ -23,4 +16,20 @@ export function safeRedirectPath(path: unknown, fallback = '/dashboard') {
     return fallback
   }
   return url.pathname + url.search + url.hash
+}
+
+/** Escapes `\`, `%` and `_` so user input matches literally in `LIKE`/`ILIKE`. */
+export function escapeLike(value: string) {
+  return value.replace(/[\\%_]/g, '\\$&')
+}
+
+const pluralRules = new Intl.PluralRules('en')
+
+/** Prefixes `count` to the word form it takes: "1 box", "3 boxes". */
+export function pluralize(
+  count: number,
+  forms: { one: string; other: string },
+) {
+  const form = pluralRules.select(count) === 'one' ? forms.one : forms.other
+  return `${count} ${form}`
 }
