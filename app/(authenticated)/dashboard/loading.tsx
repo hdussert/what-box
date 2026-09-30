@@ -1,5 +1,4 @@
 import { Item, ItemContent } from '@/components/ui/item'
-import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import Typography from '@/components/ui/typography'
 
@@ -17,12 +16,11 @@ export default function DashboardLoading() {
         </div>
       </div>
 
-      <div className="shadow-xl bg-background -mx-2 p-2 border-b">
+      <div className="flex flex-col gap-2 shadow-xl bg-background -mx-2 p-2 border-b">
         <div className="flex gap-1">
           <Skeleton className="h-9 flex-1" />
           <Skeleton className="h-9 w-36" />
         </div>
-        <Separator className="mt-2 mb-1" />
         <div className="flex justify-between">
           <Skeleton className="h-8 w-16" />
           <Skeleton className="h-8 w-36" />
