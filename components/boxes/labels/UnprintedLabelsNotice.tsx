@@ -22,7 +22,7 @@ const UnprintedLabelsNotice = ({ boxIds }: UnprintedLabelsNoticeProps) => {
   }
 
   return (
-    <Alert role="status">
+    <Alert role="status" className="has-data-[slot=alert-action]:pr-24">
       <PrinterX />
       <AlertTitle>
         {pluralize(boxIds.length, BOX_WORDS)} without a label
