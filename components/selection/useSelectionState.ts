@@ -1,12 +1,15 @@
 import { useState } from 'react'
 
 export function useSelectionState() {
-  const [isSelecting, setIsSelecting] = useState<boolean>(false)
+  const [activeAction, setActiveAction] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  const startSelecting = () => setIsSelecting(true)
+  const isSelecting = activeAction !== null
+
+  /** Enters selection mode for the bulk action with this id */
+  const startSelecting = (actionId: string) => setActiveAction(actionId)
   const stopSelecting = () => {
-    setIsSelecting(false)
+    setActiveAction(null)
     setSelectedIds([])
   }
 
@@ -23,6 +26,7 @@ export function useSelectionState() {
   }
 
   return {
+    activeAction,
     isSelecting,
     startSelecting,
     stopSelecting,
