@@ -20,7 +20,7 @@ const BoxesToolbar = ({ boxIds, unprintedIds }: BoxesToolbarProps) => {
   const { startSelecting } = useSelection()
 
   return (
-    <div className="sticky top-0 z-20 shadow-xl bg-background -mx-2 px-2 p-2 border-b">
+    <div className="sticky top-0 z-20 shadow-xl bg-background -mx-2 p-2 border-b">
       <ListControls />
       <Separator className="mt-2 mb-1" />
       <SelectionToolbar
