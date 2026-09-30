@@ -55,7 +55,7 @@ export function NewItemButton({ boxId }: NewItemButtonProps) {
     return (
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerTrigger render={<ToolbarButton />}>
-          <Plus /> Add
+          <Plus data-icon="inline-start" /> Add
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader className="flex-row items-center justify-between">
@@ -74,7 +74,7 @@ export function NewItemButton({ boxId }: NewItemButtonProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger render={<ToolbarButton />}>
-        <Plus /> Add
+        <Plus data-icon="inline-start" /> Add
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="flex-row items-center justify-between pr-6">

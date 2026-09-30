@@ -24,13 +24,13 @@ const ItemsToolbar = ({ boxId, itemIds }: ItemsToolbarProps) => {
         ids={itemIds}
         startActions={
           <ToolbarButton onClick={startSelecting}>
-            <ActionLabel icon={<Trash />} label="Delete" />
+            <ActionLabel icon={Trash} label="Delete" />
           </ToolbarButton>
         }
         selectionActions={({ selectedIds, done }) => (
           <DeleteItemsButton itemIds={selectedIds} onSuccess={done}>
             <ActionLabel
-              icon={<Trash />}
+              icon={Trash}
               label="Delete"
               count={selectedIds.length}
             />

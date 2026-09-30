@@ -27,10 +27,10 @@ const BoxesToolbar = ({ boxIds, unprintedIds }: BoxesToolbarProps) => {
         startActions={
           <>
             <ToolbarButton onClick={startSelecting}>
-              <ActionLabel icon={<Printer />} label="Print" />
+              <ActionLabel icon={Printer} label="Print" />
             </ToolbarButton>
             <ToolbarButton onClick={startSelecting}>
-              <ActionLabel icon={<Trash />} label="Delete" />
+              <ActionLabel icon={Trash} label="Delete" />
             </ToolbarButton>
           </>
         }
@@ -38,14 +38,14 @@ const BoxesToolbar = ({ boxIds, unprintedIds }: BoxesToolbarProps) => {
           <>
             <PrintLabelsButton boxIds={selectedIds} onSuccess={done}>
               <ActionLabel
-                icon={<Printer />}
+                icon={Printer}
                 label="Print"
                 count={selectedIds.length}
               />
             </PrintLabelsButton>
             <DeleteBoxesButton boxIds={selectedIds} onSuccess={done}>
               <ActionLabel
-                icon={<Trash />}
+                icon={Trash}
                 label="Delete"
                 count={selectedIds.length}
               />
