@@ -375,8 +375,8 @@ function SidebarContent({ className, ...props }: React.ComponentProps<'div'>) {
       data-slot="sidebar-content"
       data-sidebar="content"
       className={cn(
-        'flex min-h-0 flex-1 m-4 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
-        'group-data-[collapsible=icon]:group-data-[state=collapsed]:m-2 transition-[margin] duration-200 ease-linear',
+        'flex min-h-0 flex-1 p-4 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
+        'group-data-[collapsible=icon]:group-data-[state=collapsed]:p-2 transition-[padding] duration-200 ease-linear',
         className,
       )}
       {...props}
