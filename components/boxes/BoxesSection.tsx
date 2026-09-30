@@ -4,7 +4,6 @@ import BoxesHeader from '@/components/boxes/BoxesHeader'
 import BoxesList from '@/components/boxes/BoxesList'
 import BoxesListEmpty from '@/components/boxes/BoxesListEmpty'
 import BoxesToolbar from '@/components/boxes/BoxesToolbar'
-import UnprintedLabelsNotice from '@/components/boxes/labels/UnprintedLabelsNotice'
 import { BoxWithRelations } from '@/lib/box'
 
 type BoxesSectionProps = {
@@ -19,9 +18,11 @@ const BoxesSection = ({ boxes }: BoxesSectionProps) => {
 
   return (
     <div className="flex gap-2 flex-col">
-      <BoxesHeader total={boxes.length} />
-      <UnprintedLabelsNotice boxIds={unprintedIds} />
-      <BoxesToolbar boxIds={boxes.map(({ id }) => id)} />
+      <BoxesHeader total={boxes.length} unprintedIds={unprintedIds} />
+      <BoxesToolbar
+        boxIds={boxes.map(({ id }) => id)}
+        unprintedIds={unprintedIds}
+      />
       {isEmpty ? <BoxesListEmpty /> : <BoxesList boxes={boxes} />}
     </div>
   )
