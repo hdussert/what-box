@@ -29,7 +29,7 @@ const BoxName = ({ box }: BoxNameProps) => {
 
   return (
     <div className="flex min-h-9 items-center justify-center px-12">
-      <div className="relative min-w-24 px-3">
+      <div className="relative flex min-w-24 items-center px-3">
         <Typography.H2 className="uppercase break-words leading-[normal]">
           {box.name}
         </Typography.H2>
@@ -37,7 +37,7 @@ const BoxName = ({ box }: BoxNameProps) => {
           variant="ghost"
           size="icon-sm"
           aria-label="Edit name"
-          className="absolute top-1/2 left-full ml-1 -translate-y-1/2"
+          className="absolute left-full ml-1"
           onClick={handleEdit}
         >
           <Pen />

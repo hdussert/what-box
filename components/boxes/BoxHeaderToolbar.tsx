@@ -13,7 +13,7 @@ const BoxHeaderToolbar = ({ boxId }: BoxHeaderToolbarProps) => {
   return (
     <div className="flex items-center justify-between">
       <ToolbarButton onClick={() => router.replace('/dashboard')} size="icon">
-        <ArrowLeft size={48} />
+        <ArrowLeft />
       </ToolbarButton>
       <div>
         <PrintLabelsButton boxIds={[boxId]} />
