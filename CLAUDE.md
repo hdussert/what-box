@@ -50,7 +50,7 @@ Conventions:
 Components:
 
 - Server-first: pages, layouts and data fetching stay on the server. `'use client'` goes on the smallest interactive leaf; client components never fetch data.
-- Reuse `components/ui` primitives before custom markup.
+- Reuse `components/ui` primitives before custom markup. Load the `shadcn` skill before adding or composing them: it carries the Base UI APIs and composition rules.
 
 Naming and layout:
 
