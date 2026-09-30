@@ -27,13 +27,8 @@ const CreateItemSchema = z.object({
 type CreateItemData = z.infer<typeof CreateItemSchema>
 type CreateItemValues = Omit<CreateItemData, 'image'>
 
-type CreateItemResult = {
-  id: string
-}
-
 export type CreateItemState = ActionResponse & {
   values: CreateItemValues
-  result?: CreateItemResult
 }
 
 export async function createItemAction(
@@ -62,7 +57,7 @@ export async function createItemAction(
     }
 
     const id = randomUUID()
-    const item = await createWithImage(
+    await createWithImage(
       { boxId: data.boxId, itemId: id },
       image,
       (storedImage) =>
@@ -84,9 +79,6 @@ export async function createItemAction(
         boxId: data.boxId,
         name: '',
         quantity: 1,
-      },
-      result: {
-        id: item.id,
       },
     }
   } catch (error) {

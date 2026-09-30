@@ -90,10 +90,7 @@ export function DeleteItemsDialog({
           <DialogTitle>
             Delete {pluralize(itemIds.length, ITEM_WORDS)}?
           </DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. All images and items in these items
-            will also be deleted.
-          </DialogDescription>
+          <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose

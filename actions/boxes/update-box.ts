@@ -14,13 +14,8 @@ const UpdateBoxSchema = z.object({
 
 type UpdateBoxValues = z.infer<typeof UpdateBoxSchema>
 
-type UpdateBoxResult = {
-  id: string
-}
-
 export type UpdateBoxState = ActionResponse & {
   values: UpdateBoxValues
-  result?: UpdateBoxResult
 }
 
 export async function updateBoxAction(
@@ -45,7 +40,6 @@ export async function updateBoxAction(
       success: true,
       message: 'Box updated successfully',
       values: { id: box.id, name: box.name },
-      result: { id: box.id },
     }
   } catch (error) {
     // Let getCurrentUser()'s sign-in redirect through
