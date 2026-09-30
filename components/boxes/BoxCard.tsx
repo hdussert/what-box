@@ -1,5 +1,5 @@
+import LabelStatus from '@/components/boxes/labels/LabelStatus'
 import ImagePreview from '@/components/images/ImagePreview'
-import { Badge } from '@/components/ui/badge'
 import {
   Item,
   ItemContent,
@@ -46,28 +46,27 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
         </div>
       )}
       <ItemContent className="min-w-0">
-        <ItemTitle className="block w-full truncate text-base font-semibold">
-          {box.name}
-        </ItemTitle>
-        <ItemDescription className="line-clamp-1">
-          {itemsSummary}
-        </ItemDescription>
-        <div className="flex justify-between text-xs text-muted-foreground/70">
-          <span className="flex items-center gap-2">
-            <span className="font-mono">{box.shortId}</span>
-            {box.labelPrinted ? null : (
-              <Badge variant="outline" className="py-0">
-                No label
-              </Badge>
-            )}
-          </span>
-          <time dateTime={box.createdAt.toISOString()}>
+        <div className="flex items-baseline justify-between gap-2">
+          <ItemTitle className="block min-w-0 flex-1 truncate text-base font-semibold">
+            {box.name}
+          </ItemTitle>
+          <time
+            dateTime={box.createdAt.toISOString()}
+            className="text-xs text-muted-foreground"
+          >
             {box.createdAt.toLocaleDateString('en-US', {
               year: '2-digit',
               month: '2-digit',
               day: '2-digit',
             })}
           </time>
+        </div>
+        <ItemDescription className="line-clamp-1">
+          {itemsSummary}
+        </ItemDescription>
+        <div className="flex items-center justify-between text-xs text-muted-foreground/70">
+          <span className="font-mono">{box.shortId}</span>
+          <LabelStatus isPrinted={Boolean(box.labelPrinted)} />
         </div>
       </ItemContent>
     </Item>
