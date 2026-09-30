@@ -27,10 +27,19 @@ const PrintLabelsButton = ({
   const [isPending, startTransition] = useTransition()
   const { openDialog } = useDialog()
 
+  const handleAfterPrint = (unprintedIds: string[]) => {
+    // Another button's print would otherwise include this sheet too
+    setBoxes(undefined)
+    onSuccess?.()
+    if (unprintedIds.length) {
+      openDialog(MarkLabelsPrintedDialog, { boxIds: unprintedIds })
+    }
+  }
+
   const print = () => {
     startTransition(async () => {
-      const fetchedBoxes = await getBoxesByIdsAction(boxIds)
-      const unprintedIds = (fetchedBoxes ?? [])
+      const fetchedBoxes = (await getBoxesByIdsAction(boxIds)) ?? []
+      const unprintedIds = fetchedBoxes
         .filter((box) => !box.labelPrinted)
         .map(({ id }) => id)
 
@@ -41,15 +50,10 @@ const PrintLabelsButton = ({
       // window.print() doesn't block on iOS, and onSuccess may unmount the sheet
       window.addEventListener(
         'afterprint',
-        () => {
-          // Another button's print would otherwise include this sheet too
-          setBoxes(undefined)
-          onSuccess?.()
-          if (unprintedIds.length) {
-            openDialog(MarkLabelsPrintedDialog, { boxIds: unprintedIds })
-          }
+        () => handleAfterPrint(unprintedIds),
+        {
+          once: true,
         },
-        { once: true },
       )
       window.print()
     })
