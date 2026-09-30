@@ -12,11 +12,17 @@ type BoxesSectionProps = {
 
 const BoxesSection = ({ boxes }: BoxesSectionProps) => {
   const isEmpty = boxes.length === 0
+  const unprintedIds = boxes
+    .filter((box) => !box.labelPrinted)
+    .map(({ id }) => id)
 
   return (
     <div className="flex gap-2 flex-col">
-      <BoxesHeader total={boxes.length} />
-      <BoxesToolbar boxIds={boxes.map(({ id }) => id)} />
+      <BoxesHeader total={boxes.length} unprintedIds={unprintedIds} />
+      <BoxesToolbar
+        boxIds={boxes.map(({ id }) => id)}
+        unprintedIds={unprintedIds}
+      />
       {isEmpty ? <BoxesListEmpty /> : <BoxesList boxes={boxes} />}
     </div>
   )

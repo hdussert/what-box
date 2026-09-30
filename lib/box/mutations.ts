@@ -78,3 +78,15 @@ export async function deleteBoxes(boxIds: string[]): Promise<number> {
 
   return result.length
 }
+
+/** Marks the labels of these boxes as printed. Returns how many boxes were updated. */
+export async function markLabelsPrinted(boxIds: string[]): Promise<number> {
+  const user = await getCurrentUser()
+  const result = await db
+    .update(boxes)
+    .set({ labelPrinted: true })
+    .where(and(inArray(boxes.id, boxIds), eq(boxes.userId, user.id)))
+    .returning({ id: boxes.id })
+
+  return result.length
+}
