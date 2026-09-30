@@ -8,7 +8,6 @@ import ActionLabel from '@/components/selection/ActionLabel'
 import { useSelection } from '@/components/selection/SelectionProvider'
 import SelectionToolbar from '@/components/selection/SelectionToolbar'
 import ToolbarButton from '@/components/ToolbarButton'
-import { Separator } from '@/components/ui/separator'
 import { Printer, Trash } from 'lucide-react'
 
 type BoxesToolbarProps = {
@@ -20,9 +19,8 @@ const BoxesToolbar = ({ boxIds, unprintedIds }: BoxesToolbarProps) => {
   const { startSelecting } = useSelection()
 
   return (
-    <div className="sticky top-0 z-20 shadow-xl bg-background -mx-2 p-2 border-b">
+    <div className="sticky top-0 z-20 flex flex-col gap-2 shadow-xl bg-background -mx-2 p-2 border-b">
       <ListControls />
-      <Separator className="mt-2 mb-1" />
       <SelectionToolbar
         ids={boxIds}
         presets={[{ label: 'Unprinted', ids: unprintedIds }]}
