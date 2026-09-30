@@ -1,7 +1,5 @@
 import { SortOption } from '@/components/list/types'
 
-export const BOXES_PAGE_SIZE = 20
-
 /** Word forms for `pluralize`. */
 export const BOX_WORDS = { one: 'box', other: 'boxes' }
 
