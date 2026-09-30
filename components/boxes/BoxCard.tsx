@@ -1,4 +1,4 @@
-import LabelStatus from '@/components/boxes/labels/LabelStatus'
+import NoLabelIcon from '@/components/boxes/labels/NoLabelIcon'
 import ImagePreview from '@/components/images/ImagePreview'
 import {
   Item,
@@ -66,7 +66,7 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
         </ItemDescription>
         <div className="flex items-center justify-between text-xs text-muted-foreground/70">
           <span className="font-mono">{box.shortId}</span>
-          <LabelStatus isPrinted={Boolean(box.labelPrinted)} />
+          {box.labelPrinted ? null : <NoLabelIcon />}
         </div>
       </ItemContent>
     </Item>
