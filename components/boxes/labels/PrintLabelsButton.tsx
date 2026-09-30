@@ -8,21 +8,19 @@ import { useDialog } from '@/components/dialog/DialogProvider'
 import { Spinner } from '@/components/ui/spinner'
 import { BoxWithRelations } from '@/lib/box'
 import { Printer } from 'lucide-react'
-import { ComponentProps, ReactNode, useState, useTransition } from 'react'
+import { ReactNode, useState, useTransition } from 'react'
 import { flushSync } from 'react-dom'
 
 type PrintLabelsButtonProps = {
   boxIds: string[]
   /** Called once the print dialog closes */
   onSuccess?: () => void
-  variant?: ComponentProps<typeof ToolbarButton>['variant']
   children?: ReactNode
 }
 
 const PrintLabelsButton = ({
   boxIds,
   onSuccess,
-  variant,
   children = <Printer />,
 }: PrintLabelsButtonProps) => {
   const [boxes, setBoxes] = useState<BoxWithRelations[]>()
@@ -63,11 +61,7 @@ const PrintLabelsButton = ({
 
   return (
     <>
-      <ToolbarButton
-        variant={variant}
-        onClick={print}
-        disabled={isPending || !boxIds.length}
-      >
+      <ToolbarButton onClick={print} disabled={isPending || !boxIds.length}>
         {isPending ? <Spinner /> : children}
       </ToolbarButton>
       {boxes ? <BoxLabelsSheet boxes={boxes} /> : null}
