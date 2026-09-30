@@ -1,4 +1,4 @@
-import { Item } from '@/components/ui/item'
+import { Item, ItemContent } from '@/components/ui/item'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import Typography from '@/components/ui/typography'
@@ -15,7 +15,7 @@ export default function DashboardLoading() {
         <Skeleton className="h-6 w-20" />
       </div>
 
-      <div className="-mx-2 px-2 pt-2">
+      <div className="-mx-2 p-2 border-b">
         <div className="flex gap-1">
           <Skeleton className="h-9 flex-1" />
           <Skeleton className="h-9 w-36" />
@@ -23,7 +23,7 @@ export default function DashboardLoading() {
         <Separator className="mt-2 mb-1" />
         <div className="flex justify-between">
           <Skeleton className="h-8 w-16" />
-          <Skeleton className="h-8 w-16" />
+          <Skeleton className="h-8 w-36" />
         </div>
       </div>
 
@@ -32,17 +32,22 @@ export default function DashboardLoading() {
           <Item
             key={index}
             variant="muted"
-            className="p-0 pr-4 gap-4 flex-nowrap min-w-0"
+            className="p-0 gap-2 flex-nowrap min-w-0"
           >
-            <Skeleton className="aspect-square w-20 shrink-0" />
-            <div className="flex flex-col flex-1 min-w-0 gap-1">
-              <Skeleton className="h-5.5 w-2/5" />
-              <Skeleton className="h-[21px] w-3/4" />
+            <Skeleton className="aspect-square w-24 shrink-0" />
+            <ItemContent className="min-w-0 p-2 self-stretch">
+              <div className="flex justify-between gap-2">
+                <Skeleton className="h-5.5 w-2/5" />
+                <Skeleton className="h-4 w-14" />
+              </div>
+              <div className="flex-1">
+                <Skeleton className="h-[21px] w-3/4" />
+              </div>
               <div className="flex justify-between">
                 <Skeleton className="h-4 w-14" />
-                <Skeleton className="h-4 w-16" />
+                <Skeleton className="size-4" />
               </div>
-            </div>
+            </ItemContent>
           </Item>
         ))}
       </div>
