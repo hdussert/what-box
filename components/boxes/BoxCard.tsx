@@ -28,7 +28,7 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
     <Item
       variant="muted"
       className={cn(
-        'p-0 pr-4 gap-4 flex-1 flex-nowrap min-w-0 cursor-pointer transition hover:bg-muted',
+        'p-0 gap-2 flex-1 flex-nowrap min-w-0 cursor-pointer transition hover:bg-muted',
         {
           'ring-2 ring-primary': isSelected,
         },
@@ -38,15 +38,15 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
         <ImagePreview
           src={box.imageUrl}
           alt="Box image"
-          className="aspect-square w-20 shrink-0"
+          className="aspect-square w-24 shrink-0"
         />
       ) : (
-        <div className="bg-input/30 rounded-md aspect-square w-20 shrink-0 flex items-center justify-center">
+        <div className="bg-input/30 rounded-md aspect-square w-24 shrink-0 flex items-center justify-center">
           <Package size={48} />
         </div>
       )}
-      <ItemContent className="min-w-0">
-        <div className="flex items-baseline justify-between gap-2">
+      <ItemContent className="min-w-0 p-2 self-stretch">
+        <div className="flex justify-between gap-2">
           <ItemTitle className="block min-w-0 flex-1 truncate text-base font-semibold">
             {box.name}
           </ItemTitle>
@@ -61,10 +61,10 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
             })}
           </time>
         </div>
-        <ItemDescription className="line-clamp-1">
+        <ItemDescription className="line-clamp-1 flex-1">
           {itemsSummary}
         </ItemDescription>
-        <div className="flex items-center justify-between text-xs text-muted-foreground/70">
+        <div className="flex justify-between text-xs text-muted-foreground/70">
           <span className="font-mono">{box.shortId}</span>
           {box.labelPrinted ? null : <NoLabelIcon />}
         </div>
