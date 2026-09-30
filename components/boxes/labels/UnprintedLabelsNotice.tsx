@@ -7,9 +7,13 @@ import {
   AlertDescription,
   AlertTitle,
 } from '@/components/ui/alert'
-import { BOX_WORDS } from '@/lib/box/const'
 import { pluralize } from '@/lib/utils'
 import { Printer, PrinterX } from 'lucide-react'
+
+const UNPRINTED_WORDS = {
+  one: "label hasn't been printed",
+  other: "labels haven't been printed",
+}
 
 type UnprintedLabelsNoticeProps = {
   boxIds: string[]
@@ -24,9 +28,7 @@ const UnprintedLabelsNotice = ({ boxIds }: UnprintedLabelsNoticeProps) => {
   return (
     <Alert role="status" className="has-data-[slot=alert-action]:pr-24">
       <PrinterX />
-      <AlertTitle>
-        {pluralize(boxIds.length, BOX_WORDS)} without a label
-      </AlertTitle>
+      <AlertTitle>{pluralize(boxIds.length, UNPRINTED_WORDS)}</AlertTitle>
       <AlertDescription>
         Print their QR labels to find them by scanning.
       </AlertDescription>
