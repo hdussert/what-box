@@ -17,13 +17,8 @@ const UpdateItemSchema = z.object({
 type UpdateItemData = z.infer<typeof UpdateItemSchema>
 type UpdateItemValues = Omit<UpdateItemData, 'image'>
 
-type UpdateItemResult = {
-  id: string
-}
-
 export type UpdateItemState = ActionResponse & {
   values: UpdateItemValues
-  result?: UpdateItemResult
 }
 
 export async function updateItemAction(
@@ -42,7 +37,7 @@ export async function updateItemAction(
     const data = UpdateItemSchema.parse(raw)
 
     // Create item
-    const item = await updateItem({
+    await updateItem({
       id: data.id,
       name: data.name,
       quantity: data.quantity,
@@ -58,9 +53,6 @@ export async function updateItemAction(
         boxId: data.boxId,
         name: '',
         quantity: 1,
-      },
-      result: {
-        id: item.id,
       },
     }
   } catch (error) {
