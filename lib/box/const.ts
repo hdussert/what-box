@@ -2,6 +2,7 @@ import { SortOption } from '@/components/list/types'
 
 /** Word forms for `pluralize`. */
 export const BOX_WORDS = { one: 'box', other: 'boxes' }
+export const LABEL_WORDS = { one: 'label', other: 'labels' }
 
 export const BOXES_SORT_OPTIONS: SortOption[] = [
   {
