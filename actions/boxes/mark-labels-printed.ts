@@ -9,16 +9,8 @@ import z from 'zod'
 const BoxIdsSchema = z.array(z.string().min(1)).min(1)
 
 export async function markLabelsPrintedAction(boxIds: string[]) {
-  const parsed = BoxIdsSchema.safeParse(boxIds)
-  if (!parsed.success) {
-    return {
-      success: false,
-      message: 'No boxes to mark as printed',
-    } as const
-  }
-
   try {
-    const marked = await markLabelsPrinted(parsed.data)
+    const marked = await markLabelsPrinted(BoxIdsSchema.parse(boxIds))
     revalidatePath('/dashboard')
 
     return { success: true, marked } as const
