@@ -12,14 +12,14 @@ const BoxHeader = ({ box }: BoxHeaderProps) => {
   return (
     <div className="flex flex-col gap-3">
       <BoxHeaderToolbar boxId={box.id} />
-      <div className="flex">
+      <div className="flex items-center gap-4">
         <EditableImage
           boxId={box.id}
           imageUrl={box.imageUrl}
-          className="aspect-square flex-1"
+          className="size-28 shrink-0"
         />
-        <div className="flex flex-col text-center justify-center flex-2 gap-2 min-w-0">
-          <Typography.P className=" font-bold text-sm font-mono">
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <Typography.P className="font-mono text-sm font-bold">
             {box.shortId}
           </Typography.P>
           <BoxName box={{ id: box.id, name: box.name }} />
