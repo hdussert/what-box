@@ -7,8 +7,6 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { BoxWithRelations } from '@/lib/box'
-import { ITEM_WORDS } from '@/lib/item/const'
-import { pluralize } from '@/lib/utils'
 import { cn } from 'cn'
 import { Package } from 'lucide-react'
 
@@ -19,16 +17,14 @@ type BoxCardProps = {
 
 const BoxCard = ({ box, isSelected }: BoxCardProps) => {
   const itemsSummary = box.items.length
-    ? `${pluralize(box.items.length, ITEM_WORDS)} · ${box.items
-        .map((item) => item.name)
-        .join(', ')}`
+    ? box.items.map((item) => item.name).join(', ')
     : 'Empty'
 
   return (
     <Item
       variant="muted"
       className={cn(
-        'p-0 gap-2 flex-1 flex-nowrap min-w-0 cursor-pointer transition hover:bg-muted',
+        'p-1 gap-2 flex-1 flex-nowrap min-w-0 cursor-pointer transition hover:bg-muted',
         {
           'ring-2 ring-primary': isSelected,
         },
@@ -45,7 +41,7 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
           <Package size={48} />
         </div>
       )}
-      <ItemContent className="min-w-0 p-2 self-stretch">
+      <ItemContent className="min-w-0 p-1 self-stretch">
         <div className="flex justify-between gap-2">
           <ItemTitle className="block min-w-0 flex-1 truncate text-base font-semibold">
             {box.name}
@@ -61,13 +57,13 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
             })}
           </time>
         </div>
-        <ItemDescription className="line-clamp-1 flex-1">
-          {itemsSummary}
-        </ItemDescription>
-        <div className="flex justify-between text-xs text-muted-foreground/70">
-          <span className="font-mono">{box.shortId}</span>
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span className="font-mono font-semibold">{box.shortId}</span>
           {box.labelPrinted ? null : <NoLabelIcon />}
         </div>
+        <ItemDescription className="line-clamp-2 flex-1">
+          {itemsSummary}
+        </ItemDescription>
       </ItemContent>
     </Item>
   )

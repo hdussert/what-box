@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { cn } from 'cn'
 
 type ImageInputClearButtonProps = {
   disabled?: boolean
@@ -15,7 +16,7 @@ const ImageInputClearButton = ({
     <Button
       type="button"
       variant="secondary"
-      className={className}
+      className={cn('bg-clip-border', className)}
       disabled={disabled}
       onClick={onClear}
     >

@@ -32,20 +32,20 @@ export default function DashboardLoading() {
           <Item
             key={index}
             variant="muted"
-            className="p-0 gap-2 flex-nowrap min-w-0"
+            className="p-1 gap-2 flex-nowrap min-w-0"
           >
             <Skeleton className="aspect-square w-24 shrink-0" />
-            <ItemContent className="min-w-0 p-2 self-stretch">
+            <ItemContent className="min-w-0 p-1 self-stretch">
               <div className="flex justify-between gap-2">
                 <Skeleton className="h-5.5 w-2/5" />
                 <Skeleton className="h-4 w-14" />
               </div>
-              <div className="flex-1">
-                <Skeleton className="h-[21px] w-3/4" />
-              </div>
               <div className="flex justify-between">
                 <Skeleton className="h-4 w-14" />
                 <Skeleton className="size-4" />
+              </div>
+              <div className="flex-1">
+                <Skeleton className="h-[21px] w-3/4" />
               </div>
             </ItemContent>
           </Item>

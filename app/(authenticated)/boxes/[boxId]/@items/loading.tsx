@@ -24,10 +24,10 @@ export default function ItemsLoading() {
           <Item
             key={index}
             variant="muted"
-            className="p-0 gap-2 flex-nowrap items-stretch"
+            className="p-1 gap-2 flex-nowrap items-stretch"
           >
             <Skeleton className="size-20" />
-            <div className="flex flex-1 p-2">
+            <div className="flex flex-1 p-1">
               <div className="flex flex-col flex-1 my-auto gap-1">
                 <div className="h-9 py-1.5">
                   <Skeleton className="h-6 w-2/5" />
