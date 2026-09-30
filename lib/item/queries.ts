@@ -1,12 +1,11 @@
 import { db } from '@/db'
-import { Item, items } from '@/db/schema'
+import { Item } from '@/db/schema'
 import { ITEMS_DEFAULT_SORT } from '@/lib/item/const'
 import { toOrderBy } from '@/lib/list/utils'
 import { getCurrentUser } from '@/lib/user'
 import { escapeLike } from '@/lib/utils'
-import { and, eq, ilike, sql } from 'drizzle-orm'
 import 'server-only'
-import { ItemsPaginated, ItemsQuery } from './types'
+import { ItemsQuery } from './types'
 
 export async function getItemById(itemId: string): Promise<Item | undefined> {
   const user = await getCurrentUser()
@@ -18,27 +17,12 @@ export async function getItemById(itemId: string): Promise<Item | undefined> {
 export async function getItems(
   boxId: string,
   query: ItemsQuery = {},
-): Promise<ItemsPaginated> {
+): Promise<Item[]> {
   const user = await getCurrentUser()
-
   const search = query.search?.trim()
   const pattern = search ? `%${escapeLike(search)}%` : undefined
-  const filters = [
-    eq(items.userId, user.id),
-    eq(items.boxId, boxId),
-    pattern ? ilike(items.name, pattern) : undefined,
-  ].filter(Boolean)
 
-  const whereClause = and(...filters)
-
-  const [{ count }] = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(items)
-    .where(whereClause)
-
-  const total = Number(count) || 0
-
-  const itemsList = await db.query.items.findMany({
+  return db.query.items.findMany({
     where: {
       userId: user.id,
       boxId,
@@ -46,9 +30,5 @@ export async function getItems(
     },
     orderBy: (table, operators) =>
       toOrderBy(query.sort ?? ITEMS_DEFAULT_SORT, table, operators),
-    limit: 20,
-    offset: 0,
   })
-
-  return { rows: itemsList, total }
 }

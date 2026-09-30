@@ -8,9 +8,16 @@ type SelectionActions = {
   done: () => void
 }
 
+/** A named subset of the rows, selected in one tap (e.g. unprinted boxes). */
+type SelectionPreset = {
+  label: string
+  ids: string[]
+}
+
 type SelectionToolbarProps = {
   /** Ids of the listed rows, for Select all */
   ids: string[]
+  presets?: SelectionPreset[]
   /** Idle buttons that enter selection mode */
   startActions: ReactNode
   selectionActions: (actions: SelectionActions) => ReactNode
@@ -19,6 +26,7 @@ type SelectionToolbarProps = {
 
 const SelectionToolbar = ({
   ids,
+  presets = [],
   startActions,
   selectionActions,
   actions,
@@ -38,6 +46,15 @@ const SelectionToolbar = ({
     <div className="flex flex-wrap justify-between gap-y-1">
       <div>
         <ToolbarButton onClick={() => selectAll(ids)}>Select all</ToolbarButton>
+        {presets.map((preset) => (
+          <ToolbarButton
+            key={preset.label}
+            onClick={() => selectAll(preset.ids)}
+            disabled={!preset.ids.length}
+          >
+            {preset.label}
+          </ToolbarButton>
+        ))}
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
       <div className="ml-auto flex gap-1">

@@ -8,7 +8,7 @@ const ITEM_CARD_COUNT = 6
 export default function ItemsLoading() {
   return (
     <div>
-      <div className="-mx-2 px-2 py-2 space-y-2 border-b">
+      <div className="shadow-xl bg-background -mx-2 px-2 py-2 space-y-2 border-b">
         <div className="flex gap-1">
           <Skeleton className="h-9 flex-1" />
           <Skeleton className="h-9 w-36" />

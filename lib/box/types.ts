@@ -1,7 +1,6 @@
 import { SortValue } from '@/components/list/types'
 import { Box, Item } from '@/db/schema'
 import { StoredImage } from '@/lib/image/types'
-import { Paginated } from '@/lib/types'
 
 // --- Query parameters for fetching boxes ---
 export type BoxesQuery = {
@@ -10,7 +9,6 @@ export type BoxesQuery = {
 }
 
 export type BoxWithRelations = Box & { items: Item[] }
-export type BoxesPaginated = Paginated<BoxWithRelations>
 
 export type CreateBoxData = {
   id: string

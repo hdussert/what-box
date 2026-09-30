@@ -10,8 +10,14 @@ type ToolbarButtonProps = PropsWithChildren<
   } & VariantProps<typeof buttonVariants>
 >
 
-const ToolbarButton = ({ onClick, children, ...props }: ToolbarButtonProps) => (
-  <Button variant="ghost" size="sm" onClick={onClick} {...props}>
+const ToolbarButton = ({
+  onClick,
+  children,
+  variant = 'ghost',
+  size = 'sm',
+  ...props
+}: ToolbarButtonProps) => (
+  <Button variant={variant} size={size} onClick={onClick} {...props}>
     {children}
   </Button>
 )

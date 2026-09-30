@@ -4,16 +4,25 @@ import BoxesHeader from '@/components/boxes/BoxesHeader'
 import BoxesList from '@/components/boxes/BoxesList'
 import BoxesListEmpty from '@/components/boxes/BoxesListEmpty'
 import BoxesToolbar from '@/components/boxes/BoxesToolbar'
-import { BoxesPaginated } from '@/lib/box'
+import { BoxWithRelations } from '@/lib/box'
 
-const BoxesSection = (props: BoxesPaginated) => {
-  const { rows: boxes, total } = props
-  const isEmpty = total === 0
+type BoxesSectionProps = {
+  boxes: BoxWithRelations[]
+}
+
+const BoxesSection = ({ boxes }: BoxesSectionProps) => {
+  const isEmpty = boxes.length === 0
+  const unprintedIds = boxes
+    .filter((box) => !box.labelPrinted)
+    .map(({ id }) => id)
 
   return (
     <div className="flex gap-2 flex-col">
-      <BoxesHeader total={total} />
-      <BoxesToolbar boxIds={boxes.map(({ id }) => id)} />
+      <BoxesHeader total={boxes.length} unprintedIds={unprintedIds} />
+      <BoxesToolbar
+        boxIds={boxes.map(({ id }) => id)}
+        unprintedIds={unprintedIds}
+      />
       {isEmpty ? <BoxesListEmpty /> : <BoxesList boxes={boxes} />}
     </div>
   )

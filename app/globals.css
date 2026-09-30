@@ -121,6 +121,10 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Same width with or without a scrollbar, e.g. skeleton then a longer list */
+  html {
+    scrollbar-gutter: stable;
+  }
   body {
     @apply bg-background text-foreground;
   }

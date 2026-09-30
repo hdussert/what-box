@@ -1,22 +1,34 @@
 'use client'
 
+import PrintLabelsButton from '@/components/boxes/labels/PrintLabelsButton'
 import { useList } from '@/components/list/ListProvider'
 import Typography from '@/components/ui/typography'
-import { BOX_WORDS } from '@/lib/box/const'
+import { BOX_WORDS, LABEL_WORDS } from '@/lib/box/const'
 import { pluralize } from '@/lib/utils'
 
 type BoxesHeaderProps = {
   total: number
+  unprintedIds: string[]
 }
 
-const BoxesHeader = ({ total }: BoxesHeaderProps) => {
+const BoxesHeader = ({ total, unprintedIds }: BoxesHeaderProps) => {
   const { search } = useList()
   const forms = search ? { one: 'result', other: 'results' } : BOX_WORDS
 
   return (
     <div className="pb-2">
       <Typography.H1 className="mb-2">My boxes</Typography.H1>
-      <p className="text-muted-foreground">{pluralize(total, forms)}</p>
+      <p className="flex min-h-8 items-center gap-1 text-muted-foreground">
+        {pluralize(total, forms)}
+        {unprintedIds.length ? (
+          <>
+            <span aria-hidden>·</span>
+            <PrintLabelsButton boxIds={unprintedIds} variant="link">
+              {pluralize(unprintedIds.length, LABEL_WORDS)} to print
+            </PrintLabelsButton>
+          </>
+        ) : null}
+      </p>
     </div>
   )
 }

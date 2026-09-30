@@ -45,12 +45,12 @@ Conventions:
 - Booleans start with a verb: `isOpen`, `hasImage`, `canDelete`.
 - Early returns always use braces: `if (...) { return }`. Apply to new and edited code (older code doesn't).
 - XState (`xstate`, `@xstate/react`) for complex logic.
-- Comments: JSDoc on exports. Inline, only to answer a question the code raises but can't answer: a fact from elsewhere, or the reason for a decision. Test: without it, would a reader who knows the codebase be confused, or "fix" the code and break it? Never restate the code, justify a technique, or describe the bug it fixes, the behavior it prevents or its history: that goes in the commit. Rewrite, don't append.
+- Comments: JSDoc on exports states the contract callers rely on. Inline, only to answer a question the code raises but can't answer: a fact from elsewhere, or the reason for a decision. Test: without it, would a reader who knows the codebase be confused, or "fix" the code and break it? Keep concurrency, compatibility and security details, even when they need several sentences. Write short, plain sentences in the code's own terms. Never restate the code or the contract, justify a technique, or describe the bug it fixes, the behavior it prevents or its history: that goes in the commit. Rewrite or delete stale comments, don't append.
 
 Components:
 
 - Server-first: pages, layouts and data fetching stay on the server. `'use client'` goes on the smallest interactive leaf; client components never fetch data.
-- Reuse `components/ui` primitives before custom markup.
+- Reuse `components/ui` primitives before custom markup. Load the `shadcn` skill before adding or composing them: it carries the Base UI APIs and composition rules.
 
 Naming and layout:
 
