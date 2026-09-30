@@ -51,7 +51,7 @@ const UpdateBoxForm = ({ box, onCancel, onSuccess }: UpdateBoxFormProps) => {
     <form action={formAction} className="flex flex-col gap-1">
       <input type="hidden" name="id" value={box.id} />
 
-      <div className="flex min-h-9 items-center justify-center px-12">
+      <div className="flex min-h-9 items-center justify-center px-18">
         <div className="relative min-w-24 max-w-full">
           <Input
             name="name"
