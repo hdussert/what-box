@@ -1,14 +1,22 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { PrinterX } from 'lucide-react'
 
-/** Marks a box whose label isn't printed yet, for screen readers and on hover too. */
+/** Marks a box whose label isn't printed yet, with the same text in a tooltip and for screen readers. */
 const NoLabelIcon = () => {
   const label = 'No label yet'
 
   return (
-    <span title={label}>
-      <PrinterX className="size-4" aria-hidden />
-      <span className="sr-only">{label}</span>
-    </span>
+    <Tooltip>
+      <TooltipTrigger render={<span />}>
+        <PrinterX className="size-4" aria-hidden />
+        <span className="sr-only">{label}</span>
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
   )
 }
 
