@@ -2,7 +2,7 @@ import { LucideIcon } from 'lucide-react'
 import { ReactNode } from 'react'
 
 /** A named subset of the rows, selected in one tap (e.g. unprinted boxes). */
-export type SelectionPreset = {
+type SelectionPreset = {
   label: string
   ids: string[]
 }

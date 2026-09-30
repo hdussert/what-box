@@ -57,7 +57,7 @@ const SelectionToolbar = ({
         ))}
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
-      <div className="ml-auto flex gap-1">
+      <div className="ml-auto">
         {renderButton({
           selectedIds,
           done: stopSelecting,
