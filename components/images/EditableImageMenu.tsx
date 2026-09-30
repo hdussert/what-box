@@ -48,8 +48,8 @@ const EditableImageMenu = ({
           render={
             <Button
               variant="secondary"
-              size="icon-sm"
-              className="absolute top-0 right-0 rounded-tl-none rounded-br-none fade-in animate-in"
+              size="icon-xs"
+              className="absolute top-1 right-1 bg-clip-border fade-in animate-in"
             />
           }
           disabled={disabled}
