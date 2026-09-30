@@ -33,17 +33,15 @@ const BoxName = ({ box }: BoxNameProps) => {
         <Typography.H2 className="uppercase break-words leading-[normal]">
           {box.name}
         </Typography.H2>
-        {/* Button's pressed state sets its own translate */}
-        <div className="absolute top-1/2 left-full ml-1 -translate-y-1/2">
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Edit name"
-            onClick={handleEdit}
-          >
-            <Pen />
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Edit name"
+          className="absolute inset-y-0 left-full my-auto ml-1"
+          onClick={handleEdit}
+        >
+          <Pen />
+        </Button>
       </div>
     </div>
   )
