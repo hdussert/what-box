@@ -22,7 +22,7 @@ const ItemsSlot = async ({ params, searchParams }: ItemsSlotProps) => {
   const queryParams = await searchParams
   const { search, sort } = searchParamsSchema.parse(queryParams)
 
-  const result = await getItems(boxId, {
+  const items = await getItems(boxId, {
     search,
     sort,
   })
@@ -33,7 +33,7 @@ const ItemsSlot = async ({ params, searchParams }: ItemsSlotProps) => {
       defaultSort={ITEMS_DEFAULT_SORT}
     >
       <SelectionProvider>
-        <ItemsSection boxId={boxId} {...result} />
+        <ItemsSection boxId={boxId} items={items} />
       </SelectionProvider>
     </ListProvider>
   )

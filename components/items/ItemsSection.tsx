@@ -2,15 +2,15 @@ import ItemsList from '@/components/items/ItemsList'
 import ItemsListEmpty from '@/components/items/ItemsListEmpty'
 import ItemsToolbar from '@/components/items/ItemsToolbar'
 
-import { ItemsPaginated } from '@/lib/item/types'
+import { Item } from '@/db/schema'
 
-type ItemsSectionProps = ItemsPaginated & {
+type ItemsSectionProps = {
   boxId: string
+  items: Item[]
 }
 
-const ItemsSection = (props: ItemsSectionProps) => {
-  const { total, rows: items, boxId } = props
-  const isEmpty = total === 0
+const ItemsSection = ({ boxId, items }: ItemsSectionProps) => {
+  const isEmpty = items.length === 0
 
   return (
     <div>

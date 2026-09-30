@@ -25,7 +25,7 @@ export default async function DashboardPage({
   const params = await searchParams
   const { search, sort } = searchParamsSchema.parse(params)
 
-  const result = await getBoxes({
+  const boxes = await getBoxes({
     search,
     sort,
   })
@@ -36,7 +36,7 @@ export default async function DashboardPage({
       defaultSort={BOXES_DEFAULT_SORT}
     >
       <SelectionProvider>
-        <BoxesSection {...result} />
+        <BoxesSection boxes={boxes} />
       </SelectionProvider>
     </ListProvider>
   )
