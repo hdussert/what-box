@@ -56,7 +56,7 @@ const UpdateBoxForm = ({ box, onCancel, onSuccess }: UpdateBoxFormProps) => {
           name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="min-w-0 flex-1 px-3 text-2xl leading-[normal] font-bold uppercase md:text-2xl"
+          className="min-w-0 flex-1 px-3 text-xl leading-[normal] font-bold uppercase sm:text-2xl md:text-2xl"
           disabled={isPending}
           autoFocus
         />

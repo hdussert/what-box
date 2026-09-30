@@ -29,7 +29,7 @@ const BoxName = ({ box }: BoxNameProps) => {
 
   return (
     <div className="flex min-h-9 items-center gap-1">
-      <Typography.H2 className="min-w-0 uppercase break-words leading-[normal]">
+      <Typography.H2 className="min-w-0 text-xl uppercase wrap-break-word leading-[normal] sm:text-2xl">
         {box.name}
       </Typography.H2>
       <Button

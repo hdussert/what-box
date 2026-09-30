@@ -16,7 +16,7 @@ const BoxHeader = ({ box }: BoxHeaderProps) => {
         <EditableImage
           boxId={box.id}
           imageUrl={box.imageUrl}
-          className="size-42 shrink-0"
+          className="size-28 shrink-0 sm:size-42"
         />
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <Typography.P className="font-mono text-sm font-bold">
