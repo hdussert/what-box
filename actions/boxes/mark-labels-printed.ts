@@ -10,7 +10,8 @@ const BoxIdsSchema = z.array(z.string().min(1)).min(1)
 
 export async function markLabelsPrintedAction(boxIds: string[]) {
   try {
-    const marked = await markLabelsPrinted(BoxIdsSchema.parse(boxIds))
+    const ids = BoxIdsSchema.parse(boxIds)
+    const marked = await markLabelsPrinted(ids)
     revalidatePath('/dashboard')
 
     return { success: true, marked } as const
