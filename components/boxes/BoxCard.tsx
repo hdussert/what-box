@@ -1,4 +1,5 @@
 import ImagePreview from '@/components/images/ImagePreview'
+import { Badge } from '@/components/ui/badge'
 import {
   Item,
   ItemContent,
@@ -52,7 +53,14 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
           {itemsSummary}
         </ItemDescription>
         <div className="flex justify-between text-xs text-muted-foreground/70">
-          <span className="font-mono">{box.shortId}</span>
+          <span className="flex items-center gap-2">
+            <span className="font-mono">{box.shortId}</span>
+            {box.labelPrinted ? null : (
+              <Badge variant="outline" className="py-0">
+                No label
+              </Badge>
+            )}
+          </span>
           <time dateTime={box.createdAt.toISOString()}>
             {box.createdAt.toLocaleDateString('en-US', {
               year: '2-digit',
