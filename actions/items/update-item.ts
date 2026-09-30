@@ -36,7 +36,6 @@ export async function updateItemAction(
   try {
     const data = UpdateItemSchema.parse(raw)
 
-    // Create item
     await updateItem({
       id: data.id,
       name: data.name,
