@@ -30,7 +30,7 @@ const UnprintedLabelsNotice = ({ boxIds }: UnprintedLabelsNoticeProps) => {
       <PrinterX />
       <AlertTitle>{pluralize(boxIds.length, UNPRINTED_WORDS)}</AlertTitle>
       <AlertDescription>
-        Print their QR labels to find them by scanning.
+        Once printed, stick each label on its box.
       </AlertDescription>
       <AlertAction>
         <PrintLabelsButton boxIds={boxIds}>
