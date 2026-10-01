@@ -17,9 +17,9 @@ const BULK_ACTIONS: BulkAction[] = [
     id: 'delete',
     label: 'Delete',
     icon: Trash,
-    renderButton: ({ selectedIds, done, label }) => (
+    renderButton: ({ selectedIds, done, renderLabel }) => (
       <DeleteItemsButton itemIds={selectedIds} onSuccess={done}>
-        {label}
+        {renderLabel()}
       </DeleteItemsButton>
     ),
   },

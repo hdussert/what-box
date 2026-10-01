@@ -16,7 +16,8 @@ type PrintLabelsButtonProps = {
   /** Called once the print dialog closes */
   onSuccess?: () => void
   variant?: ComponentProps<typeof ToolbarButton>['variant']
-  children?: ReactNode
+  /** A function gets the pending state; anything else is replaced by a spinner while pending */
+  children?: ReactNode | ((isPending: boolean) => ReactNode)
 }
 
 const PrintLabelsButton = ({
@@ -61,6 +62,13 @@ const PrintLabelsButton = ({
     })
   }
 
+  const renderContent = () => {
+    if (typeof children === 'function') {
+      return children(isPending)
+    }
+    return isPending ? <Spinner /> : children
+  }
+
   return (
     <>
       <ToolbarButton
@@ -68,7 +76,7 @@ const PrintLabelsButton = ({
         onClick={print}
         disabled={isPending || !boxIds.length}
       >
-        {isPending ? <Spinner /> : children}
+        {renderContent()}
       </ToolbarButton>
       {boxes ? <BoxLabelsSheet boxes={boxes} /> : null}
     </>
