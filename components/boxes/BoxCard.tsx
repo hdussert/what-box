@@ -58,7 +58,9 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
             </Badge>
           )}
         </div>
-        <ItemDescription className="line-clamp-1">{itemsSummary}</ItemDescription>
+        <ItemDescription className="line-clamp-1">
+          {itemsSummary}
+        </ItemDescription>
       </ItemContent>
     </Item>
   )
