@@ -1,9 +1,9 @@
 import EditableImage from '@/components/images/EditableImage'
 import DeleteItemsButton from '@/components/items/DeleteItemsButton'
+import ItemCardLayout from '@/components/items/ItemCardLayout'
 import ItemDetails from '@/components/items/ItemDetails'
 import UpdateItemForm from '@/components/items/UpdateItemForm'
 import ToolbarButton from '@/components/ToolbarButton'
-import { Item as ItemRow } from '@/components/ui/item'
 import { Item } from '@/db/schema'
 import { cn } from 'cn'
 
@@ -30,10 +30,9 @@ const ItemCard = ({
   }
 
   return (
-    <ItemRow
-      variant="muted"
+    <ItemCardLayout
       className={cn(
-        'p-1 flex-1 min-w-0 flex-nowrap items-stretch gap-2 cursor-pointer transition hover:bg-muted relative',
+        'cursor-pointer transition hover:bg-muted',
         isSelected && 'ring-2 ring-primary',
       )}
       onClick={(e) => {
@@ -41,27 +40,27 @@ const ItemCard = ({
           e.stopPropagation()
         }
       }}
-    >
-      <div
-        onClick={(e) => {
-          if (isFocused) {
-            e.stopPropagation()
-          }
-        }}
-      >
-        <EditableImage
-          itemId={item.id}
-          boxId={item.boxId}
-          imageUrl={item.imageUrl}
-          isInputDisabled={!isFocused}
-          className={cn('relative size-20 transition-all', {
-            'size-40': isFocused,
-          })}
-        />
-      </div>
-
-      <div className="flex flex-1 min-w-0 p-1">
-        {isEditing ? (
+      image={
+        <div
+          onClick={(e) => {
+            if (isFocused) {
+              e.stopPropagation()
+            }
+          }}
+        >
+          <EditableImage
+            itemId={item.id}
+            boxId={item.boxId}
+            imageUrl={item.imageUrl}
+            isInputDisabled={!isFocused}
+            className={cn('relative size-20 transition-all', {
+              'size-40': isFocused,
+            })}
+          />
+        </div>
+      }
+      details={
+        isEditing ? (
           <UpdateItemForm
             item={item}
             onCancel={onEditEnd}
@@ -69,8 +68,9 @@ const ItemCard = ({
           />
         ) : (
           <ItemDetails item={item} isFocused={isFocused} />
-        )}
-
+        )
+      }
+      date={
         <time
           dateTime={item.createdAt.toISOString()}
           className="text-xs text-muted-foreground"
@@ -81,8 +81,9 @@ const ItemCard = ({
             day: '2-digit',
           })}
         </time>
-
-        {isFocused && !isEditing && (
+      }
+      actions={
+        isFocused && !isEditing ? (
           <div className="absolute bottom-1 right-1 animate-in fade-in">
             <ToolbarButton onClick={handleEdit} className="hover:bg-input/50">
               Edit
@@ -93,9 +94,9 @@ const ItemCard = ({
               className="hover:bg-input/50"
             />
           </div>
-        )}
-      </div>
-    </ItemRow>
+        ) : null
+      }
+    />
   )
 }
 
