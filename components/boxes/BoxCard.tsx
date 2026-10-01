@@ -48,7 +48,7 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
           <ItemTitle className="block min-w-0 truncate text-base font-semibold">
             {box.name}
           </ItemTitle>
-          <span className="font-mono text-xs font-semibold text-muted-foreground">
+          <span className="shrink-0 font-mono text-xs font-semibold text-muted-foreground">
             {box.shortId}
           </span>
           <time
