@@ -1,11 +1,12 @@
 import BoxCardSkeleton from '@/components/boxes/BoxCardSkeleton'
+import ListToolbarSkeleton from '@/components/list/ListToolbarSkeleton'
 import { Skeleton } from '@/components/ui/skeleton'
 import Typography from '@/components/ui/typography'
 
 const BOX_CARD_COUNT = 6
 
-// Mirrors BoxesSection's header and toolbar so the page doesn't shift when the
-// data arrives. Keep in sync when those components change.
+// Mirrors BoxesHeader so the page doesn't shift when the data arrives. Keep in
+// sync when it changes.
 export default function DashboardLoading() {
   return (
     <div className="flex gap-2 flex-col">
@@ -16,16 +17,7 @@ export default function DashboardLoading() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 shadow-xl bg-background -mx-2 p-2 border-b">
-        <div className="flex gap-1">
-          <Skeleton className="h-9 flex-1" />
-          <Skeleton className="h-9 w-36" />
-        </div>
-        <div className="flex justify-between">
-          <Skeleton className="h-8 w-16" />
-          <Skeleton className="h-8 w-36" />
-        </div>
-      </div>
+      <ListToolbarSkeleton />
 
       <div className="flex gap-2 flex-col">
         {Array.from({ length: BOX_CARD_COUNT }).map((_, index) => (
