@@ -20,8 +20,12 @@ const BoxesToolbar = ({ boxIds, unprintedIds }: BoxesToolbarProps) => {
       label: 'Print',
       icon: Printer,
       presets: [{ label: 'Unprinted', ids: unprintedIds }],
-      renderButton: ({ selectedIds, done, label }) => (
-        <PrintLabelsButton boxIds={selectedIds} onSuccess={done}>
+      renderButton: ({ selectedIds, done, label, pendingLabel }) => (
+        <PrintLabelsButton
+          boxIds={selectedIds}
+          onSuccess={done}
+          pendingChildren={pendingLabel}
+        >
           {label}
         </PrintLabelsButton>
       ),

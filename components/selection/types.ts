@@ -13,6 +13,8 @@ type BulkActionButtonProps = {
   done: () => void
   /** The button's content: icon, label and selected count */
   label: ReactNode
+  /** `label` with a spinner in place of the icon */
+  pendingLabel: ReactNode
 }
 
 /** An action applied to the selected rows, e.g. Print or Delete. */

@@ -10,17 +10,15 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { cn } from 'cn'
 import { useActionState, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 type NewItemFormProps = {
   boxId: string
-  className?: string
   onSuccess?: () => void
 }
 
-const NewItemForm = ({ boxId, className, onSuccess }: NewItemFormProps) => {
+const NewItemForm = ({ boxId, onSuccess }: NewItemFormProps) => {
   const initialState: CreateItemState = {
     success: false,
     message: '',
@@ -64,7 +62,7 @@ const NewItemForm = ({ boxId, className, onSuccess }: NewItemFormProps) => {
   }, [isPending])
 
   return (
-    <form action={formAction} className={cn('flex flex-col gap-3', className)}>
+    <form action={formAction} className="flex flex-col gap-3">
       <input type="hidden" name="boxId" value={boxId} />
 
       <div className="flex items-end gap-2">

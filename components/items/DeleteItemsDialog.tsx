@@ -1,25 +1,15 @@
 import { deleteItemsAction } from '@/actions/items/delete-items'
 import { DialogBaseProps } from '@/components/dialog/DialogProvider'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/dialog/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { ITEM_WORDS } from '@/lib/item/const'
 import { pluralize } from '@/lib/utils'
 import { useTransition } from 'react'
@@ -36,8 +26,6 @@ export function DeleteItemsDialog({
   itemIds,
   onSuccess,
 }: DeleteItemsDialogProps) {
-  const isMobile = useIsMobile()
-
   const [isPending, startTransition] = useTransition()
 
   const handleDelete = () => {
@@ -54,51 +42,24 @@ export function DeleteItemsDialog({
     })
   }
 
-  if (isMobile) {
-    return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>
-              Delete {pluralize(itemIds.length, ITEM_WORDS)}?
-            </DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <DrawerClose
-              disabled={isPending}
-              render={<Button variant="secondary" />}
-            >
-              Cancel
-            </DrawerClose>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isPending}
-            >
-              {isPending ? 'Deleting...' : 'Delete'}
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    )
-  }
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
+    <ResponsiveDialog open={isOpen} onOpenChange={setIsOpen}>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
             Delete {pluralize(itemIds.length, ITEM_WORDS)}?
-          </DialogTitle>
-          <DialogDescription>This action cannot be undone.</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
+            This action cannot be undone.
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogFooter>
+          <ResponsiveDialogClose
             disabled={isPending}
             render={<Button variant="secondary" />}
           >
             Cancel
-          </DialogClose>
+          </ResponsiveDialogClose>
           <Button
             variant="destructive"
             onClick={handleDelete}
@@ -106,8 +67,8 @@ export function DeleteItemsDialog({
           >
             {isPending ? 'Deleting...' : 'Delete'}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

@@ -64,6 +64,14 @@ const SelectionToolbar = ({
           label: (
             <ActionLabel icon={icon} label={label} count={selectedIds.length} />
           ),
+          pendingLabel: (
+            <ActionLabel
+              icon={icon}
+              label={label}
+              count={selectedIds.length}
+              isPending
+            />
+          ),
         })}
       </div>
     </div>
