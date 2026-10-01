@@ -61,12 +61,15 @@ const SelectionToolbar = ({
         {renderButton({
           selectedIds,
           done: stopSelecting,
-          renderLabel: (isPending) => (
+          label: (
+            <ActionLabel icon={icon} label={label} count={selectedIds.length} />
+          ),
+          pendingLabel: (
             <ActionLabel
               icon={icon}
               label={label}
               count={selectedIds.length}
-              isPending={isPending}
+              isPending
             />
           ),
         })}

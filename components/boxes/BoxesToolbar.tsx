@@ -20,9 +20,13 @@ const BoxesToolbar = ({ boxIds, unprintedIds }: BoxesToolbarProps) => {
       label: 'Print',
       icon: Printer,
       presets: [{ label: 'Unprinted', ids: unprintedIds }],
-      renderButton: ({ selectedIds, done, renderLabel }) => (
-        <PrintLabelsButton boxIds={selectedIds} onSuccess={done}>
-          {renderLabel}
+      renderButton: ({ selectedIds, done, label, pendingLabel }) => (
+        <PrintLabelsButton
+          boxIds={selectedIds}
+          onSuccess={done}
+          pendingChildren={pendingLabel}
+        >
+          {label}
         </PrintLabelsButton>
       ),
     },
@@ -30,9 +34,9 @@ const BoxesToolbar = ({ boxIds, unprintedIds }: BoxesToolbarProps) => {
       id: 'delete',
       label: 'Delete',
       icon: Trash,
-      renderButton: ({ selectedIds, done, renderLabel }) => (
+      renderButton: ({ selectedIds, done, label }) => (
         <DeleteBoxesButton boxIds={selectedIds} onSuccess={done}>
-          {renderLabel()}
+          {label}
         </DeleteBoxesButton>
       ),
     },
