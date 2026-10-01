@@ -32,17 +32,15 @@ const SelectionToolbar = ({
   }
 
   return (
-    <div className="flex flex-wrap justify-between gap-y-1">
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center">
       <div>
         <ToolbarButton onClick={() => selectAll(ids)}>Select all</ToolbarButton>
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
-      <div className="ml-auto flex items-center gap-1">
-        <span className="text-sm text-muted-foreground">
-          {selectedIds.length} selected
-        </span>
-        {children}
-      </div>
+      <span className="text-sm text-muted-foreground">
+        <span className="font-mono">{selectedIds.length}</span> selected
+      </span>
+      <div className="justify-self-end">{children}</div>
     </div>
   )
 }
