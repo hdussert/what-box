@@ -5,7 +5,6 @@ import {
 import { DialogBaseProps } from '@/components/dialog/DialogProvider'
 import {
   ResponsiveDialog,
-  ResponsiveDialogBody,
   ResponsiveDialogClose,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
@@ -62,16 +61,14 @@ export function DeleteAccountDialog({ isOpen, setIsOpen }: DialogBaseProps) {
   return (
     <ResponsiveDialog open={isOpen} onOpenChange={setIsOpen}>
       <ResponsiveDialogContent>
-        <form action={formAction} className="md:flex md:flex-col md:gap-4">
+        <form action={formAction} className="flex flex-col gap-4">
           <ResponsiveDialogHeader>
             <ResponsiveDialogTitle>{TITLE}</ResponsiveDialogTitle>
             <ResponsiveDialogDescription>
               {DESCRIPTION}
             </ResponsiveDialogDescription>
           </ResponsiveDialogHeader>
-          <ResponsiveDialogBody className="flex flex-col gap-4">
-            {passwordField}
-          </ResponsiveDialogBody>
+          <div className="flex flex-col gap-4">{passwordField}</div>
           <ResponsiveDialogFooter>
             <ResponsiveDialogClose
               disabled={isPending}

@@ -4,7 +4,6 @@ import NewBoxForm from '@/components/boxes/NewBoxForm'
 import { DialogBaseProps } from '@/components/dialog/DialogProvider'
 import {
   ResponsiveDialog,
-  ResponsiveDialogBody,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
   ResponsiveDialogHeader,
@@ -23,9 +22,7 @@ const NewBoxDialog = ({ isOpen, setIsOpen }: NewBoxDialogProps) => {
             Create a new box and start taking inventory
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
-        <ResponsiveDialogBody>
-          <NewBoxForm />
-        </ResponsiveDialogBody>
+        <NewBoxForm />
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   )

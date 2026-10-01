@@ -2,7 +2,6 @@
 
 import {
   ResponsiveDialog,
-  ResponsiveDialogBody,
   ResponsiveDialogContent,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
@@ -48,14 +47,11 @@ export function NewItemButton({ boxId }: NewItemButtonProps) {
         <Plus data-icon="inline-start" /> Add
       </ResponsiveDialogTrigger>
       <ResponsiveDialogContent>
-        {/* md:pr-6 clears the dialog's close button */}
-        <ResponsiveDialogHeader className="flex-row items-center justify-between md:pr-6">
+        <ResponsiveDialogHeader className="flex-row items-center justify-between">
           <ResponsiveDialogTitle>New item</ResponsiveDialogTitle>
           {keepOpenCheckbox}
         </ResponsiveDialogHeader>
-        <ResponsiveDialogBody>
-          <NewItemForm boxId={boxId} onSuccess={handleSuccess} />
-        </ResponsiveDialogBody>
+        <NewItemForm boxId={boxId} onSuccess={handleSuccess} />
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   )

@@ -10,15 +10,10 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { cn } from 'cn'
 import { useActionState, useState } from 'react'
 import { toast } from 'sonner'
 
-type NewBoxFormProps = {
-  className?: string
-}
-
-const NewBoxForm = ({ className }: NewBoxFormProps) => {
+const NewBoxForm = () => {
   // Use useActionState hook for the form submission action
   const initialState: CreateBoxState = {
     success: false,
@@ -44,7 +39,7 @@ const NewBoxForm = ({ className }: NewBoxFormProps) => {
   )
 
   return (
-    <form action={formAction} className={cn('flex flex-col gap-3', className)}>
+    <form action={formAction} className="flex flex-col gap-3">
       <div className="flex gap-3 items-center">
         <ImageInput
           label="Image"

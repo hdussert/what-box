@@ -22,7 +22,13 @@ import {
 } from '@/components/ui/drawer'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { cn } from 'cn'
-import { ComponentProps, ReactElement, ReactNode } from 'react'
+import {
+  ComponentProps,
+  createContext,
+  ReactElement,
+  ReactNode,
+  useContext,
+} from 'react'
 
 type RootProps = {
   open: boolean
@@ -43,67 +49,90 @@ type TextPartProps = {
   children: ReactNode
 }
 
+const IsMobileContext = createContext<boolean | null>(null)
+
+function useIsMobileDialog() {
+  const isMobile = useContext(IsMobileContext)
+  if (isMobile === null) {
+    throw new Error(
+      'ResponsiveDialog parts must be used within a ResponsiveDialog',
+    )
+  }
+  return isMobile
+}
+
 /** A dialog on desktop and a bottom drawer on mobile, with the same parts as `Dialog`. */
 function ResponsiveDialog(props: RootProps) {
   const isMobile = useIsMobile()
-  return isMobile ? <Drawer {...props} /> : <Dialog {...props} />
+  return (
+    <IsMobileContext.Provider value={isMobile}>
+      {isMobile ? <Drawer {...props} /> : <Dialog {...props} />}
+    </IsMobileContext.Provider>
+  )
 }
 
 function ResponsiveDialogTrigger(props: ButtonPartProps) {
-  const isMobile = useIsMobile()
-  return isMobile ? <DrawerTrigger {...props} /> : <DialogTrigger {...props} />
+  return useIsMobileDialog() ? (
+    <DrawerTrigger {...props} />
+  ) : (
+    <DialogTrigger {...props} />
+  )
 }
 
 function ResponsiveDialogClose(props: ButtonPartProps) {
-  const isMobile = useIsMobile()
-  return isMobile ? <DrawerClose {...props} /> : <DialogClose {...props} />
+  return useIsMobileDialog() ? (
+    <DrawerClose {...props} />
+  ) : (
+    <DialogClose {...props} />
+  )
 }
 
 function ResponsiveDialogContent({ children }: { children: ReactNode }) {
-  const isMobile = useIsMobile()
-  return isMobile ? (
-    <DrawerContent>{children}</DrawerContent>
+  return useIsMobileDialog() ? (
+    <DrawerContent>
+      {/* Spaces the parts like DialogContent; header and footer drop their own padding */}
+      <div className="flex flex-col gap-4 p-4">{children}</div>
+    </DrawerContent>
   ) : (
     <DialogContent>{children}</DialogContent>
   )
 }
 
-function ResponsiveDialogHeader(props: PartProps) {
-  const isMobile = useIsMobile()
-  return isMobile ? <DrawerHeader {...props} /> : <DialogHeader {...props} />
+function ResponsiveDialogHeader({ className, ...props }: PartProps) {
+  return useIsMobileDialog() ? (
+    <DrawerHeader className={cn('p-0', className)} {...props} />
+  ) : (
+    // Clears the dialog's close button
+    <DialogHeader className={cn('pr-6', className)} {...props} />
+  )
 }
 
 function ResponsiveDialogTitle(props: TextPartProps) {
-  const isMobile = useIsMobile()
-  return isMobile ? <DrawerTitle {...props} /> : <DialogTitle {...props} />
+  return useIsMobileDialog() ? (
+    <DrawerTitle {...props} />
+  ) : (
+    <DialogTitle {...props} />
+  )
 }
 
 function ResponsiveDialogDescription(props: TextPartProps) {
-  const isMobile = useIsMobile()
-  return isMobile ? (
+  return useIsMobileDialog() ? (
     <DrawerDescription {...props} />
   ) : (
     <DialogDescription {...props} />
   )
 }
 
-/** The content between header and footer, padded like them on mobile. */
-function ResponsiveDialogBody({ className, ...props }: PartProps) {
-  const isMobile = useIsMobile()
-  return (
-    // Without a footer, the drawer's bottom padding comes from the body
-    <div className={cn(isMobile && 'px-4 last:pb-4', className)} {...props} />
+function ResponsiveDialogFooter({ className, ...props }: PartProps) {
+  return useIsMobileDialog() ? (
+    <DrawerFooter className={cn('p-0', className)} {...props} />
+  ) : (
+    <DialogFooter className={className} {...props} />
   )
-}
-
-function ResponsiveDialogFooter(props: PartProps) {
-  const isMobile = useIsMobile()
-  return isMobile ? <DrawerFooter {...props} /> : <DialogFooter {...props} />
 }
 
 export {
   ResponsiveDialog,
-  ResponsiveDialogBody,
   ResponsiveDialogClose,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
