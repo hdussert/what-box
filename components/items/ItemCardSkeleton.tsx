@@ -14,7 +14,7 @@ const ItemCardSkeleton = () => (
           <Skeleton className="h-5 w-8" />
         </div>
       </div>
-      <Skeleton className="h-4 w-16" />
+      <Skeleton className="h-4 w-10" />
     </div>
   </Item>
 )

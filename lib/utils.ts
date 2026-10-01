@@ -33,3 +33,14 @@ export function pluralize(
   const form = pluralRules.select(count) === 'one' ? forms.one : forms.other
   return `${count} ${form}`
 }
+
+/** "Sep 30", with the year only when it isn't the current one. */
+export function formatShortDate(date: Date) {
+  const isThisYear = date.getFullYear() === new Date().getFullYear()
+
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: isThisYear ? undefined : 'numeric',
+  })
+}

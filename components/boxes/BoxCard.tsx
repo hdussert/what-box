@@ -7,6 +7,7 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { BoxWithRelations } from '@/lib/box'
+import { formatShortDate } from '@/lib/utils'
 import { cn } from 'cn'
 import { Package } from 'lucide-react'
 
@@ -64,17 +65,6 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
       </ItemContent>
     </Item>
   )
-}
-
-/** "Sep 30", with the year only when it isn't the current one. */
-function formatShortDate(date: Date) {
-  const isThisYear = date.getFullYear() === new Date().getFullYear()
-
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: isThisYear ? undefined : 'numeric',
-  })
 }
 
 export default BoxCard
