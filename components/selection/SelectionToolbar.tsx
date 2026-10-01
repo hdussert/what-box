@@ -1,5 +1,4 @@
 import ToolbarButton from '@/components/ToolbarButton'
-import ActionLabel from '@/components/selection/ActionLabel'
 import { useSelection } from '@/components/selection/SelectionProvider'
 import { SelectionPreset } from '@/components/selection/types'
 import { ListChecks } from 'lucide-react'
@@ -30,7 +29,7 @@ const SelectionToolbar = ({
       <div className="flex justify-between">
         <div>{actions}</div>
         <ToolbarButton onClick={startSelecting}>
-          <ActionLabel icon={ListChecks} label="Select" />
+          <ListChecks data-icon="inline-start" /> Select
         </ToolbarButton>
       </div>
     )
