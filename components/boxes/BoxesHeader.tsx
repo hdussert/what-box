@@ -21,11 +21,11 @@ const BoxesHeader = ({ total, unprintedIds }: BoxesHeaderProps) => {
   return (
     <div className="pb-2">
       <Typography.H1 className="mb-2">My boxes</Typography.H1>
-      <p className="flex min-h-8 items-center gap-1 text-muted-foreground">
+      <p className="flex min-h-8 items-center text-muted-foreground">
         {pluralize(total, forms)}
         {unprintedIds.length ? (
           <>
-            <span aria-hidden>·</span>
+            <span aria-hidden>,</span>
             <ToolbarButton
               variant="link"
               onClick={() => print(unprintedIds)}
