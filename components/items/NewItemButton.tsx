@@ -1,24 +1,17 @@
 'use client'
 
-import ToolbarButton from '@/components/ToolbarButton'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from '@/components/dialog/ResponsiveDialog'
 import NewItemForm from '@/components/items/NewItemForm'
+import ToolbarButton from '@/components/ToolbarButton'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
 import { Field, FieldLabel } from '@/components/ui/field'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
@@ -29,8 +22,6 @@ type NewItemButtonProps = {
 export function NewItemButton({ boxId }: NewItemButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [keepOpen, setKeepOpen] = useState(false)
-
-  const isMobile = useIsMobile()
 
   const handleSuccess = () => {
     if (!keepOpen) {
@@ -51,38 +42,21 @@ export function NewItemButton({ boxId }: NewItemButtonProps) {
     </Field>
   )
 
-  if (isMobile) {
-    return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerTrigger render={<ToolbarButton />}>
-          <Plus data-icon="inline-start" /> Add
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader className="flex-row items-center justify-between">
-            <DrawerTitle>New item</DrawerTitle>
-            {keepOpenCheckbox}
-          </DrawerHeader>
-          <NewItemForm
-            boxId={boxId}
-            onSuccess={handleSuccess}
-            className="px-4 pb-4"
-          />
-        </DrawerContent>
-      </Drawer>
-    )
-  }
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger render={<ToolbarButton />}>
+    <ResponsiveDialog open={isOpen} onOpenChange={setIsOpen}>
+      <ResponsiveDialogTrigger render={<ToolbarButton />}>
         <Plus data-icon="inline-start" /> Add
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader className="flex-row items-center justify-between pr-6">
-          <DialogTitle>New item</DialogTitle>
+      </ResponsiveDialogTrigger>
+      <ResponsiveDialogContent>
+        {/* md:pr-6 clears the dialog's close button */}
+        <ResponsiveDialogHeader className="flex-row items-center justify-between md:pr-6">
+          <ResponsiveDialogTitle>New item</ResponsiveDialogTitle>
           {keepOpenCheckbox}
-        </DialogHeader>
-        <NewItemForm boxId={boxId} onSuccess={handleSuccess} />
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody>
+          <NewItemForm boxId={boxId} onSuccess={handleSuccess} />
+        </ResponsiveDialogBody>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

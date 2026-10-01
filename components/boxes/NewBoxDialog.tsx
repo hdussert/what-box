@@ -3,53 +3,31 @@
 import NewBoxForm from '@/components/boxes/NewBoxForm'
 import { DialogBaseProps } from '@/components/dialog/DialogProvider'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer'
-import { useIsMobile } from '@/hooks/useIsMobile'
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/dialog/ResponsiveDialog'
 
 type NewBoxDialogProps = DialogBaseProps
 
 const NewBoxDialog = ({ isOpen, setIsOpen }: NewBoxDialogProps) => {
-  const isMobile = useIsMobile()
-
-  if (isMobile) {
-    return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>New Box</DrawerTitle>
-            <DrawerDescription>
-              Create a new box and start taking inventory
-            </DrawerDescription>
-          </DrawerHeader>
-          <NewBoxForm className="px-4 pb-4" />
-        </DrawerContent>
-      </Drawer>
-    )
-  }
   return (
-    <Dialog modal open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>New box</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={isOpen} onOpenChange={setIsOpen}>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>New box</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Create a new box and start taking inventory
-          </DialogDescription>
-        </DialogHeader>
-        <NewBoxForm />
-      </DialogContent>
-    </Dialog>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogBody>
+          <NewBoxForm />
+        </ResponsiveDialogBody>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }
 

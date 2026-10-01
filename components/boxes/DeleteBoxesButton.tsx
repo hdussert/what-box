@@ -1,29 +1,18 @@
 'use client'
 
 import { deleteBoxesAction } from '@/actions/boxes/delete-boxes'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from '@/components/dialog/ResponsiveDialog'
 import ToolbarButton from '@/components/ToolbarButton'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { BOX_WORDS } from '@/lib/box/const'
 import { pluralize } from '@/lib/utils'
 import { Trash } from 'lucide-react'
@@ -43,7 +32,6 @@ export function DeleteBoxesButton({
 }: DeleteBoxesButtonProps) {
   const trigger = <ToolbarButton disabled={!boxIds.length} />
   const [isOpen, setIsOpen] = useState(false)
-  const isMobile = useIsMobile()
 
   const [isPending, startTransition] = useTransition()
 
@@ -61,49 +49,28 @@ export function DeleteBoxesButton({
     })
   }
 
-  if (isMobile) {
-    return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerTrigger render={trigger}>{children}</DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>
-              Delete {pluralize(boxIds.length, BOX_WORDS)}?
-            </DrawerTitle>
-            <DrawerDescription>
-              This action cannot be undone. All images and items in these boxes
-              will also be deleted.
-            </DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <DrawerClose disabled={isPending}>Cancel</DrawerClose>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isPending}
-            >
-              {isPending ? 'Deleting...' : 'Delete'}
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    )
-  }
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger render={trigger}>{children}</DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
+    <ResponsiveDialog open={isOpen} onOpenChange={setIsOpen}>
+      <ResponsiveDialogTrigger render={trigger}>
+        {children}
+      </ResponsiveDialogTrigger>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
             Delete {pluralize(boxIds.length, BOX_WORDS)}?
-          </DialogTitle>
-          <DialogDescription>
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             This action cannot be undone. All images and items in these boxes
             will also be deleted.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose disabled={isPending}>Cancel</DialogClose>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogFooter>
+          <ResponsiveDialogClose
+            disabled={isPending}
+            render={<Button variant="secondary" />}
+          >
+            Cancel
+          </ResponsiveDialogClose>
           <Button
             variant="destructive"
             onClick={handleDelete}
@@ -111,8 +78,8 @@ export function DeleteBoxesButton({
           >
             {isPending ? 'Deleting...' : 'Delete'}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }
