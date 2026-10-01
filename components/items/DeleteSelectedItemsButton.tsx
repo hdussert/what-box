@@ -11,7 +11,7 @@ const DeleteSelectedItemsButton = () => {
 
   return (
     <DeleteItemsButton itemIds={selectedIds} onSuccess={stopSelecting}>
-      <ActionLabel icon={Trash} label="Delete" count={selectedIds.length} />
+      <ActionLabel icon={Trash} label="Delete" />
     </DeleteItemsButton>
   )
 }

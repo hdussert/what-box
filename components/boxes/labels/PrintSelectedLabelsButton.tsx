@@ -17,12 +17,7 @@ const PrintSelectedLabelsButton = () => {
         onClick={() => print(selectedIds)}
         disabled={isPending || !selectedIds.length}
       >
-        <ActionLabel
-          icon={Printer}
-          label="Print"
-          count={selectedIds.length}
-          isPending={isPending}
-        />
+        <ActionLabel icon={Printer} label="Print" isPending={isPending} />
       </ToolbarButton>
       {sheet}
     </>
