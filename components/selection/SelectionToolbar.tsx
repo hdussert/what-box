@@ -32,15 +32,15 @@ const SelectionToolbar = ({
   }
 
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center">
-      <div>
+    <div className="grid grid-cols-[auto_1fr_auto] items-center">
+      <div className="flex">
         <ToolbarButton onClick={() => selectAll(ids)}>Select all</ToolbarButton>
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
-      <span className="text-sm text-muted-foreground">
+      <span className="text-center text-sm text-muted-foreground">
         <span className="font-mono">{selectedIds.length}</span> selected
       </span>
-      <div className="justify-self-end">{children}</div>
+      <div className="flex">{children}</div>
     </div>
   )
 }
