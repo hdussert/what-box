@@ -16,13 +16,8 @@ const SelectionToolbar = ({
   bulkActions,
   actions,
 }: SelectionToolbarProps) => {
-  const {
-    activeAction,
-    startSelecting,
-    stopSelecting,
-    selectedIds,
-    selectAll,
-  } = useSelection()
+  const { activeAction, startSelecting, stopSelecting, selectAll } =
+    useSelection()
   const selectingAction = bulkActions.find(({ id }) => id === activeAction)
 
   if (!selectingAction) {
@@ -40,7 +35,7 @@ const SelectionToolbar = ({
     )
   }
 
-  const { label, icon, presets = [], renderButton } = selectingAction
+  const { presets = [], button } = selectingAction
 
   return (
     <div className="flex flex-wrap justify-between gap-y-1">
@@ -57,23 +52,7 @@ const SelectionToolbar = ({
         ))}
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
-      <div className="ml-auto">
-        {renderButton({
-          selectedIds,
-          done: stopSelecting,
-          label: (
-            <ActionLabel icon={icon} label={label} count={selectedIds.length} />
-          ),
-          pendingLabel: (
-            <ActionLabel
-              icon={icon}
-              label={label}
-              count={selectedIds.length}
-              isPending
-            />
-          ),
-        })}
-      </div>
+      <div className="ml-auto">{button}</div>
     </div>
   )
 }

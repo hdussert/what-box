@@ -1,9 +1,11 @@
 'use client'
 
 import { DeleteBoxesButton } from '@/components/boxes/DeleteBoxesButton'
-import PrintLabelsButton from '@/components/boxes/labels/PrintLabelsButton'
+import PrintSelectedLabelsButton from '@/components/boxes/labels/PrintSelectedLabelsButton'
 import NewBoxButton from '@/components/boxes/NewBoxButton'
 import ListControls from '@/components/list/ListControls'
+import ActionLabel from '@/components/selection/ActionLabel'
+import { useSelection } from '@/components/selection/SelectionProvider'
 import SelectionToolbar from '@/components/selection/SelectionToolbar'
 import { BulkAction } from '@/components/selection/types'
 import { Printer, Trash } from 'lucide-react'
@@ -14,29 +16,23 @@ type BoxesToolbarProps = {
 }
 
 const BoxesToolbar = ({ boxIds, unprintedIds }: BoxesToolbarProps) => {
+  const { selectedIds, stopSelecting } = useSelection()
+
   const bulkActions: BulkAction[] = [
     {
       id: 'print',
       label: 'Print',
       icon: Printer,
       presets: [{ label: 'Unprinted', ids: unprintedIds }],
-      renderButton: ({ selectedIds, done, label, pendingLabel }) => (
-        <PrintLabelsButton
-          boxIds={selectedIds}
-          onSuccess={done}
-          pendingChildren={pendingLabel}
-        >
-          {label}
-        </PrintLabelsButton>
-      ),
+      button: <PrintSelectedLabelsButton />,
     },
     {
       id: 'delete',
       label: 'Delete',
       icon: Trash,
-      renderButton: ({ selectedIds, done, label }) => (
-        <DeleteBoxesButton boxIds={selectedIds} onSuccess={done}>
-          {label}
+      button: (
+        <DeleteBoxesButton boxIds={selectedIds} onSuccess={stopSelecting}>
+          <ActionLabel icon={Trash} label="Delete" count={selectedIds.length} />
         </DeleteBoxesButton>
       ),
     },

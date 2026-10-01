@@ -1,33 +1,23 @@
 'use client'
 
 import { getBoxesByIdsAction } from '@/actions/boxes/get-boxes-by-ids'
-import ToolbarButton from '@/components/ToolbarButton'
 import BoxLabelsSheet from '@/components/boxes/labels/BoxLabelsSheet'
 import { MarkLabelsPrintedDialog } from '@/components/boxes/labels/MarkLabelsPrintedDialog'
 import { useDialog } from '@/components/dialog/DialogProvider'
-import { Spinner } from '@/components/ui/spinner'
 import { BoxWithRelations } from '@/lib/box'
-import { Printer } from 'lucide-react'
-import { ComponentProps, ReactNode, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { flushSync } from 'react-dom'
 
-type PrintLabelsButtonProps = {
-  boxIds: string[]
+type UsePrintLabelsOptions = {
   /** Called once the print dialog closes */
-  onSuccess?: () => void
-  variant?: ComponentProps<typeof ToolbarButton>['variant']
-  children?: ReactNode
-  /** Shown while the boxes load */
-  pendingChildren?: ReactNode
+  onDone?: () => void
 }
 
-const PrintLabelsButton = ({
-  boxIds,
-  onSuccess,
-  variant,
-  children = <Printer />,
-  pendingChildren = <Spinner />,
-}: PrintLabelsButtonProps) => {
+/**
+ * Prints the labels of the given boxes, then asks whether the unprinted ones
+ * printed correctly. The caller renders `sheet`.
+ */
+export function usePrintLabels({ onDone }: UsePrintLabelsOptions = {}) {
   const [boxes, setBoxes] = useState<BoxWithRelations[]>()
   const [isPending, startTransition] = useTransition()
   const { openDialog } = useDialog()
@@ -35,13 +25,13 @@ const PrintLabelsButton = ({
   const handleAfterPrint = (unprintedIds: string[]) => {
     // Another button's print would otherwise include this sheet too
     setBoxes(undefined)
-    onSuccess?.()
+    onDone?.()
     if (unprintedIds.length) {
       openDialog(MarkLabelsPrintedDialog, { boxIds: unprintedIds })
     }
   }
 
-  const print = () => {
+  const print = (boxIds: string[]) => {
     startTransition(async () => {
       const fetchedBoxes = (await getBoxesByIdsAction(boxIds)) ?? []
       const unprintedIds = fetchedBoxes
@@ -52,30 +42,17 @@ const PrintLabelsButton = ({
       // setState only schedules the render
       flushSync(() => setBoxes(fetchedBoxes))
 
-      // window.print() doesn't block on iOS, and onSuccess may unmount the sheet
+      // window.print() doesn't block on iOS, and onDone may unmount the sheet
       window.addEventListener(
         'afterprint',
         () => handleAfterPrint(unprintedIds),
-        {
-          once: true,
-        },
+        { once: true },
       )
       window.print()
     })
   }
 
-  return (
-    <>
-      <ToolbarButton
-        variant={variant}
-        onClick={print}
-        disabled={isPending || !boxIds.length}
-      >
-        {isPending ? pendingChildren : children}
-      </ToolbarButton>
-      {boxes ? <BoxLabelsSheet boxes={boxes} /> : null}
-    </>
-  )
-}
+  const sheet = boxes ? <BoxLabelsSheet boxes={boxes} /> : null
 
-export default PrintLabelsButton
+  return { print, isPending, sheet }
+}

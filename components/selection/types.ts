@@ -7,16 +7,6 @@ type SelectionPreset = {
   ids: string[]
 }
 
-type BulkActionButtonProps = {
-  selectedIds: string[]
-  /** Ends selection mode */
-  done: () => void
-  /** The button's content: icon, label and selected count */
-  label: ReactNode
-  /** `label` with a spinner in place of the icon */
-  pendingLabel: ReactNode
-}
-
 /** An action applied to the selected rows, e.g. Print or Delete. */
 export type BulkAction = {
   id: string
@@ -24,6 +14,6 @@ export type BulkAction = {
   icon: LucideIcon
   /** Shortcuts shown only while this action is selecting */
   presets?: SelectionPreset[]
-  /** The button that applies the action to the selection */
-  renderButton: (props: BulkActionButtonProps) => ReactNode
+  /** The button that applies the action to the selection, shown while selecting */
+  button: ReactNode
 }
