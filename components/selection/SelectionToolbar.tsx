@@ -1,6 +1,6 @@
 import ToolbarButton from '@/components/ToolbarButton'
 import { useSelection } from '@/components/selection/SelectionProvider'
-import { ListChecks, X } from 'lucide-react'
+import { ListChecks } from 'lucide-react'
 import { ReactNode } from 'react'
 
 type SelectionToolbarProps = {
@@ -34,14 +34,15 @@ const SelectionToolbar = ({
   return (
     <div className="flex flex-wrap justify-between gap-y-1">
       <div>
-        <ToolbarButton onClick={stopSelecting}>
-          <X data-icon="inline-start" />
-          <span className="sr-only">Cancel,</span>
-          {selectedIds.length} selected
-        </ToolbarButton>
         <ToolbarButton onClick={() => selectAll(ids)}>Select all</ToolbarButton>
+        <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
-      <div className="ml-auto">{children}</div>
+      <div className="ml-auto flex items-center gap-1">
+        <span className="text-sm text-muted-foreground">
+          {selectedIds.length} selected
+        </span>
+        {children}
+      </div>
     </div>
   )
 }
