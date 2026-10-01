@@ -43,7 +43,7 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
         </div>
       )}
       <ItemContent className="min-w-0 p-1 self-stretch gap-1">
-        <div className="flex min-h-0 flex-1 flex-col gap-1">
+        <div className="flex flex-col gap-1">
           <div className="flex items-baseline justify-between gap-2">
             <ItemTitle className="block min-w-0 flex-1 truncate text-base font-semibold">
               {box.name}
@@ -59,7 +59,7 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
             {box.shortId}
           </span>
         </div>
-        <div className="flex shrink-0 items-center gap-1 text-sm text-muted-foreground">
+        <div className="flex flex-1 items-center gap-1 text-sm text-muted-foreground">
           <span className="truncate">{itemsSummary}</span>
           {hiddenItemCount ? (
             <span className="shrink-0">({hiddenItemCount} more)</span>
