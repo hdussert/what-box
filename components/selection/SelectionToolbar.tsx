@@ -1,41 +1,40 @@
 import ToolbarButton from '@/components/ToolbarButton'
 import ActionLabel from '@/components/selection/ActionLabel'
 import { useSelection } from '@/components/selection/SelectionProvider'
-import { BulkAction } from '@/components/selection/types'
+import { SelectionPreset } from '@/components/selection/types'
+import { ListChecks } from 'lucide-react'
 import { ReactNode } from 'react'
 
 type SelectionToolbarProps = {
   /** Ids of the listed rows, for Select all */
   ids: string[]
-  bulkActions: BulkAction[]
+  /** Shortcuts shown next to Select all */
+  presets?: SelectionPreset[]
+  /** Shown while not selecting */
   actions?: ReactNode
+  /** The bulk action buttons, shown while selecting */
+  children: ReactNode
 }
 
 const SelectionToolbar = ({
   ids,
-  bulkActions,
+  presets = [],
   actions,
+  children,
 }: SelectionToolbarProps) => {
-  const { activeAction, startSelecting, stopSelecting, selectAll } =
+  const { isSelecting, startSelecting, stopSelecting, selectAll } =
     useSelection()
-  const selectingAction = bulkActions.find(({ id }) => id === activeAction)
 
-  if (!selectingAction) {
+  if (!isSelecting) {
     return (
       <div className="flex justify-between">
         <div>{actions}</div>
-        <div>
-          {bulkActions.map(({ id, label, icon }) => (
-            <ToolbarButton key={id} onClick={() => startSelecting(id)}>
-              <ActionLabel icon={icon} label={label} />
-            </ToolbarButton>
-          ))}
-        </div>
+        <ToolbarButton onClick={startSelecting}>
+          <ActionLabel icon={ListChecks} label="Select" />
+        </ToolbarButton>
       </div>
     )
   }
-
-  const { presets = [], button } = selectingAction
 
   return (
     <div className="flex flex-wrap justify-between gap-y-1">
@@ -52,7 +51,7 @@ const SelectionToolbar = ({
         ))}
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
-      <div className="ml-auto">{button}</div>
+      <div className="ml-auto">{children}</div>
     </div>
   )
 }
