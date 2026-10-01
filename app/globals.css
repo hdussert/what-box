@@ -125,8 +125,12 @@
   html {
     scrollbar-gutter: stable;
   }
+  /* will-change: Chrome (GPU) otherwise paints the background one shade
+     lighter from where content starts on tall pages. Not transform: that
+     would make body the containing block of fixed elements. */
   body {
     @apply bg-background text-foreground;
+    will-change: opacity;
   }
 }
 
