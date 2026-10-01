@@ -1,6 +1,6 @@
 'use client'
 
-import { DeleteBoxesButton } from '@/components/boxes/DeleteBoxesButton'
+import DeleteBoxesButton from '@/components/boxes/DeleteBoxesButton'
 import ActionLabel from '@/components/selection/ActionLabel'
 import { useSelection } from '@/components/selection/SelectionProvider'
 import { Trash } from 'lucide-react'

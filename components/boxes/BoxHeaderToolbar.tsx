@@ -1,6 +1,6 @@
 'use client'
 import ToolbarButton from '@/components/ToolbarButton'
-import { DeleteBoxesButton } from '@/components/boxes/DeleteBoxesButton'
+import DeleteBoxesButton from '@/components/boxes/DeleteBoxesButton'
 import { usePrintLabels } from '@/components/boxes/labels/usePrintLabels'
 import { Spinner } from '@/components/ui/spinner'
 import { ArrowLeft, Printer } from 'lucide-react'
