@@ -1,5 +1,5 @@
-import NoLabelIcon from '@/components/boxes/labels/NoLabelIcon'
 import ImagePreview from '@/components/images/ImagePreview'
+import { Badge } from '@/components/ui/badge'
 import {
   Item,
   ItemContent,
@@ -16,6 +16,7 @@ type BoxCardProps = {
 }
 
 const BoxCard = ({ box, isSelected }: BoxCardProps) => {
+  // getBoxes puts the items matching the search first, so they stay visible
   const itemsSummary = box.items.length
     ? box.items.map((item) => item.name).join(', ')
     : 'Empty'
@@ -41,32 +42,37 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
           <Package size={48} />
         </div>
       )}
-      <ItemContent className="min-w-0 p-1 self-stretch">
-        <div className="flex justify-between gap-2">
-          <ItemTitle className="block min-w-0 flex-1 truncate text-base font-semibold">
-            {box.name}
-          </ItemTitle>
-          <time
-            dateTime={box.createdAt.toISOString()}
-            className="text-xs text-muted-foreground"
-          >
-            {box.createdAt.toLocaleDateString('en-US', {
-              year: '2-digit',
-              month: '2-digit',
-              day: '2-digit',
-            })}
-          </time>
-        </div>
-        <div className="flex justify-between text-xs text-muted-foreground">
+      <ItemContent className="min-w-0 p-1 self-stretch justify-center gap-1">
+        <ItemTitle className="block truncate text-base font-semibold">
+          {box.name}
+        </ItemTitle>
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <span className="font-mono font-semibold">{box.shortId}</span>
-          {box.labelPrinted ? null : <NoLabelIcon />}
+          <span aria-hidden>·</span>
+          <time dateTime={box.createdAt.toISOString()}>
+            {formatShortDate(box.createdAt)}
+          </time>
+          {box.labelPrinted ? null : (
+            <Badge variant="outline" className="ml-auto">
+              No label
+            </Badge>
+          )}
         </div>
-        <ItemDescription className="line-clamp-2 flex-1">
-          {itemsSummary}
-        </ItemDescription>
+        <ItemDescription className="line-clamp-1">{itemsSummary}</ItemDescription>
       </ItemContent>
     </Item>
   )
+}
+
+/** "Sep 30", with the year only when it isn't the current one. */
+function formatShortDate(date: Date) {
+  const isThisYear = date.getFullYear() === new Date().getFullYear()
+
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: isThisYear ? undefined : 'numeric',
+  })
 }
 
 export default BoxCard
