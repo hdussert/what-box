@@ -16,7 +16,6 @@ const SHOWN_ITEM_COUNT = 4
 const BoxCard = ({ box, isSelected }: BoxCardProps) => {
   // getBoxes puts the items matching the search first, so they stay visible
   const shownItems = box.items.slice(0, SHOWN_ITEM_COUNT)
-  const hiddenItemCount = box.items.length - shownItems.length
   const itemsSummary = shownItems.length
     ? shownItems.map((item) => item.name).join(', ')
     : 'Empty'
@@ -42,35 +41,32 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
           <Package size={48} />
         </div>
       )}
-      <ItemContent className="min-w-0 p-1 self-stretch gap-1">
+      <ItemContent className="min-w-0 p-1 self-stretch gap-1 justify-around">
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline justify-between gap-2">
             <ItemTitle className="block min-w-0 flex-1 truncate text-base font-semibold">
-              {box.name}
+              {box.name}&nbsp;
             </ItemTitle>
-            <time
-              dateTime={box.createdAt.toISOString()}
-              className="shrink-0 text-xs text-muted-foreground"
-            >
-              {formatShortDate(box.createdAt)}
-            </time>
           </div>
-          <span className="font-mono text-xs font-semibold text-muted-foreground">
+          <span className="font-mono text-sm font-semibold text-muted-foreground">
             {box.shortId}
           </span>
         </div>
-        <div className="flex flex-1 items-center gap-1 text-sm text-muted-foreground">
-          <span className="truncate">{itemsSummary}</span>
-          {hiddenItemCount ? (
-            <span className="shrink-0">({hiddenItemCount} more)</span>
-          ) : null}
-          {box.labelPrinted ? null : (
-            <Badge variant="outline" className="ml-auto">
-              No label
-            </Badge>
-          )}
-        </div>
+        <p className="truncate text-sm text-muted-foreground">{itemsSummary}</p>
       </ItemContent>
+      <div className="flex flex-col justify-between self-stretch items-end">
+        <time
+          dateTime={box.createdAt.toISOString()}
+          className="text-xs text-muted-foreground"
+        >
+          {formatShortDate(box.createdAt)}
+        </time>
+        {box.labelPrinted ? null : (
+          <Badge variant="secondary" className="ml-auto">
+            Not printed
+          </Badge>
+        )}
+      </div>
     </Item>
   )
 }
