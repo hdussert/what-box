@@ -10,11 +10,11 @@ const BoxCardSkeleton = () => (
         <Skeleton className="h-5 w-2/5" />
         <Skeleton className="h-4 w-10" />
       </div>
-      <div className="flex h-5 items-center justify-between">
-        <Skeleton className="h-4 w-14" />
+      <Skeleton className="h-4 w-14" />
+      <div className="flex h-5 items-center justify-between gap-2">
+        <Skeleton className="h-4 w-3/4" />
         <Skeleton className="h-5 w-16" />
       </div>
-      <Skeleton className="h-5 w-3/4" />
     </ItemContent>
   </Item>
 )
