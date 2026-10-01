@@ -42,22 +42,24 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
           <Package size={48} />
         </div>
       )}
-      <ItemContent className="min-w-0 p-1 self-stretch justify-center gap-1">
-        <div className="flex items-baseline justify-between gap-2">
-          <ItemTitle className="block min-w-0 flex-1 truncate text-base font-semibold">
-            {box.name}
-          </ItemTitle>
-          <time
-            dateTime={box.createdAt.toISOString()}
-            className="shrink-0 text-xs text-muted-foreground"
-          >
-            {formatShortDate(box.createdAt)}
-          </time>
+      <ItemContent className="min-w-0 p-1 self-stretch gap-1">
+        <div className="flex min-h-0 flex-1 flex-col gap-1">
+          <div className="flex items-baseline justify-between gap-2">
+            <ItemTitle className="block min-w-0 flex-1 truncate text-base font-semibold">
+              {box.name}
+            </ItemTitle>
+            <time
+              dateTime={box.createdAt.toISOString()}
+              className="shrink-0 text-xs text-muted-foreground"
+            >
+              {formatShortDate(box.createdAt)}
+            </time>
+          </div>
+          <span className="font-mono text-xs font-semibold text-muted-foreground">
+            {box.shortId}
+          </span>
         </div>
-        <span className="font-mono text-xs font-semibold text-muted-foreground">
-          {box.shortId}
-        </span>
-        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+        <div className="flex shrink-0 items-center gap-1 text-sm text-muted-foreground">
           <span className="truncate">{itemsSummary}</span>
           {hiddenItemCount ? (
             <span className="shrink-0">({hiddenItemCount} more)</span>
