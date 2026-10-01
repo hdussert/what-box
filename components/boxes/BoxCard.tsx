@@ -1,12 +1,8 @@
-import NoLabelIcon from '@/components/boxes/labels/NoLabelIcon'
 import ImagePreview from '@/components/images/ImagePreview'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Badge } from '@/components/ui/badge'
+import { Item, ItemContent, ItemTitle } from '@/components/ui/item'
 import { BoxWithRelations } from '@/lib/box'
+import { formatShortDate } from '@/lib/utils'
 import { cn } from 'cn'
 import { Package } from 'lucide-react'
 
@@ -15,9 +11,13 @@ type BoxCardProps = {
   isSelected: boolean
 }
 
+const SHOWN_ITEM_COUNT = 4
+
 const BoxCard = ({ box, isSelected }: BoxCardProps) => {
-  const itemsSummary = box.items.length
-    ? box.items.map((item) => item.name).join(', ')
+  // getBoxes puts the items matching the search first, so they stay visible
+  const shownItems = box.items.slice(0, SHOWN_ITEM_COUNT)
+  const itemsSummary = shownItems.length
+    ? shownItems.map((item) => item.name).join(', ')
     : 'Empty'
 
   return (
@@ -41,30 +41,28 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
           <Package size={48} />
         </div>
       )}
-      <ItemContent className="min-w-0 p-1 self-stretch">
-        <div className="flex justify-between gap-2">
-          <ItemTitle className="block min-w-0 flex-1 truncate text-base font-semibold">
-            {box.name}
+      <ItemContent className="min-w-0 p-1 self-stretch gap-1 justify-around">
+        <div className="flex flex-col gap-1">
+          <ItemTitle className="block truncate text-base font-semibold">
+            {box.name}&nbsp;
           </ItemTitle>
-          <time
-            dateTime={box.createdAt.toISOString()}
-            className="text-xs text-muted-foreground"
-          >
-            {box.createdAt.toLocaleDateString('en-US', {
-              year: '2-digit',
-              month: '2-digit',
-              day: '2-digit',
-            })}
-          </time>
+          <span className="font-mono text-sm font-semibold text-muted-foreground">
+            {box.shortId}
+          </span>
         </div>
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span className="font-mono font-semibold">{box.shortId}</span>
-          {box.labelPrinted ? null : <NoLabelIcon />}
-        </div>
-        <ItemDescription className="line-clamp-2 flex-1">
-          {itemsSummary}
-        </ItemDescription>
+        <p className="truncate text-sm text-muted-foreground">{itemsSummary}</p>
       </ItemContent>
+      <div className="flex flex-col justify-between self-stretch items-end">
+        <time
+          dateTime={box.createdAt.toISOString()}
+          className="text-xs text-muted-foreground"
+        >
+          {formatShortDate(box.createdAt)}
+        </time>
+        {box.labelPrinted ? null : (
+          <Badge variant="secondary">Not printed</Badge>
+        )}
+      </div>
     </Item>
   )
 }

@@ -5,6 +5,7 @@ import UpdateItemForm from '@/components/items/UpdateItemForm'
 import ToolbarButton from '@/components/ToolbarButton'
 import { Item as ItemRow } from '@/components/ui/item'
 import { Item } from '@/db/schema'
+import { formatShortDate } from '@/lib/utils'
 import { cn } from 'cn'
 
 type ItemCardProps = {
@@ -75,11 +76,7 @@ const ItemCard = ({
           dateTime={item.createdAt.toISOString()}
           className="text-xs text-muted-foreground"
         >
-          {item.createdAt.toLocaleDateString('en-US', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+          {formatShortDate(item.createdAt)}
         </time>
 
         {isFocused && !isEditing && (
