@@ -1,7 +1,9 @@
 'use client'
 
-import PrintLabelsButton from '@/components/boxes/labels/PrintLabelsButton'
+import { usePrintLabels } from '@/components/boxes/labels/usePrintLabels'
 import { useList } from '@/components/list/ListProvider'
+import ToolbarButton from '@/components/ToolbarButton'
+import { Spinner } from '@/components/ui/spinner'
 import Typography from '@/components/ui/typography'
 import { BOX_WORDS, LABEL_WORDS } from '@/lib/box/const'
 import { pluralize } from '@/lib/utils'
@@ -13,6 +15,7 @@ type BoxesHeaderProps = {
 
 const BoxesHeader = ({ total, unprintedIds }: BoxesHeaderProps) => {
   const { search } = useList()
+  const { print, isPending, sheet } = usePrintLabels()
   const forms = search ? { one: 'result', other: 'results' } : BOX_WORDS
 
   return (
@@ -23,9 +26,18 @@ const BoxesHeader = ({ total, unprintedIds }: BoxesHeaderProps) => {
         {unprintedIds.length ? (
           <>
             <span aria-hidden>·</span>
-            <PrintLabelsButton boxIds={unprintedIds} variant="link">
-              {pluralize(unprintedIds.length, LABEL_WORDS)} to print
-            </PrintLabelsButton>
+            <ToolbarButton
+              variant="link"
+              onClick={() => print(unprintedIds)}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <Spinner />
+              ) : (
+                `${pluralize(unprintedIds.length, LABEL_WORDS)} to print`
+              )}
+            </ToolbarButton>
+            {sheet}
           </>
         ) : null}
       </p>

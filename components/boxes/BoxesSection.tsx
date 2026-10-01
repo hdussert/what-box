@@ -19,10 +19,7 @@ const BoxesSection = ({ boxes }: BoxesSectionProps) => {
   return (
     <div className="flex gap-2 flex-col">
       <BoxesHeader total={boxes.length} unprintedIds={unprintedIds} />
-      <BoxesToolbar
-        boxIds={boxes.map(({ id }) => id)}
-        unprintedIds={unprintedIds}
-      />
+      <BoxesToolbar boxIds={boxes.map(({ id }) => id)} />
       {isEmpty ? <BoxesListEmpty /> : <BoxesList boxes={boxes} />}
     </div>
   )

@@ -1,79 +1,46 @@
 import ToolbarButton from '@/components/ToolbarButton'
-import ActionLabel from '@/components/selection/ActionLabel'
 import { useSelection } from '@/components/selection/SelectionProvider'
-import { BulkAction } from '@/components/selection/types'
+import { ListChecks } from 'lucide-react'
 import { ReactNode } from 'react'
 
 type SelectionToolbarProps = {
   /** Ids of the listed rows, for Select all */
   ids: string[]
-  bulkActions: BulkAction[]
+  /** Shown while not selecting */
   actions?: ReactNode
+  /** The bulk action buttons, shown while selecting */
+  children: ReactNode
 }
 
 const SelectionToolbar = ({
   ids,
-  bulkActions,
   actions,
+  children,
 }: SelectionToolbarProps) => {
-  const {
-    activeAction,
-    startSelecting,
-    stopSelecting,
-    selectedIds,
-    selectAll,
-  } = useSelection()
-  const selectingAction = bulkActions.find(({ id }) => id === activeAction)
+  const { isSelecting, startSelecting, stopSelecting, selectedIds, selectAll } =
+    useSelection()
 
-  if (!selectingAction) {
+  if (!isSelecting) {
     return (
       <div className="flex justify-between">
         <div>{actions}</div>
-        <div>
-          {bulkActions.map(({ id, label, icon }) => (
-            <ToolbarButton key={id} onClick={() => startSelecting(id)}>
-              <ActionLabel icon={icon} label={label} />
-            </ToolbarButton>
-          ))}
-        </div>
+        <ToolbarButton onClick={startSelecting}>
+          <ListChecks data-icon="inline-start" /> Select
+        </ToolbarButton>
       </div>
     )
   }
 
-  const { label, icon, presets = [], renderButton } = selectingAction
-
   return (
-    <div className="flex flex-wrap justify-between gap-y-1">
-      <div>
+    <div className="grid grid-cols-[auto_1fr_auto] items-center">
+      <div className="flex">
         <ToolbarButton onClick={() => selectAll(ids)}>Select all</ToolbarButton>
-        {presets.map((preset) => (
-          <ToolbarButton
-            key={preset.label}
-            onClick={() => selectAll(preset.ids)}
-            disabled={!preset.ids.length}
-          >
-            {preset.label}
-          </ToolbarButton>
-        ))}
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
-      <div className="ml-auto">
-        {renderButton({
-          selectedIds,
-          done: stopSelecting,
-          label: (
-            <ActionLabel icon={icon} label={label} count={selectedIds.length} />
-          ),
-          pendingLabel: (
-            <ActionLabel
-              icon={icon}
-              label={label}
-              count={selectedIds.length}
-              isPending
-            />
-          ),
-        })}
-      </div>
+      <span className="text-center text-sm text-muted-foreground">
+        <span className="font-mono">{selectedIds.length}</span> selected
+      </span>
+      <div className="flex">{children}</div>
     </div>
   )
 }
