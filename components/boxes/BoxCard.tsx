@@ -1,11 +1,6 @@
 import ImagePreview from '@/components/images/ImagePreview'
 import { Badge } from '@/components/ui/badge'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Item, ItemContent, ItemTitle } from '@/components/ui/item'
 import { BoxWithRelations } from '@/lib/box'
 import { formatShortDate } from '@/lib/utils'
 import { cn } from 'cn'
@@ -16,10 +11,14 @@ type BoxCardProps = {
   isSelected: boolean
 }
 
+const SHOWN_ITEM_COUNT = 4
+
 const BoxCard = ({ box, isSelected }: BoxCardProps) => {
   // getBoxes puts the items matching the search first, so they stay visible
-  const itemsSummary = box.items.length
-    ? box.items.map((item) => item.name).join(', ')
+  const shownItems = box.items.slice(0, SHOWN_ITEM_COUNT)
+  const hiddenItemCount = box.items.length - shownItems.length
+  const itemsSummary = shownItems.length
+    ? shownItems.map((item) => item.name).join(', ')
     : 'Empty'
 
   return (
@@ -59,9 +58,12 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
           <span className="font-mono font-semibold">{box.shortId}</span>
           {box.labelPrinted ? null : <Badge variant="outline">No label</Badge>}
         </div>
-        <ItemDescription className="line-clamp-1">
-          {itemsSummary}
-        </ItemDescription>
+        <div className="flex gap-1 text-sm text-muted-foreground">
+          <span className="truncate">{itemsSummary}</span>
+          {hiddenItemCount ? (
+            <span className="shrink-0">({hiddenItemCount} more)</span>
+          ) : null}
+        </div>
       </ItemContent>
     </Item>
   )
