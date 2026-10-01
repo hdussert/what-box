@@ -44,24 +44,26 @@ const BoxCard = ({ box, isSelected }: BoxCardProps) => {
         </div>
       )}
       <ItemContent className="min-w-0 p-1 self-stretch justify-center gap-1">
-        <ItemTitle className="block truncate text-base font-semibold">
-          {box.name}
-        </ItemTitle>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <span className="font-mono font-semibold">{box.shortId}</span>
-          <span aria-hidden>·</span>
-          <time dateTime={box.createdAt.toISOString()}>
+        <div className="flex items-baseline gap-2">
+          <ItemTitle className="block min-w-0 truncate text-base font-semibold">
+            {box.name}
+          </ItemTitle>
+          <span className="font-mono text-xs font-semibold text-muted-foreground">
+            {box.shortId}
+          </span>
+          <time
+            dateTime={box.createdAt.toISOString()}
+            className="ml-auto shrink-0 text-xs text-muted-foreground"
+          >
             {formatShortDate(box.createdAt)}
           </time>
-          {box.labelPrinted ? null : (
-            <Badge variant="outline" className="ml-auto">
-              No label
-            </Badge>
-          )}
         </div>
-        <ItemDescription className="line-clamp-1">
-          {itemsSummary}
-        </ItemDescription>
+        <div className="flex items-center gap-2">
+          <ItemDescription className="line-clamp-1 flex-1">
+            {itemsSummary}
+          </ItemDescription>
+          {box.labelPrinted ? null : <Badge variant="outline">No label</Badge>}
+        </div>
       </ItemContent>
     </Item>
   )
