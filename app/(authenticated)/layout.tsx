@@ -18,7 +18,9 @@ const AppLayout = ({ children }: PropsWithChildren) => {
     <SidebarProvider>
       <DialogProvider>
         <Side />
-        <SidebarInset>
+        {/* min-w-0: as a flex child it would otherwise grow to fit any
+            truncated text instead of letting it truncate */}
+        <SidebarInset className="min-w-0">
           <header className="flex h-14 shrink-0 items-center gap-2 border-b px-2 md:px-6">
             <SidebarTrigger />
           </header>
