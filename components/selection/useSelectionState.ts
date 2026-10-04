@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export function useSelectionState() {
-  const [isSelecting, setIsSelecting] = useState<boolean>(false)
+  const [isSelecting, setIsSelecting] = useState(false)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const startSelecting = () => setIsSelecting(true)

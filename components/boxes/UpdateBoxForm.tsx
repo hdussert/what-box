@@ -51,40 +51,36 @@ const UpdateBoxForm = ({ box, onCancel, onSuccess }: UpdateBoxFormProps) => {
     <form action={formAction} className="flex flex-col gap-1">
       <input type="hidden" name="id" value={box.id} />
 
-      <div className="flex min-h-9 items-center justify-center px-12">
-        <div className="relative min-w-24 max-w-full">
-          <Input
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className=" w-auto min-w-24 max-w-full px-3 text-center text-2xl leading-[normal] font-bold uppercase md:text-2xl"
-            disabled={isPending}
-            autoFocus
-          />
-          <div className="absolute top-1/2 left-full ml-1 flex -translate-y-1/2 gap-1">
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              type="submit"
-              aria-label="Save"
-              disabled={isPending}
-            >
-              {isPending ? <Spinner /> : <Check />}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              type="button"
-              aria-label="Cancel"
-              onClick={onCancel}
-              disabled={isPending}
-            >
-              <X />
-            </Button>
-          </div>
-        </div>
+      <div className="flex min-h-9 items-center gap-1">
+        <Input
+          name="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="flex-1 text-xl leading-[normal] font-bold uppercase sm:text-2xl md:text-2xl"
+          disabled={isPending}
+          autoFocus
+        />
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          type="submit"
+          aria-label="Save"
+          disabled={isPending}
+        >
+          {isPending ? <Spinner /> : <Check />}
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          type="button"
+          aria-label="Cancel"
+          onClick={onCancel}
+          disabled={isPending}
+        >
+          <X />
+        </Button>
       </div>
-      <FieldError className="text-center">{state.errors?.name?.[0]}</FieldError>
+      <FieldError>{state.errors?.name?.[0]}</FieldError>
     </form>
   )
 }

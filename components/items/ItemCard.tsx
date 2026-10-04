@@ -5,6 +5,7 @@ import UpdateItemForm from '@/components/items/UpdateItemForm'
 import ToolbarButton from '@/components/ToolbarButton'
 import { Item as ItemRow } from '@/components/ui/item'
 import { Item } from '@/db/schema'
+import { formatShortDate } from '@/lib/utils'
 import { cn } from 'cn'
 
 type ItemCardProps = {
@@ -33,7 +34,7 @@ const ItemCard = ({
     <ItemRow
       variant="muted"
       className={cn(
-        'p-0 flex-1 min-w-0 flex-nowrap items-stretch gap-2 cursor-pointer transition hover:bg-muted relative',
+        'p-1 flex-1 min-w-0 flex-nowrap items-stretch gap-2 cursor-pointer transition hover:bg-muted relative',
         isSelected && 'ring-2 ring-primary',
       )}
       onClick={(e) => {
@@ -60,7 +61,7 @@ const ItemCard = ({
         />
       </div>
 
-      <div className="flex flex-1 min-w-0 p-2">
+      <div className="flex flex-1 min-w-0 p-1">
         {isEditing ? (
           <UpdateItemForm
             item={item}
@@ -75,11 +76,7 @@ const ItemCard = ({
           dateTime={item.createdAt.toISOString()}
           className="text-xs text-muted-foreground"
         >
-          {item.createdAt.toLocaleDateString('en-US', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+          {formatShortDate(item.createdAt)}
         </time>
 
         {isFocused && !isEditing && (

@@ -3,28 +3,18 @@ import {
   DeleteAccountState,
 } from '@/actions/auth/delete-account'
 import { DialogBaseProps } from '@/components/dialog/DialogProvider'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/dialog/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useActionState } from 'react'
 
 const initialState: DeleteAccountState = { success: false, message: '' }
@@ -34,7 +24,6 @@ const DESCRIPTION =
   'Your boxes, items and photos will be deleted for good. This cannot be undone.'
 
 export function DeleteAccountDialog({ isOpen, setIsOpen }: DialogBaseProps) {
-  const isMobile = useIsMobile()
   const [state, formAction, isPending] = useActionState(
     deleteAccountAction,
     initialState,
@@ -69,50 +58,28 @@ export function DeleteAccountDialog({ isOpen, setIsOpen }: DialogBaseProps) {
     </Button>
   )
 
-  if (isMobile) {
-    return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent>
-          <form action={formAction}>
-            <DrawerHeader>
-              <DrawerTitle>{TITLE}</DrawerTitle>
-              <DrawerDescription>{DESCRIPTION}</DrawerDescription>
-            </DrawerHeader>
-            <div className="flex flex-col gap-4 px-4">{passwordField}</div>
-            <DrawerFooter>
-              <DrawerClose
-                disabled={isPending}
-                render={<Button variant="secondary" />}
-              >
-                Cancel
-              </DrawerClose>
-              {deleteButton}
-            </DrawerFooter>
-          </form>
-        </DrawerContent>
-      </Drawer>
-    )
-  }
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
+    <ResponsiveDialog open={isOpen} onOpenChange={setIsOpen}>
+      <ResponsiveDialogContent>
         <form action={formAction} className="flex flex-col gap-4">
-          <DialogHeader>
-            <DialogTitle>{TITLE}</DialogTitle>
-            <DialogDescription>{DESCRIPTION}</DialogDescription>
-          </DialogHeader>
-          {passwordField}
-          <DialogFooter>
-            <DialogClose
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>{TITLE}</ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              {DESCRIPTION}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+          <div className="flex flex-col gap-4">{passwordField}</div>
+          <ResponsiveDialogFooter>
+            <ResponsiveDialogClose
               disabled={isPending}
               render={<Button variant="secondary" />}
             >
               Cancel
-            </DialogClose>
+            </ResponsiveDialogClose>
             {deleteButton}
-          </DialogFooter>
+          </ResponsiveDialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

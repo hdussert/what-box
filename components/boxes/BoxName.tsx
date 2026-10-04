@@ -28,21 +28,18 @@ const BoxName = ({ box }: BoxNameProps) => {
   }
 
   return (
-    <div className="flex min-h-9 items-center justify-center px-12">
-      <div className="relative min-w-24 px-3">
-        <Typography.H2 className="uppercase break-words leading-[normal]">
-          {box.name}
-        </Typography.H2>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Edit name"
-          className="absolute top-1/2 left-full ml-1 -translate-y-1/2"
-          onClick={handleEdit}
-        >
-          <Pen />
-        </Button>
-      </div>
+    <div className="flex min-h-9 items-center gap-1">
+      <Typography.H2 className="min-w-0 text-xl uppercase wrap-break-word leading-[normal] sm:text-2xl">
+        {box.name}
+      </Typography.H2>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        aria-label="Edit name"
+        onClick={handleEdit}
+      >
+        <Pen />
+      </Button>
     </div>
   )
 }

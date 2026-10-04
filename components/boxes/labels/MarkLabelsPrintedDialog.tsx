@@ -1,25 +1,15 @@
 import { markLabelsPrintedAction } from '@/actions/boxes/mark-labels-printed'
 import { DialogBaseProps } from '@/components/dialog/DialogProvider'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/dialog/ResponsiveDialog'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { LABEL_WORDS } from '@/lib/box/const'
 import { pluralize } from '@/lib/utils'
 import { useTransition } from 'react'
@@ -40,7 +30,6 @@ export function MarkLabelsPrintedDialog({
   setIsOpen,
   boxIds,
 }: MarkLabelsPrintedDialogProps) {
-  const isMobile = useIsMobile()
   const [isPending, startTransition] = useTransition()
 
   const description = `${pluralize(boxIds.length, LABEL_WORDS)} will be marked as printed.`
@@ -60,48 +49,27 @@ export function MarkLabelsPrintedDialog({
     })
   }
 
-  if (isMobile) {
-    return (
-      <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>{TITLE}</DrawerTitle>
-            <DrawerDescription>{description}</DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <DrawerClose
-              disabled={isPending}
-              render={<Button variant="secondary" />}
-            >
-              Not now
-            </DrawerClose>
-            <Button onClick={handleMark} disabled={isPending}>
-              {isPending ? 'Marking...' : 'Mark as printed'}
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    )
-  }
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{TITLE}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose
+    <ResponsiveDialog open={isOpen} onOpenChange={setIsOpen}>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>{TITLE}</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
+            {description}
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
+        <ResponsiveDialogFooter>
+          <ResponsiveDialogClose
             disabled={isPending}
             render={<Button variant="secondary" />}
           >
             Not now
-          </DialogClose>
+          </ResponsiveDialogClose>
           <Button onClick={handleMark} disabled={isPending}>
             {isPending ? 'Marking...' : 'Mark as printed'}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   )
 }

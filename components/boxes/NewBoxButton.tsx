@@ -15,7 +15,7 @@ const NewBoxButton = ({ label }: NewBoxButtonProps) => {
         openDialog(NewBoxDialog, {})
       }}
     >
-      <PackagePlus />
+      <PackagePlus data-icon="inline-start" />
       {label}
     </ToolbarButton>
   )

@@ -1,65 +1,46 @@
 import ToolbarButton from '@/components/ToolbarButton'
 import { useSelection } from '@/components/selection/SelectionProvider'
+import { ListChecks } from 'lucide-react'
 import { ReactNode } from 'react'
-
-type SelectionActions = {
-  selectedIds: string[]
-  /** Ends selection mode */
-  done: () => void
-}
-
-/** A named subset of the rows, selected in one tap (e.g. unprinted boxes). */
-type SelectionPreset = {
-  label: string
-  ids: string[]
-}
 
 type SelectionToolbarProps = {
   /** Ids of the listed rows, for Select all */
   ids: string[]
-  presets?: SelectionPreset[]
-  /** Idle buttons that enter selection mode */
-  startActions: ReactNode
-  selectionActions: (actions: SelectionActions) => ReactNode
+  /** Shown while not selecting */
   actions?: ReactNode
+  /** The bulk action buttons, shown while selecting */
+  children: ReactNode
 }
 
 const SelectionToolbar = ({
   ids,
-  presets = [],
-  startActions,
-  selectionActions,
   actions,
+  children,
 }: SelectionToolbarProps) => {
-  const { isSelecting, stopSelecting, selectedIds, selectAll } = useSelection()
+  const { isSelecting, startSelecting, stopSelecting, selectedIds, selectAll } =
+    useSelection()
 
   if (!isSelecting) {
     return (
       <div className="flex justify-between">
         <div>{actions}</div>
-        <div>{startActions}</div>
+        <ToolbarButton onClick={startSelecting}>
+          <ListChecks data-icon="inline-start" /> Select
+        </ToolbarButton>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-wrap justify-between gap-y-1">
-      <div>
+    <div className="grid grid-cols-[auto_1fr_auto] items-center">
+      <div className="flex">
         <ToolbarButton onClick={() => selectAll(ids)}>Select all</ToolbarButton>
-        {presets.map((preset) => (
-          <ToolbarButton
-            key={preset.label}
-            onClick={() => selectAll(preset.ids)}
-            disabled={!preset.ids.length}
-          >
-            {preset.label}
-          </ToolbarButton>
-        ))}
         <ToolbarButton onClick={stopSelecting}>Cancel</ToolbarButton>
       </div>
-      <div className="ml-auto flex gap-1">
-        {selectionActions({ selectedIds, done: stopSelecting })}
-      </div>
+      <span className="text-center text-sm text-muted-foreground">
+        <span className="font-mono">{selectedIds.length}</span> selected
+      </span>
+      <div className="flex">{children}</div>
     </div>
   )
 }

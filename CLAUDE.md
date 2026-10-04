@@ -8,7 +8,7 @@
 2. **Plan**: for non-trivial work (several files, a feature, a schema change, anything ambiguous), propose a plan and wait for approval.
 3. **Implement**: small conventional commits. Stay on the task.
 4. **Verify**: `yarn verify` (type check, lint and build, as in CI). For UI changes, check the app in the browser, or say you couldn't.
-5. **Self-review**: `/simplify` the diff for readability, then `/code-review` it and fix the findings that hold up.
+5. **Self-review**: `/code-review` the diff and fix the findings that hold up; larger diffs get `/simplify` first (sizing in `/finish`).
 6. **Finish**: update the PR's title and description and mark it ready. Never merge: the user reviews and merges.
 
 **Be concise** in replies, PRs, commits and docs: lead with the answer, and only mention options you'd recommend.
@@ -50,6 +50,7 @@ Conventions:
 Components:
 
 - Server-first: pages, layouts and data fetching stay on the server. `'use client'` goes on the smallest interactive leaf; client components never fetch data.
+- Hook first: a behavior (state, effects, calling actions, pending state) lives in one `useXxx` hook; components call it and render. Share behavior as a hook, not as a component that takes content props for its states (`pendingChildren`, render props).
 - Reuse `components/ui` primitives before custom markup. Load the `shadcn` skill before adding or composing them: it carries the Base UI APIs and composition rules.
 
 Naming and layout:
