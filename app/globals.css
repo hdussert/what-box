@@ -134,6 +134,21 @@
   }
 }
 
+/* Page transitions (app/(authenticated)/template.tsx). Clicks during the
+   fade reach the live page instead of the snapshot. */
+::view-transition {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
 /* Set in app/layout.tsx when the page is embedded in an iframe */
 .in-iframe {
   scrollbar-width: none;
