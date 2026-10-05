@@ -4,7 +4,8 @@ import Typography from '@/components/ui/typography'
 const PASSWORD_FIELD_COUNT = 3
 
 // Mirrors the settings page (password form, delete account) so it doesn't
-// shift when the page arrives. Keep in sync when it changes.
+// shift when the page arrives. Each placeholder sits in a row as tall as the
+// text it stands for. Keep in sync when the page changes.
 export default function SettingsLoading() {
   return (
     <div className="flex flex-col gap-6">
@@ -13,8 +14,10 @@ export default function SettingsLoading() {
         <SectionHeaderSkeleton descriptionLineCount={2} />
         <div className="space-y-6">
           {Array.from({ length: PASSWORD_FIELD_COUNT }).map((_, index) => (
-            <div key={index} className="flex flex-col gap-2">
-              <Skeleton className="h-4 w-32" />
+            <div key={index} className="flex flex-col gap-3">
+              <div className="flex h-4.75 items-center">
+                <Skeleton className="h-3.5 w-32" />
+              </div>
               <Skeleton className="h-9 w-full" />
             </div>
           ))}
@@ -37,11 +40,15 @@ function SectionHeaderSkeleton({
   descriptionLineCount,
 }: SectionHeaderSkeletonProps) {
   return (
-    <div className="flex flex-col gap-2">
+    <div>
       <Skeleton className="h-6 w-40" />
-      {Array.from({ length: descriptionLineCount }).map((_, index) => (
-        <Skeleton key={index} className="h-4 w-full" />
-      ))}
+      <div className="mt-2">
+        {Array.from({ length: descriptionLineCount }).map((_, index) => (
+          <div key={index} className="flex h-5 items-center">
+            <Skeleton className="h-3.5 w-full" />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
