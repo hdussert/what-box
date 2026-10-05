@@ -1,8 +1,10 @@
 import { PropsWithChildren, ViewTransition } from 'react'
 
-// Remounts on every navigation, so the old page fades out and the new one (or
-// its loading skeleton) fades in. default="none": updates within a page, like
-// search, sort or a server action's refresh, would otherwise cross-fade too.
+// Remounts when the section changes (dashboard, boxes, settings), so the old
+// page fades out and the new one (or its loading skeleton) fades in. Moving
+// between two boxes stays in the same section and doesn't fade.
+// default="none": updates within a page, like search, sort or a server
+// action's refresh, would otherwise cross-fade too.
 // Same flex as <main> in the layout, which it sits inside.
 export default function AuthenticatedTemplate({ children }: PropsWithChildren) {
   return (
