@@ -1,7 +1,8 @@
 import { randomUUID } from 'crypto'
-import { InferSelectModel } from 'drizzle-orm'
+import { InferSelectModel, isNotNull } from 'drizzle-orm'
 import {
   boolean,
+  index,
   integer,
   snakeCase,
   text,
@@ -43,35 +44,52 @@ export const users = snakeCase.table('users', {
   lastPasswordResetRequestAt: timestamp(),
 })
 
-export const boxes = snakeCase.table('boxes', {
-  id: id(),
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+export const boxes = snakeCase.table(
+  'boxes',
+  {
+    id: id(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
 
-  userId: userIdRef().notNull(),
+    userId: userIdRef().notNull(),
 
-  shortId: text(),
-  name: text().notNull(),
-  labelPrinted: boolean().default(false),
+    shortId: text(),
+    name: text().notNull(),
+    labelPrinted: boolean().default(false),
 
-  imageUrl: text(), // Public URL
-  imagePathname: text(), // Storage path
-})
+    imageUrl: text(), // Public URL
+    imagePathname: text(), // Storage path
+  },
+  // The image cleanup looks files up by pathname; most rows have none
+  (table) => [
+    index('boxes_image_pathname_idx')
+      .on(table.imagePathname)
+      .where(isNotNull(table.imagePathname)),
+  ],
+)
 
-export const items = snakeCase.table('items', {
-  id: id(),
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+export const items = snakeCase.table(
+  'items',
+  {
+    id: id(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
 
-  userId: userIdRef().notNull(),
-  boxId: boxIdRef().notNull(),
+    userId: userIdRef().notNull(),
+    boxId: boxIdRef().notNull(),
 
-  name: text().notNull(),
-  quantity: integer().notNull(),
+    name: text().notNull(),
+    quantity: integer().notNull(),
 
-  imageUrl: text(), // Public URL
-  imagePathname: text(), // Storage path
-})
+    imageUrl: text(), // Public URL
+    imagePathname: text(), // Storage path
+  },
+  (table) => [
+    index('items_image_pathname_idx')
+      .on(table.imagePathname)
+      .where(isNotNull(table.imagePathname)),
+  ],
+)
 
 export type User = InferSelectModel<typeof users>
 export type Box = InferSelectModel<typeof boxes>
