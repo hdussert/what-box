@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "320fb601-feeb-4e34-a505-8a9267f410b5",
+  "id": "9032e704-2eb7-417a-9ca6-8ca1b9aa4da7",
   "prevIds": [
     "45fa2a29-7a8c-456e-bdd3-589cfffc85e3"
   ],
@@ -9,12 +9,6 @@
     {
       "isRlsEnabled": false,
       "name": "boxes",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "image_cleanup_queue",
       "entityType": "tables",
       "schema": "public"
     },
@@ -146,32 +140,6 @@
       "entityType": "columns",
       "schema": "public",
       "table": "boxes"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "pathname",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "image_cleanup_queue"
-    },
-    {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "queued_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "image_cleanup_queue"
     },
     {
       "type": "text",
@@ -408,6 +376,48 @@
       "table": "users"
     },
     {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "image_pathname",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": "(\"image_pathname\" is not null)",
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "boxes_image_pathname_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "boxes"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "image_pathname",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": "(\"image_pathname\" is not null)",
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "items_image_pathname_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "items"
+    },
+    {
       "nameExplicit": false,
       "columns": [
         "user_id"
@@ -466,16 +476,6 @@
       "name": "boxes_pkey",
       "schema": "public",
       "table": "boxes",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "pathname"
-      ],
-      "nameExplicit": false,
-      "name": "image_cleanup_queue_pkey",
-      "schema": "public",
-      "table": "image_cleanup_queue",
       "entityType": "pks"
     },
     {

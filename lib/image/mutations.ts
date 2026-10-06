@@ -1,16 +1,6 @@
 import { getBoxById, updateBoxImage } from '@/lib/box'
 import { UserError } from '@/lib/errors'
-import {
-  getAllImagePathnames,
-  getImagePathnamesByBoxIds,
-  getImagePathnamesByItemIds,
-} from '@/lib/image/queries'
-import { enqueueImageCleanup } from '@/lib/image/queue'
-import {
-  deleteAllImageFiles,
-  deleteImageFiles,
-  uploadImageFile,
-} from '@/lib/image/storage'
+import { deleteImageFiles, uploadImageFile } from '@/lib/image/storage'
 import {
   ImageOwner,
   PreparedImage,
@@ -65,9 +55,6 @@ export async function saveImage(data: UploadImageData): Promise<void> {
 
   const blob = await uploadImageFile(data)
   const image = { url: blob.url, pathname: blob.pathname }
-  if (previousPathname) {
-    await enqueueImageCleanup(previousPathname)
-  }
 
   try {
     if (itemId) {
@@ -103,7 +90,6 @@ export async function deleteImage({
     throw new UserError('No image found')
   }
 
-  await enqueueImageCleanup(pathname)
   if (itemId) {
     await updateItemImage(itemId, null)
   } else {
@@ -116,41 +102,4 @@ export async function deleteImage({
   } catch (error) {
     console.error('Failed to delete image file', { pathname, error })
   }
-}
-
-/**
- * Delete the image files of these boxes and of their items. Call it before
- * deleting the rows: the files are queued for cleanup first, so a failed
- * deletion here (logged, not thrown) is retried by the cleanup job.
- */
-export async function deleteBoxImages(boxIds: string[]) {
-  const pathnames = await getImagePathnamesByBoxIds(boxIds)
-  await deleteQueuedImageFiles(pathnames)
-}
-
-/** Like `deleteBoxImages`, for items. */
-export async function deleteItemImages(itemIds: string[]) {
-  const pathnames = await getImagePathnamesByItemIds(itemIds)
-  await deleteQueuedImageFiles(pathnames)
-}
-
-/**
- * Delete every image file of the signed-in user, before deleting the account.
- * Throws if the files couldn't all be deleted. Files stored before the
- * per-user folders aren't under the user's prefix: queuing every referenced
- * file first lets the cleanup job delete those.
- */
-export async function deleteAccountImages() {
-  await enqueueImageCleanup(await getAllImagePathnames())
-  await deleteAllImageFiles()
-}
-
-async function deleteQueuedImageFiles(pathnames: string[]) {
-  await enqueueImageCleanup(pathnames)
-  if (!pathnames.length) {
-    return
-  }
-  await deleteImageFiles(pathnames).catch((error) =>
-    console.error('Failed to delete image files', { pathnames, error }),
-  )
 }

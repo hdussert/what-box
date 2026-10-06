@@ -26,7 +26,7 @@ const userIdRef = () =>
 const boxIdRef = () =>
   text().references(() => boxes.id, { onDelete: 'cascade' })
 
-// The image cleanup checks pathnames against both tables; most rows have none
+// The image cleanup looks files up by pathname; most rows have none
 const imagePathnameIndex = (tableName: string, column: AnyPgColumn) =>
   index(`${tableName}_image_pathname_idx`).on(column).where(isNotNull(column))
 
@@ -85,16 +85,6 @@ export const items = snakeCase.table(
     imagePathname: text(), // Storage path
   },
   (table) => [imagePathnameIndex('items', table.imagePathname)],
-)
-
-// Image files to delete once nothing references them (lib/image/queue.ts)
-export const imageCleanupQueue = snakeCase.table(
-  'image_cleanup_queue',
-  {
-    pathname: text().primaryKey(),
-    queuedAt: timestamp().notNull().defaultNow(),
-  },
-  (table) => [index('image_cleanup_queue_queued_at_idx').on(table.queuedAt)],
 )
 
 export type User = InferSelectModel<typeof users>

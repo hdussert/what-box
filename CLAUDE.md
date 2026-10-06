@@ -26,8 +26,8 @@
 
 ## Invariants
 
-- Authorization lives in the data layer: every `lib/*` query or mutation calls `getCurrentUser()` and scopes its `where` by `userId`. `proxy.ts` never authorizes: it only forwards the request path, and redirects `/` to `/dashboard` for a valid session token (signature and expiry, no revocation check). The one exception is `processImageCleanupQueue` (`lib/image/cleanup.ts`), a system job with no user, called only by the cron route behind `CRON_SECRET`.
-- Deleting a box or item cascades in the DB but not in Vercel Blob: remove image files through `lib/image`, and enqueue them with `enqueueImageCleanup` before any reference to them can disappear (upload, replace, remove, delete). The daily cleanup job deletes what the inline deletes miss.
+- Authorization lives in the data layer: every `lib/*` query or mutation calls `getCurrentUser()` and scopes its `where` by `userId`. `proxy.ts` never authorizes: it only forwards the request path, and redirects `/` to `/dashboard` for a valid session token (signature and expiry, no revocation check). The one exception is `deleteUnreferencedImageFiles` (`lib/image/cleanup.ts`), a system job with no user, called only by the cron route behind `CRON_SECRET`.
+- Deleting a box or item cascades in the DB but not in Vercel Blob: remove image files through `lib/image`.
 
 ## Code
 

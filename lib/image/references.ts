@@ -1,13 +1,11 @@
 import { db } from '@/db'
 import { boxes, items } from '@/db/schema'
 import { inArray } from 'drizzle-orm'
-
-// No 'server-only': scripts/image-cleanup-backfill.ts runs it outside Next.
+import 'server-only'
 
 /**
  * Which of these pathnames a box or an item still points to, across every
- * user. The single test of "in use" for the image cleanup: a file is deleted
- * only if it's not in this set.
+ * user: the image cleanup deletes a file only if it's not in this set.
  */
 export async function getReferencedImagePathnames(pathnames: string[]) {
   if (!pathnames.length) {
