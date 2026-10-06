@@ -56,3 +56,23 @@ export async function getImagePathnamesByItemIds(
 
   return rows.flatMap(({ pathname }) => (pathname ? [pathname] : []))
 }
+
+/** Pathnames of every image of the signed-in user, on boxes and items */
+export async function getAllImagePathnames(): Promise<string[]> {
+  const user = await getCurrentUser()
+
+  const [boxRows, itemRows] = await Promise.all([
+    db
+      .select({ pathname: boxes.imagePathname })
+      .from(boxes)
+      .where(and(eq(boxes.userId, user.id), isNotNull(boxes.imagePathname))),
+    db
+      .select({ pathname: items.imagePathname })
+      .from(items)
+      .where(and(eq(items.userId, user.id), isNotNull(items.imagePathname))),
+  ])
+
+  return [...boxRows, ...itemRows].flatMap(({ pathname }) =>
+    pathname ? [pathname] : [],
+  )
+}

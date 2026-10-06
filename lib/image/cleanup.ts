@@ -1,5 +1,6 @@
 import { db } from '@/db'
-import { boxes, imageCleanupQueue, items } from '@/db/schema'
+import { imageCleanupQueue } from '@/db/schema'
+import { getReferencedImagePathnames } from '@/lib/image/references'
 import { del } from '@vercel/blob'
 import { and, asc, inArray, lt } from 'drizzle-orm'
 import 'server-only'
@@ -31,18 +32,17 @@ export async function processImageCleanupQueue() {
       break
     }
 
-    const referenced = await getReferencedPathnames(batch)
+    const referenced = await getReferencedImagePathnames(batch)
     const unreferenced = batch.filter((pathname) => !referenced.has(pathname))
     // A due candidate can't become referenced now: rows only ever point to
     // fresh uploads, which are still in their grace period
-    let batchFailed = 0
-    if (unreferenced.length) {
-      const isDeleted = await deleteFiles(unreferenced)
-      if (!isDeleted) {
-        // Back of the queue, so a failing batch can't block the ones after it
-        await requeue(unreferenced)
-        batchFailed = unreferenced.length
-      }
+    const isDeleted = !unreferenced.length || (await deleteFiles(unreferenced))
+    if (isDeleted) {
+      deleted += unreferenced.length
+    } else {
+      // Back of the queue, so a failing batch can't block the ones after it
+      await requeue(unreferenced)
+      failed += unreferenced.length
     }
 
     // A candidate enqueued again during the run has a newer queuedAt: keep it
@@ -56,8 +56,6 @@ export async function processImageCleanupQueue() {
       )
 
     checked += batch.length
-    deleted += unreferenced.length - batchFailed
-    failed += batchFailed
   }
 
   return { checked, deleted, failed }
@@ -90,19 +88,4 @@ async function getDueCandidates(cutoff: Date) {
     .limit(BATCH_SIZE)
 
   return rows.map(({ pathname }) => pathname)
-}
-
-async function getReferencedPathnames(pathnames: string[]) {
-  const [boxRows, itemRows] = await Promise.all([
-    db
-      .select({ pathname: boxes.imagePathname })
-      .from(boxes)
-      .where(inArray(boxes.imagePathname, pathnames)),
-    db
-      .select({ pathname: items.imagePathname })
-      .from(items)
-      .where(inArray(items.imagePathname, pathnames)),
-  ])
-
-  return new Set([...boxRows, ...itemRows].map(({ pathname }) => pathname))
 }

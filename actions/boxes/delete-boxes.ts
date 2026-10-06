@@ -2,9 +2,7 @@
 
 import { deleteBoxes } from '@/lib/box'
 import { toUserMessage } from '@/lib/errors'
-import { getImagePathnamesByBoxIds } from '@/lib/image/queries'
-import { enqueueImageCleanup } from '@/lib/image/queue'
-import { deleteImageFiles } from '@/lib/image/storage'
+import { deleteBoxImages } from '@/lib/image/mutations'
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
 
@@ -17,17 +15,7 @@ export async function deleteBoxesAction(boxIds: string[]) {
   }
 
   try {
-    // Delete the images uploaded (Vercel)
-    const pathnames = await getImagePathnamesByBoxIds(boxIds)
-
-    // Before the rows go, so a failed file deletion is retried by the cleanup job
-    await enqueueImageCleanup(pathnames)
-    if (pathnames.length) {
-      await deleteImageFiles(pathnames).catch((error) => {
-        console.error('Failed to delete some image files :', error)
-        // Continue even if the blob deletion fails (shouldn't stop the user)
-      })
-    }
+    await deleteBoxImages(boxIds)
 
     await deleteBoxes(boxIds)
     revalidatePath('/dashboard')

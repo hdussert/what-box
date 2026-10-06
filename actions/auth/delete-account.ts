@@ -2,7 +2,7 @@
 
 import { ActionResponse } from '@/actions/types'
 import { UserError, toUserMessage } from '@/lib/errors'
-import { deleteAllImageFiles } from '@/lib/image/storage'
+import { deleteAccountImages } from '@/lib/image/mutations'
 import { deleteSession } from '@/lib/session'
 import { deleteCurrentUser, verifyCurrentPassword } from '@/lib/user'
 import { redirect, unstable_rethrow } from 'next/navigation'
@@ -31,7 +31,7 @@ export async function deleteAccountAction(
 
     // Photos first, and stop if that fails: once the account is gone, no
     // one could clean up what's left
-    await deleteAllImageFiles().catch((error) => {
+    await deleteAccountImages().catch((error) => {
       console.error('Failed to delete image files:', error)
       throw new UserError(
         "Couldn't delete your photos, so your account was kept: please try again.",

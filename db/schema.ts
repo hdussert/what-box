@@ -1,11 +1,13 @@
 import { randomUUID } from 'crypto'
-import { InferSelectModel } from 'drizzle-orm'
+import { InferSelectModel, isNotNull } from 'drizzle-orm'
 import {
   boolean,
+  index,
   integer,
   snakeCase,
   text,
   timestamp,
+  type AnyPgColumn,
 } from 'drizzle-orm/pg-core'
 
 // Common column definitions
@@ -23,6 +25,10 @@ const userIdRef = () =>
 
 const boxIdRef = () =>
   text().references(() => boxes.id, { onDelete: 'cascade' })
+
+// The image cleanup checks pathnames against both tables; most rows have none
+const imagePathnameIndex = (tableName: string, column: AnyPgColumn) =>
+  index(`${tableName}_image_pathname_idx`).on(column).where(isNotNull(column))
 
 // Tables definitions
 export const users = snakeCase.table('users', {
@@ -43,43 +49,53 @@ export const users = snakeCase.table('users', {
   lastPasswordResetRequestAt: timestamp(),
 })
 
-export const boxes = snakeCase.table('boxes', {
-  id: id(),
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+export const boxes = snakeCase.table(
+  'boxes',
+  {
+    id: id(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
 
-  userId: userIdRef().notNull(),
+    userId: userIdRef().notNull(),
 
-  shortId: text(),
-  name: text().notNull(),
-  labelPrinted: boolean().default(false),
+    shortId: text(),
+    name: text().notNull(),
+    labelPrinted: boolean().default(false),
 
-  imageUrl: text(), // Public URL
-  imagePathname: text(), // Storage path
-})
+    imageUrl: text(), // Public URL
+    imagePathname: text(), // Storage path
+  },
+  (table) => [imagePathnameIndex('boxes', table.imagePathname)],
+)
 
-export const items = snakeCase.table('items', {
-  id: id(),
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+export const items = snakeCase.table(
+  'items',
+  {
+    id: id(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
 
-  userId: userIdRef().notNull(),
-  boxId: boxIdRef().notNull(),
+    userId: userIdRef().notNull(),
+    boxId: boxIdRef().notNull(),
 
-  name: text().notNull(),
-  quantity: integer().notNull(),
+    name: text().notNull(),
+    quantity: integer().notNull(),
 
-  imageUrl: text(), // Public URL
-  imagePathname: text(), // Storage path
-})
+    imageUrl: text(), // Public URL
+    imagePathname: text(), // Storage path
+  },
+  (table) => [imagePathnameIndex('items', table.imagePathname)],
+)
 
-// Image files that may no longer be referenced by any box or item. Enqueued
-// before a reference can disappear; the cleanup job deletes a file only if,
-// once its grace period has passed, nothing references it (lib/image/cleanup).
-export const imageCleanupQueue = snakeCase.table('image_cleanup_queue', {
-  pathname: text().primaryKey(),
-  queuedAt: timestamp().notNull().defaultNow(),
-})
+// Image files to delete once nothing references them (lib/image/queue.ts)
+export const imageCleanupQueue = snakeCase.table(
+  'image_cleanup_queue',
+  {
+    pathname: text().primaryKey(),
+    queuedAt: timestamp().notNull().defaultNow(),
+  },
+  (table) => [index('image_cleanup_queue_queued_at_idx').on(table.queuedAt)],
+)
 
 export type User = InferSelectModel<typeof users>
 export type Box = InferSelectModel<typeof boxes>

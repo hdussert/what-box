@@ -7,9 +7,9 @@
  *   yarn image:backfill:prod [--dry-run]  production store and DB
  */
 import { db } from '@/db'
-import { boxes, imageCleanupQueue, items } from '@/db/schema'
+import { imageCleanupQueue } from '@/db/schema'
+import { getReferencedImagePathnames } from '@/lib/image/references'
 import { list } from '@vercel/blob'
-import { inArray } from 'drizzle-orm'
 
 const isDryRun = process.argv.includes('--dry-run')
 
@@ -41,22 +41,7 @@ async function main() {
 }
 
 async function getUnreferenced(pathnames: string[]) {
-  if (!pathnames.length) {
-    return []
-  }
-  const [boxRows, itemRows] = await Promise.all([
-    db
-      .select({ pathname: boxes.imagePathname })
-      .from(boxes)
-      .where(inArray(boxes.imagePathname, pathnames)),
-    db
-      .select({ pathname: items.imagePathname })
-      .from(items)
-      .where(inArray(items.imagePathname, pathnames)),
-  ])
-  const referenced = new Set(
-    [...boxRows, ...itemRows].map(({ pathname }) => pathname),
-  )
+  const referenced = await getReferencedImagePathnames(pathnames)
   return pathnames.filter((pathname) => !referenced.has(pathname))
 }
 
