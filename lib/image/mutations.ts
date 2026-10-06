@@ -1,5 +1,6 @@
 import { getBoxById, updateBoxImage } from '@/lib/box'
 import { UserError } from '@/lib/errors'
+import { enqueueImageCleanup } from '@/lib/image/queue'
 import { deleteImageFiles, uploadImageFile } from '@/lib/image/storage'
 import {
   ImageOwner,
@@ -55,6 +56,9 @@ export async function saveImage(data: UploadImageData): Promise<void> {
 
   const blob = await uploadImageFile(data)
   const image = { url: blob.url, pathname: blob.pathname }
+  if (previousPathname) {
+    await enqueueImageCleanup(previousPathname)
+  }
 
   try {
     if (itemId) {
@@ -90,6 +94,7 @@ export async function deleteImage({
     throw new UserError('No image found')
   }
 
+  await enqueueImageCleanup(pathname)
   if (itemId) {
     await updateItemImage(itemId, null)
   } else {

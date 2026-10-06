@@ -1,3 +1,4 @@
+import { enqueueImageCleanup } from '@/lib/image/queue'
 import { UploadImageData } from '@/lib/image/types'
 import { buildImagePath, userImagePrefix } from '@/lib/image/utils'
 import { getCurrentUser } from '@/lib/user'
@@ -16,6 +17,9 @@ export async function uploadImageFile({
     itemId: itemId,
     imageName: image.name,
   })
+
+  // Until a row references it, the file is an orphan if anything fails
+  await enqueueImageCleanup(imagePath)
 
   return put(imagePath, image.data, {
     access: 'public',

@@ -73,6 +73,14 @@ export const items = snakeCase.table('items', {
   imagePathname: text(), // Storage path
 })
 
+// Image files that may no longer be referenced by any box or item. Enqueued
+// before a reference can disappear; the cleanup job deletes a file only if,
+// once its grace period has passed, nothing references it (lib/image/cleanup).
+export const imageCleanupQueue = snakeCase.table('image_cleanup_queue', {
+  pathname: text().primaryKey(),
+  queuedAt: timestamp().notNull().defaultNow(),
+})
+
 export type User = InferSelectModel<typeof users>
 export type Box = InferSelectModel<typeof boxes>
 export type Item = InferSelectModel<typeof items>
