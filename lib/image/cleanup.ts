@@ -23,6 +23,7 @@ export async function processImageCleanupQueue() {
   const cutoff = new Date(startedAt - GRACE_PERIOD_MS)
   let checked = 0
   let deleted = 0
+  let failed = 0
 
   while (Date.now() - startedAt < TIME_BUDGET_MS) {
     const batch = await getDueCandidates(cutoff)
@@ -34,8 +35,14 @@ export async function processImageCleanupQueue() {
     const unreferenced = batch.filter((pathname) => !referenced.has(pathname))
     // A due candidate can't become referenced now: rows only ever point to
     // fresh uploads, which are still in their grace period
+    let batchFailed = 0
     if (unreferenced.length) {
-      await del(unreferenced)
+      const isDeleted = await deleteFiles(unreferenced)
+      if (!isDeleted) {
+        // Back of the queue, so a failing batch can't block the ones after it
+        await requeue(unreferenced)
+        batchFailed = unreferenced.length
+      }
     }
 
     // A candidate enqueued again during the run has a newer queuedAt: keep it
@@ -49,10 +56,29 @@ export async function processImageCleanupQueue() {
       )
 
     checked += batch.length
-    deleted += unreferenced.length
+    deleted += unreferenced.length - batchFailed
+    failed += batchFailed
   }
 
-  return { checked, deleted }
+  return { checked, deleted, failed }
+}
+
+async function deleteFiles(pathnames: string[]) {
+  try {
+    await del(pathnames)
+    return true
+  } catch (error) {
+    console.error('Image cleanup: failed to delete files', error)
+    return false
+  }
+}
+
+/** Resets their grace period, so they come up again in a later run */
+async function requeue(pathnames: string[]) {
+  await db
+    .update(imageCleanupQueue)
+    .set({ queuedAt: new Date() })
+    .where(inArray(imageCleanupQueue.pathname, pathnames))
 }
 
 async function getDueCandidates(cutoff: Date) {

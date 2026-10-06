@@ -1,6 +1,5 @@
 import { db } from '@/db'
 import { imageCleanupQueue } from '@/db/schema'
-import { userImagePrefix } from '@/lib/image/utils'
 import { getCurrentUser } from '@/lib/user'
 import 'server-only'
 
@@ -12,16 +11,13 @@ import 'server-only'
  * that stays in use is harmless. Re-enqueuing restarts the grace period.
  */
 export async function enqueueImageCleanup(pathnames: string | string[]) {
-  const user = await getCurrentUser()
+  // Auth check only. No userId scoping: a queued file is deleted only if no
+  // row references it, so enqueuing can't remove anyone's photo in use. Older
+  // uploads also aren't under the user's prefix.
+  await getCurrentUser()
   const list = Array.isArray(pathnames) ? pathnames : [pathnames]
   if (!list.length) {
     return
-  }
-
-  // The table has no userId: scope by the user's storage prefix instead
-  const prefix = userImagePrefix(user.id)
-  if (list.some((pathname) => !pathname.startsWith(prefix))) {
-    throw new Error('Cannot enqueue another user’s image files')
   }
 
   const queuedAt = new Date()
