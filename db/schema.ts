@@ -7,7 +7,6 @@ import {
   snakeCase,
   text,
   timestamp,
-  type AnyPgColumn,
 } from 'drizzle-orm/pg-core'
 
 // Common column definitions
@@ -25,10 +24,6 @@ const userIdRef = () =>
 
 const boxIdRef = () =>
   text().references(() => boxes.id, { onDelete: 'cascade' })
-
-// The image cleanup looks files up by pathname; most rows have none
-const imagePathnameIndex = (tableName: string, column: AnyPgColumn) =>
-  index(`${tableName}_image_pathname_idx`).on(column).where(isNotNull(column))
 
 // Tables definitions
 export const users = snakeCase.table('users', {
@@ -65,7 +60,12 @@ export const boxes = snakeCase.table(
     imageUrl: text(), // Public URL
     imagePathname: text(), // Storage path
   },
-  (table) => [imagePathnameIndex('boxes', table.imagePathname)],
+  // The image cleanup looks files up by pathname; most rows have none
+  (table) => [
+    index('boxes_image_pathname_idx')
+      .on(table.imagePathname)
+      .where(isNotNull(table.imagePathname)),
+  ],
 )
 
 export const items = snakeCase.table(
@@ -84,7 +84,11 @@ export const items = snakeCase.table(
     imageUrl: text(), // Public URL
     imagePathname: text(), // Storage path
   },
-  (table) => [imagePathnameIndex('items', table.imagePathname)],
+  (table) => [
+    index('items_image_pathname_idx')
+      .on(table.imagePathname)
+      .where(isNotNull(table.imagePathname)),
+  ],
 )
 
 export type User = InferSelectModel<typeof users>

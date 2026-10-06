@@ -10,7 +10,6 @@ export JWT_SECRET=verify-placeholder-secret-at-least-32-characters
 export DATABASE_URL=postgresql://verify:verify@localhost:5432/verify
 export BLOB_READ_WRITE_TOKEN=verify-placeholder
 export RESEND_API_KEY=verify-placeholder
-export CRON_SECRET=verify-placeholder-cron-secret
 export NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 echo "▸ Type check"

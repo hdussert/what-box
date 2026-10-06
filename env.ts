@@ -15,8 +15,9 @@ export const env = createEnv({
     BLOB_READ_WRITE_TOKEN: z.string(),
 
     RESEND_API_KEY: z.string(),
-    // Vercel Cron sends it as a bearer token (app/api/cron)
-    CRON_SECRET: z.string().min(16),
+    // Vercel Cron sends it as a bearer token (app/api/cron). Only production
+    // runs crons: without it, the cron routes refuse every request.
+    CRON_SECRET: z.string().min(16).optional(),
     // Present on Vercel deployments; absent locally
     VERCEL: z.string().optional(),
   },

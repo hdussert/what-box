@@ -1,15 +1,18 @@
-import { getReferencedImagePathnames } from '@/lib/image/references'
+import { db } from '@/db'
+import { boxes, items } from '@/db/schema'
 import { del, list } from '@vercel/blob'
+import { inArray } from 'drizzle-orm'
 import 'server-only'
 
-// createWithImage uploads before inserting the row: leave recent files alone
+// Every upload happens before the row pointing to it is written
+// (createWithImage, saveImage): the grace period must outlast that gap
 const GRACE_PERIOD_MS = 24 * 60 * 60 * 1000
 // Under the function's 300 s limit, so a run ends cleanly
 const TIME_BUDGET_MS = 250 * 1000
 
 /**
- * Delete the image files in the Blob store that no box or item references,
- * a page of 1,000 at a time. Files uploaded in the last 24 h are skipped.
+ * Delete the files in the Blob store that no box or item references. The
+ * store must hold only box and item images: anything else would be deleted.
  * `isComplete` is false if the time budget ran out before the last page; the
  * next run starts over from the first page.
  *
@@ -28,10 +31,7 @@ export async function deleteUnreferencedImageFiles() {
     const pathnames = page.blobs
       .filter((blob) => blob.uploadedAt.getTime() < cutoff)
       .map((blob) => blob.pathname)
-    const referenced = await getReferencedImagePathnames(pathnames)
-    const unreferenced = pathnames.filter(
-      (pathname) => !referenced.has(pathname),
-    )
+    const unreferenced = await getUnreferenced(pathnames)
 
     if (unreferenced.length) {
       await del(unreferenced)
@@ -43,4 +43,27 @@ export async function deleteUnreferencedImageFiles() {
   } while (cursor && Date.now() - startedAt < TIME_BUDGET_MS)
 
   return { scanned, deleted, isComplete: !cursor }
+}
+
+/** The pathnames no box or item points to, across every user */
+async function getUnreferenced(pathnames: string[]) {
+  if (!pathnames.length) {
+    return []
+  }
+
+  const [boxRows, itemRows] = await Promise.all([
+    db
+      .select({ pathname: boxes.imagePathname })
+      .from(boxes)
+      .where(inArray(boxes.imagePathname, pathnames)),
+    db
+      .select({ pathname: items.imagePathname })
+      .from(items)
+      .where(inArray(items.imagePathname, pathnames)),
+  ])
+  const referenced = new Set(
+    [...boxRows, ...itemRows].map(({ pathname }) => pathname),
+  )
+
+  return pathnames.filter((pathname) => !referenced.has(pathname))
 }
