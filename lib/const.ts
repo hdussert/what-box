@@ -9,3 +9,6 @@ export const SITE_TAGLINE = 'Find your items in an instant.'
 /** Default description for search results and link previews. */
 export const SITE_DESCRIPTION =
   'WhatBox keeps track of what is in your storage boxes: list the items, add photos, print a QR label and scan it to see what is inside.'
+
+/** App background (zinc-950): browser chrome, splash screen and app icons. */
+export const THEME_COLOR = '#09090b'
