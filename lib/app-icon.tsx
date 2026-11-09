@@ -6,11 +6,16 @@ type AppIconOptions = {
   /** Width and height of the square PNG, in pixels */
   size: number
   /** Share of the width the logo spans */
-  logoScale: number
+  logoScale?: number
 }
 
+const DEFAULT_LOGO_SCALE = 2 / 3
+
 /** The app logo as an opaque square PNG, for home-screen and install icons. */
-export const renderAppIcon = ({ size, logoScale }: AppIconOptions) => {
+export const renderAppIcon = ({
+  size,
+  logoScale = DEFAULT_LOGO_SCALE,
+}: AppIconOptions) => {
   return new ImageResponse(
     <div
       style={{

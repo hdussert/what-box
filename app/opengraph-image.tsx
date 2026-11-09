@@ -1,4 +1,4 @@
-import { SITE_NAME, SITE_TAGLINE } from '@/lib/const'
+import { SITE_NAME, SITE_TAGLINE, THEME_COLOR } from '@/lib/const'
 import { Package } from 'lucide-react'
 import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
@@ -28,7 +28,7 @@ export default function OpenGraphImage() {
         alignItems: 'center',
         justifyContent: 'center',
         gap: 56,
-        background: '#09090b',
+        background: THEME_COLOR,
         color: '#fafafa',
         fontFamily: 'Inter',
       }}
