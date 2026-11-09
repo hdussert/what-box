@@ -1,3 +1,4 @@
+import InstallAppButton from '@/components/sidebar/InstallAppButton'
 import NewBoxNavItem from '@/components/sidebar/NewBoxNavItem'
 import { SidebarNavItem } from '@/components/sidebar/SidebarNavItem'
 import SideLogo from '@/components/sidebar/SideLogo'
@@ -46,6 +47,7 @@ const Side = () => {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
+        <InstallAppButton />
         <SidebarNavItem name="Settings" icon={<Settings />} href="/settings" />
         <SignOutButton />
         <div className="px-2 pt-1 text-center text-xs text-muted-foreground whitespace-nowrap group-data-[collapsible=icon]:hidden">

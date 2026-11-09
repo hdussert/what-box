@@ -1,6 +1,12 @@
+import PwaSetup from '@/components/pwa/PwaSetup'
 import { env } from '@/env'
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from '@/lib/const'
-import type { Metadata } from 'next'
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+  THEME_COLOR,
+} from '@/lib/const'
+import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 import { PropsWithChildren } from 'react'
 import { Toaster } from 'sonner'
@@ -35,6 +41,12 @@ export const metadata: Metadata = {
     locale: 'en_US',
   },
   twitter: { card: 'summary_large_image' },
+  // iOS ignores the manifest's display mode: this opens it full-screen too
+  appleWebApp: { capable: true, title: SITE_NAME, statusBarStyle: 'black' },
+}
+
+export const viewport: Viewport = {
+  themeColor: THEME_COLOR,
 }
 
 const RootLayout = ({ children }: PropsWithChildren) => {
@@ -56,6 +68,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
       <body
         className={`font-sans ${inter.variable} ${jetBrainsMono.variable} antialiased`}
       >
+        <PwaSetup />
         <Toaster position="top-right" />
         {children}
       </body>
