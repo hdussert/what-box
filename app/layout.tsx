@@ -1,3 +1,4 @@
+import ServiceWorker from '@/components/ServiceWorker'
 import { env } from '@/env'
 import {
   SITE_DESCRIPTION,
@@ -67,6 +68,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
       <body
         className={`font-sans ${inter.variable} ${jetBrainsMono.variable} antialiased`}
       >
+        <ServiceWorker />
         <Toaster position="top-right" />
         {children}
       </body>
