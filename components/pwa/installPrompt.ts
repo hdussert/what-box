@@ -3,18 +3,6 @@ export type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<unknown>
 }
 
-declare global {
-  interface Window {
-    earlyInstallEvent?: BeforeInstallPromptEvent
-  }
-}
-
-/**
- * Inlined in the root layout's `<head>`. Chrome can fire the event before
- * hydration, and it doesn't fire it again for the page.
- */
-export const EARLY_INSTALL_PROMPT_SCRIPT = `window.addEventListener('beforeinstallprompt', (event) => { window.earlyInstallEvent = event })`
-
 let installEvent: BeforeInstallPromptEvent | null = null
 const subscribers = new Set<() => void>()
 
@@ -33,9 +21,6 @@ export const listenForInstallPrompt = () => {
     setInstallEvent(event as BeforeInstallPromptEvent)
   const handleInstalled = () => setInstallEvent(null)
 
-  if (window.earlyInstallEvent) {
-    setInstallEvent(window.earlyInstallEvent)
-  }
   window.addEventListener('beforeinstallprompt', handleInstallable)
   window.addEventListener('appinstalled', handleInstalled)
   return () => {

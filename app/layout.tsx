@@ -1,4 +1,3 @@
-import { EARLY_INSTALL_PROMPT_SCRIPT } from '@/components/pwa/installPrompt'
 import PwaSetup from '@/components/pwa/PwaSetup'
 import { env } from '@/env'
 import {
@@ -52,7 +51,7 @@ export const viewport: Viewport = {
 
 const RootLayout = ({ children }: PropsWithChildren) => {
   return (
-    // suppressHydrationWarning: a script below adds a class before hydration
+    // suppressHydrationWarning: the script below adds a class before hydration
     <html
       lang="en"
       className="dark"
@@ -64,9 +63,6 @@ const RootLayout = ({ children }: PropsWithChildren) => {
           dangerouslySetInnerHTML={{
             __html: `if (window.self !== window.top) document.documentElement.classList.add('in-iframe')`,
           }}
-        />
-        <script
-          dangerouslySetInnerHTML={{ __html: EARLY_INSTALL_PROMPT_SCRIPT }}
         />
       </head>
       <body
