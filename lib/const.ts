@@ -12,3 +12,6 @@ export const SITE_DESCRIPTION =
 
 /** App background (zinc-950): browser chrome, splash screen and app icons. */
 export const THEME_COLOR = '#09090b'
+
+/** Text and logo color on THEME_COLOR (zinc-50). */
+export const THEME_FOREGROUND = '#fafafa'

@@ -25,6 +25,8 @@ self.addEventListener('activate', (event) => {
             .map((name) => caches.delete(name)),
         ),
       )
+      // Starts each page request while the worker boots, instead of after
+      .then(() => self.registration.navigationPreload?.enable())
       .then(() => self.clients.claim()),
   )
 })
@@ -33,5 +35,19 @@ self.addEventListener('fetch', (event) => {
   if (event.request.mode !== 'navigate') {
     return
   }
-  event.respondWith(fetch(event.request).catch(() => caches.match(OFFLINE_URL)))
+  event.respondWith(loadPage(event))
 })
+
+const loadPage = async (event) => {
+  try {
+    const preloaded = await event.preloadResponse
+    return preloaded ?? (await fetch(event.request))
+  } catch (error) {
+    // The cache can be evicted: the browser's error page is all that's left
+    const offlinePage = await caches.match(OFFLINE_URL)
+    if (!offlinePage) {
+      throw error
+    }
+    return offlinePage
+  }
+}

@@ -1,7 +1,7 @@
 'use client'
 
+import { useInstallPrompt } from '@/components/pwa/useInstallPrompt'
 import { SidebarNavItem } from '@/components/sidebar/SidebarNavItem'
-import { useInstallPrompt } from '@/hooks/useInstallPrompt'
 import { Download } from 'lucide-react'
 
 /** Sidebar entry installing the app, shown only while the browser allows it. */

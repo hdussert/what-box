@@ -4,6 +4,8 @@ import type { MetadataRoute } from 'next'
 /** Makes the app installable (Android, desktop Chrome). */
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    // Chrome identifies installs by this; it defaults to start_url
+    id: '/',
     name: SITE_NAME,
     short_name: SITE_NAME,
     description: SITE_DESCRIPTION,

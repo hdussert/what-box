@@ -1,4 +1,9 @@
-import { SITE_NAME, SITE_TAGLINE, THEME_COLOR } from '@/lib/const'
+import {
+  SITE_NAME,
+  SITE_TAGLINE,
+  THEME_COLOR,
+  THEME_FOREGROUND,
+} from '@/lib/const'
 import { Package } from 'lucide-react'
 import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
@@ -29,11 +34,11 @@ export default function OpenGraphImage() {
         justifyContent: 'center',
         gap: 56,
         background: THEME_COLOR,
-        color: '#fafafa',
+        color: THEME_FOREGROUND,
         fontFamily: 'Inter',
       }}
     >
-      <Package size={220} color="#fafafa" strokeWidth={1.5} />
+      <Package size={220} color={THEME_FOREGROUND} strokeWidth={1.5} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div style={{ fontSize: 112, fontWeight: 700 }}>{SITE_NAME}</div>
         <div style={{ fontSize: 44, fontWeight: 400, color: '#a1a1aa' }}>

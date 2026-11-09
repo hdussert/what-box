@@ -1,4 +1,4 @@
-import { THEME_COLOR } from '@/lib/const'
+import { THEME_COLOR, THEME_FOREGROUND } from '@/lib/const'
 import { Package } from 'lucide-react'
 import { ImageResponse } from 'next/og'
 
@@ -27,7 +27,11 @@ export const renderAppIcon = ({
         background: THEME_COLOR,
       }}
     >
-      <Package size={size * logoScale} color="#fafafa" strokeWidth={1.75} />
+      <Package
+        size={size * logoScale}
+        color={THEME_FOREGROUND}
+        strokeWidth={1.75}
+      />
     </div>,
     { width: size, height: size },
   )

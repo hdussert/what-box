@@ -1,4 +1,4 @@
-import ServiceWorker from '@/components/ServiceWorker'
+import PwaSetup from '@/components/pwa/PwaSetup'
 import { env } from '@/env'
 import {
   SITE_DESCRIPTION,
@@ -68,7 +68,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
       <body
         className={`font-sans ${inter.variable} ${jetBrainsMono.variable} antialiased`}
       >
-        <ServiceWorker />
+        <PwaSetup />
         <Toaster position="top-right" />
         {children}
       </body>
